@@ -1,0 +1,26 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+    - name: setup
+      run: |
+        sudo apt update
+        sudo apt -y install libopencv-dev libglfw3 libglfw3-dev
+    - name: configure
+      run: cmake -B ${{github.workspace}}/build -S .
+    - name: build
+      run: cmake --build ${{github.workspace}}/build
