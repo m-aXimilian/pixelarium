@@ -19,7 +19,7 @@ jobs:
     - name: setup
       run: |
         sudo apt update
-        sudo apt -y install libopencv-dev libglfw3 libglfw3-dev libxkbcommon-dev libxinerama-dev
+        sudo apt -y install libopencv-dev libglfw3 libglfw3-dev libxkbcommon-dev libxinerama-dev libxcursor-dev
     - name: configure
       run: cmake -B ${{github.workspace}}/build -S .
     - name: build
