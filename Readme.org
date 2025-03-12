@@ -1,0 +1,9 @@
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: Pixelarium
+#+subtitle: A Image Vizualizer based on DearImGUI
+#+date: <2025-03-12 Wed>
+#+author: Maximilian Kueffner
+#+exclude_tags: noexport
+
+
