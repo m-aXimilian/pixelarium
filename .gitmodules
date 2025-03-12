@@ -1,0 +1,10 @@
+[submodule "spdlog"]
+	path = modules/spdlog
+	url = https://github.com/gabime/spdlog.git
+[submodule "portable-file-dialogs"]
+	path = modules/portable-file-dialogs
+	url = https://github.com/samhocevar/portable-file-dialogs.git
+[submodule "imgui"]
+	path = modules/imgui
+	url = https://github.com/ocornut/imgui.git
+        branch = docking
