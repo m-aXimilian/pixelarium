@@ -103,7 +103,7 @@ int ui::AppGLFW::Run()
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        // ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+        ImGui::DockSpaceOverViewport(ImGui::GetID("MainDockSpace"));
 
         // Rendering
         ImGui::Render();
