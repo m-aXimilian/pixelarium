@@ -76,11 +76,7 @@ ui::AppGLFW::AppGLFW()
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
-#ifdef __linux__
-    dejavu_serif = io.Fonts->AddFontFromFileTTF(
-        "/usr/share/fonts/dejavu-serif-fonts/DejaVuSerif.ttf", 26.0);
-    IM_ASSERT(dejavu_serif != nullptr);
-#endif
+
     ImGuiStyle& style = ImGui::GetStyle();
 
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
