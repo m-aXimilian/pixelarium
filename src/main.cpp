@@ -1,7 +1,11 @@
 #include <iostream>
 
+#include "AppGLFW.hpp"
+
 int main(int argc, char** argv)
 {
     std::cout << "ok\n";
-    return 0;
+    auto app = ui::AppGLFW();
+
+    return app.Run();
 }

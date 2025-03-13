@@ -16,6 +16,11 @@ include(cmake/libCZI.cmake)
 find_package(OpenCV REQUIRED)
 find_package(OpenGL REQUIRED)
 
+message(STATUS "IMGUI:\t" ${imgui_DIR})
+message(STATUS "GLFW:\t" ${glfw_DIR})
+message(STATUS "PFD:\t\t" ${pfd_DIR})
+message(STATUS "SPDLOG:\t" ${spdlog_DIR})
+
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
   set(CMAKE_CXX_FLAGS "/std:c++20 /Zi /EHsc")
 endif()
@@ -33,7 +38,16 @@ add_subdirectory(${pfd_DIR})
 add_subdirectory(${spdlog_DIR})
 add_subdirectory(${glfw_DIR})
 
-set(SRC src/main.cpp)
+set(SRC
+  src/AppGLFW.cpp
+  src/main.cpp
+  ${imgui_DIR}/imgui.cpp
+  ${imgui_DIR}/imgui_demo.cpp
+  ${imgui_DIR}/imgui_draw.cpp
+  ${imgui_DIR}/imgui_tables.cpp
+  ${imgui_DIR}/imgui_widgets.cpp
+  ${imgui_DIR}/backends/imgui_impl_opengl3.cpp
+  ${imgui_DIR}/backends/imgui_impl_glfw.cpp)
 
 add_executable(${PROJECT_NAME} ${SRC})
 
@@ -41,6 +55,7 @@ target_link_libraries(${PROJECT_NAME}
   LINK_PUBLIC ${OpenCV_LIBS})
 
 target_include_directories(${PROJECT_NAME}
+  PUBLIC ${PROJECT_SOURCE_DIR}/src
   PUBLIC ${OpenCV_INCLUDE_DIRS}
   PUBLIC ${imgui_DIR}
   PUBLIC ${imgui_DIR}/backends
