@@ -1,0 +1,5 @@
+#pragma once
+
+
+/*-- Gets filled in during the cmake configuration step --*/
+#cmakedefine PIXELARIUM_TITLE "@PIXELARIUM_TITLE@"

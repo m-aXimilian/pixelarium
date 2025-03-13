@@ -1,6 +1,7 @@
 #include "AppGLFW.hpp"
 
 #include "portable-file-dialogs.h"
+#include "uiresources.h"
 
 ui::AppGLFW::AppGLFW()
 {
@@ -48,7 +49,7 @@ ui::AppGLFW::AppGLFW()
     //                  " screen heigth " + std::to_string(height));
 
     // Create window with graphics context
-    window = glfwCreateWindow(1200, 800, "pixelarium", nullptr, nullptr);
+    window = glfwCreateWindow(1200, 800, PIXELARIUM_TITLE, nullptr, nullptr);
     if (window == nullptr)
     {
         // lg::Logger::Error("no window");

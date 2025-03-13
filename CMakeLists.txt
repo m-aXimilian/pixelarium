@@ -37,6 +37,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin/Release)
 add_subdirectory(${pfd_DIR})
 add_subdirectory(${spdlog_DIR})
 add_subdirectory(${glfw_DIR})
+add_subdirectory(src)
 
 set(SRC
   src/AppGLFW.cpp
@@ -61,7 +62,9 @@ target_include_directories(${PROJECT_NAME}
   PUBLIC ${imgui_DIR}/backends
   PUBLIC ${glfw_INCLUDE_DIR}
   PUBLIC ${pfd_DIR}
-  PUBLIC ${LIBCZI_INCLUDE_DIR})
+  PUBLIC ${LIBCZI_INCLUDE_DIR}
+  PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+
 
 if(WIN32)
   target_link_libraries(${PROJECT_NAME}
