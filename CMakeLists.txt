@@ -11,9 +11,6 @@ set(glfw_DIR ${PROJECT_SOURCE_DIR}/modules/glfw)
 set(pfd_DIR ${PROJECT_SOURCE_DIR}/modules/portable-file-dialogs)
 set(spdlog_DIR ${PROJECT_SOURCE_DIR}/modules/spdlog)
 
-include(cmake/libCZI.cmake)
-
-find_package(OpenCV REQUIRED)
 find_package(OpenGL REQUIRED)
 
 message(STATUS "IMGUI:\t" ${imgui_DIR})
@@ -38,6 +35,7 @@ add_subdirectory(${pfd_DIR})
 add_subdirectory(${spdlog_DIR})
 add_subdirectory(${glfw_DIR})
 add_subdirectory(src)
+add_subdirectory(lib)
 
 set(SRC
   src/AppGLFW.cpp
@@ -52,12 +50,15 @@ set(SRC
 
 add_executable(${PROJECT_NAME} ${SRC})
 
+message(STATUS "Linking " pixelariumimagelib)
 target_link_libraries(${PROJECT_NAME}
-  LINK_PUBLIC ${OpenCV_LIBS})
+  PRIVATE pixelariumimagelib
+  PRIVATE pixelariumrenderlib)
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC ${PROJECT_SOURCE_DIR}/src
-  PUBLIC ${OpenCV_INCLUDE_DIRS}
+  PUBLIC ${PROJECT_SOURCE_DIR}/lib
+  PUBLIC ${PROJECT_SOURCE_DIR}/lib/imaging
   PUBLIC ${imgui_DIR}
   PUBLIC ${imgui_DIR}/backends
   PUBLIC ${glfw_INCLUDE_DIR}

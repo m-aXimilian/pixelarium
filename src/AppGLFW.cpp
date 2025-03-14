@@ -1,9 +1,15 @@
 #include "AppGLFW.hpp"
 
+#include "imgui.h"
+
+#include "imaging/Image.hpp"
 #include "portable-file-dialogs.h"
+#include "rendering/CvMatRender.hpp"
 #include "uiresources.h"
 
-ui::AppGLFW::AppGLFW()
+using namespace pixelarium::imaging;
+
+pixelarium::ui::AppGLFW::AppGLFW()
 {
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
@@ -91,7 +97,7 @@ ui::AppGLFW::AppGLFW()
     ImGui_ImplOpenGL3_Init(glsl_version);
 }
 
-int ui::AppGLFW::Run()
+int pixelarium::ui::AppGLFW::Run()
 {
     ImGuiIO& io = ImGui::GetIO();
     (void)io;
@@ -103,7 +109,17 @@ int ui::AppGLFW::Run()
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        ImGui::DockSpaceOverViewport(ImGui::GetID("MainDockSpace"));
+        ImGui::DockSpaceOverViewport(ImGui::GetID("Backspace"));
+
+        this->MenuBar();
+
+        if (this->_imagep)
+        {
+            auto render = render::CvMatRender(this->_img);
+            ImGui::Begin("An image", &this->_imagep, NULL);
+            ImGui::Image(render.Render(), ImVec2(this->_img.GetImage().cols, this->_img.GetImage().rows));
+            ImGui::End();
+        }
 
         // Rendering
         ImGui::Render();
@@ -132,4 +148,44 @@ int ui::AppGLFW::Run()
     glfwTerminate();
 
     return 0;
+}
+
+void pixelarium::ui::AppGLFW::MenuBar()
+{
+    if (ImGui::BeginMainMenuBar())
+    {
+        // main menu
+        if (ImGui::BeginMenu(MAINMENUNAME))
+        {
+            ImGui::EndMenu();
+        }
+
+        // file menu
+        if (ImGui::BeginMenu(FILEMENUNAME))
+        {
+            if (ImGui::MenuItem("Load File"))
+            {
+                this->LoadImageProt();
+            }
+
+            ImGui::EndMenu();
+        }
+
+        ImGui::EndMainMenuBar();
+    }
+}
+
+void pixelarium::ui::AppGLFW::LoadImageProt()
+{
+    auto res{pfd::open_file("Load Inputs", pfd::path::home(),
+                            {"All Files", "*"}, pfd::opt::multiselect)
+                 .result()};
+    for (auto& p : res)
+    {
+        // lg::Logger::Debug("Adding image from " + std::string(p),
+        // __FUNCTION__);
+
+        this->_img = Image(p);
+        this->_imagep = true;
+    }
 }
