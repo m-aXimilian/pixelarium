@@ -1,15 +1,36 @@
 #include "AppGLFW.hpp"
-#include <cstdint>
+
 #include <memory>
 
-#include "imgui.h"
-
 #include "imaging/Image.hpp"
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 #include "portable-file-dialogs.h"
 #include "rendering/CvMatRender.hpp"
 #include "uiresources.h"
 
 using namespace pixelarium::imaging;
+
+/*static*/ bool pixelarium::ui::dim_changed_p(const ImVec2& ref_rect, const ImVec2& new_rect)
+{
+    if (std::abs(ref_rect.y - new_rect.y) > 5 || std::abs(ref_rect.x - new_rect.x))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+/*static*/ ImVec2 pixelarium::ui::ascpet_const_dimensions(const pixelarium::imaging::Image& img, const ImVec2& curr_dim)
+{
+    const auto w_fact = (static_cast<float>(curr_dim.x) / img.GetImage().cols);
+    const auto h_fact = (static_cast<float>(curr_dim.y) / img.GetImage().rows);
+
+    const auto fact = w_fact < h_fact ? w_fact : h_fact;
+
+    return ImVec2(img.GetImage().cols * fact, img.GetImage().rows * fact);
+}
 
 pixelarium::ui::AppGLFW::AppGLFW()
 {
@@ -32,7 +53,7 @@ pixelarium::ui::AppGLFW::AppGLFW()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);  // Required on Mac
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // Required on Mac
 #else
     // GL 3.0 + GLSL 130
 #ifdef __linux__
@@ -72,14 +93,11 @@ pixelarium::ui::AppGLFW::AppGLFW()
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
     (void)io;
-    io.ConfigFlags |=
-        ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
-    io.ConfigFlags |=
-        ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;  // Enable Docking
-    io.ConfigFlags |=
-        ImGuiConfigFlags_ViewportsEnable;  // Enable Multi-Viewport / Platform
-                                           // Windows
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;   // Enable Gamepad Controls
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;      // Enable Docking
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;    // Enable Multi-Viewport / Platform
+                                                           // Windows
     // io.ConfigViewportsNoAutoMerge = true;
     // io.ConfigViewportsNoTaskBarIcon = true;
 
@@ -118,8 +136,25 @@ int pixelarium::ui::AppGLFW::Run()
         if (this->_imagep)
         {
             // auto render = render::CvMatRender(this->_img);
-            ImGui::Begin("An image", &this->_imagep, NULL);
-            ImGui::Image(*this->_render.Render(), ImVec2(this->_img->GetImage().cols, this->_img->GetImage().rows));
+            ImGui::Begin("An image", &this->_imagep, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar);
+            this->_curr_dim = ImGui::GetContentRegionAvail();
+            auto new_dim = ImGui::GetContentRegionAvail();
+            auto texture = dim_changed_p(this->_curr_dim, new_dim)
+                               ? this->_render.Render(static_cast<size_t>(this->_curr_dim.x),
+                                                      static_cast<size_t>(this->_curr_dim.y))
+                               : this->_render.Render();
+
+            this->_curr_dim = new_dim;
+
+            // random aspect ratio
+            // ImGui::Image(reinterpret_cast<Textured>(
+            //                  reinterpret_cast<void*>(*texture)),
+            //              this->_curr_dim);
+            ImVec2 dim(this->_img->GetImage().cols, this->_img->GetImage().rows);
+            // aspect ratio constant render
+            ImGui::Image(reinterpret_cast<ImTextureID>(reinterpret_cast<void*>(*texture)),
+                         ascpet_const_dimensions(*this->_img, new_dim));
+
             ImGui::End();
         }
 
@@ -179,9 +214,7 @@ void pixelarium::ui::AppGLFW::MenuBar()
 
 void pixelarium::ui::AppGLFW::LoadImageProt()
 {
-    auto res{pfd::open_file("Load Inputs", pfd::path::home(),
-                            {"All Files", "*"}, pfd::opt::multiselect)
-                 .result()};
+    auto res{pfd::open_file("Load Inputs", pfd::path::home(), {"All Files", "*"}, pfd::opt::multiselect).result()};
     for (auto& p : res)
     {
         // lg::Logger::Debug("Adding image from " + std::string(p),

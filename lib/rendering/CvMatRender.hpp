@@ -25,6 +25,8 @@ class CvMatRender
     CvMatRender() = default;
     explicit CvMatRender(const std::shared_ptr<pixelarium::imaging::Image>& img);
     GLuint* Render();
+    GLuint* Render(float factor);
+    GLuint* Render(size_t width, size_t height);
 
    private:
     cv::Mat _img;

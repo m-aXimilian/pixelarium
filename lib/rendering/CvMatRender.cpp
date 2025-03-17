@@ -1,6 +1,12 @@
 #include "CvMatRender.hpp"
+#include <gl/GL.h>
+
 #include <cstdint>
 #include <memory>
+#include <opencv2/core/mat.hpp>
+#include <tuple>
+#include <utility>
+#include "imaging/Image.hpp"
 
 using namespace pixelarium::imaging;
 
@@ -12,9 +18,15 @@ pixelarium::render::CvMatRender::CvMatRender(const std::shared_ptr<Image>& img)
     // cv::cvtColor(this->_img, this->_img, cv::COLOR_BGR2RGBA);
 }
 
-/*static*/ void pixelarium::render::matToTexture(const cv::Mat& image, GLuint* texture)
+/*static*/ void pixelarium::render::matToTexture(const cv::Mat& image,
+                                                 GLuint* texture)
 {
-    glGenTextures(1, texture);
+    // only generate the texture when it's not already present
+    if (*texture == 0)
+    {
+        glGenTextures(1, texture);
+    }
+
     glBindTexture(GL_TEXTURE_2D, *texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -47,7 +59,31 @@ GLuint* pixelarium::render::CvMatRender::Render()
 {
     // storing a copy of the to-be-rendered image with a "well-behaved"
     cv::cvtColor(this->_img, this->_img, cv::COLOR_BGR2RGBA);
-    if (this->_texture == 0)
-        matToTexture(this->_img, &this->_texture);
+
+    matToTexture(this->_img, &this->_texture);
     return &this->_texture;
 }
+
+GLuint* pixelarium::render::CvMatRender::Render(float factor)
+{
+    cv::resize(this->_base->GetImage(), this->_img, cv::Size(0,0), factor, factor, cv::INTER_LINEAR_EXACT);
+
+    return this->Render();
+}
+
+GLuint* pixelarium::render::CvMatRender::Render(size_t width, size_t height)
+{
+    // this is nasty as it knows about what Render is doing
+    const auto sz{this->_base->GetImage().size()};
+
+    const auto get_factor = [](auto opt1, auto opt2) -> float
+    {
+        return opt1 < opt2 ? opt1 : opt2;
+    };
+
+    auto factor = get_factor(width / static_cast<float>(sz.width), height / static_cast<float>(sz.height));
+    // cv::resize(this->_base->GetImage(), this->_img, cv::Size(0,0), factor, factor, cv::INTER_LINEAR_EXACT);
+
+    return this->Render(factor);
+}
+
