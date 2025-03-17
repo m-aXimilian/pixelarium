@@ -1,4 +1,6 @@
 #include "AppGLFW.hpp"
+#include <cstdint>
+#include <memory>
 
 #include "imgui.h"
 
@@ -115,9 +117,9 @@ int pixelarium::ui::AppGLFW::Run()
 
         if (this->_imagep)
         {
-            auto render = render::CvMatRender(this->_img);
+            // auto render = render::CvMatRender(this->_img);
             ImGui::Begin("An image", &this->_imagep, NULL);
-            ImGui::Image(render.Render(), ImVec2(this->_img.GetImage().cols, this->_img.GetImage().rows));
+            ImGui::Image(*this->_render.Render(), ImVec2(this->_img->GetImage().cols, this->_img->GetImage().rows));
             ImGui::End();
         }
 
@@ -185,7 +187,9 @@ void pixelarium::ui::AppGLFW::LoadImageProt()
         // lg::Logger::Debug("Adding image from " + std::string(p),
         // __FUNCTION__);
 
-        this->_img = Image(p);
+        // this->_img = Image(p);
+        this->_img = std::make_shared<Image>(p);
+        this->_render = pixelarium::render::CvMatRender(this->_img);
         this->_imagep = true;
     }
 }

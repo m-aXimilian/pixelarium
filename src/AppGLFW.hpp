@@ -8,6 +8,7 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "rendering/CvMatRender.hpp"
 
 namespace pixelarium::ui
 {
@@ -33,7 +34,8 @@ class AppGLFW
     LogLevelSelection log_level_ = static_cast<LogLevelSelection>(0);
     GLFWwindow* window = nullptr;
     ImGuiWindowFlags window_flags = 0;
-    pixelarium::imaging::Image _img;
+    std::shared_ptr<pixelarium::imaging::Image> _img;
+    pixelarium::render::CvMatRender _render;
     bool _imagep { false };
 };
 

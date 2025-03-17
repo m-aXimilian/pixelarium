@@ -1,14 +1,15 @@
 #include "CvMatRender.hpp"
 #include <cstdint>
+#include <memory>
 
 using namespace pixelarium::imaging;
 
-pixelarium::render::CvMatRender::CvMatRender(const Image& img)
+pixelarium::render::CvMatRender::CvMatRender(const std::shared_ptr<Image>& img)
+    : _base(img), _texture(0)
 {
-    this->_img = img.GetImage();
-    this->_texture = 0;
-
-    cv::cvtColor(this->_img, this->_img, cv::COLOR_BGR2RGBA);
+    this->_img = this->_base->GetImage().clone();
+    // // storing a copy of the to-be-rendered image with a "well-behaved"
+    // cv::cvtColor(this->_img, this->_img, cv::COLOR_BGR2RGBA);
 }
 
 /*static*/ void pixelarium::render::matToTexture(const cv::Mat& image, GLuint* texture)
@@ -42,8 +43,11 @@ pixelarium::render::CvMatRender::CvMatRender(const Image& img)
     }
 }
 
-GLuint pixelarium::render::CvMatRender::Render()
+GLuint* pixelarium::render::CvMatRender::Render()
 {
-    matToTexture(this->_img, &this->_texture);
-    return this->_texture;
+    // storing a copy of the to-be-rendered image with a "well-behaved"
+    cv::cvtColor(this->_img, this->_img, cv::COLOR_BGR2RGBA);
+    if (this->_texture == 0)
+        matToTexture(this->_img, &this->_texture);
+    return &this->_texture;
 }

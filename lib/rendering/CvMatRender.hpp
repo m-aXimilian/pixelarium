@@ -1,4 +1,8 @@
 #pragma once
+// windows. must come before GL/GL.h here.
+// clang format would change this, effectively rendering the build broken.
+// clang-format off
+#include <memory>
 #ifdef _WIN32
 #include <windows.h>
 #include <GL/GL.h>
@@ -10,20 +14,21 @@
 #include <GLFW/glfw3.h>  // Will drag system OpenGL headers
 #endif
 #include "imaging/Image.hpp"
+// clang-format on
 
 namespace pixelarium::render
 {
-    static void matToTexture(const cv::Mat& image,
-                         GLuint* texture);
+static void matToTexture(const cv::Mat& image, GLuint* texture);
 class CvMatRender
 {
    public:
-    explicit CvMatRender(const pixelarium::imaging::Image& img);
-    // void* Render();
-    GLuint Render();
+    CvMatRender() = default;
+    explicit CvMatRender(const std::shared_ptr<pixelarium::imaging::Image>& img);
+    GLuint* Render();
 
    private:
     cv::Mat _img;
+    std::shared_ptr<pixelarium::imaging::Image> _base;
     GLuint _texture;
 };
 
