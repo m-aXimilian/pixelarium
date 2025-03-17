@@ -10,7 +10,7 @@
 using namespace pixelarium::utils::log;
 
 SpdLogger::SpdLogger(const std::string& file_sink, const std::string& name)
-    : _logger(spdlog::basic_logger_mt(file_sink, name)), _file(file_sink), _name(name)
+    : _logger(spdlog::basic_logger_mt(name, file_sink)), _file(file_sink), _name(name)
 {
     spdlog::set_default_logger(this->_logger);
     spdlog::flush_on(spdlog::level::info);
