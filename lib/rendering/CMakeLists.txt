@@ -1,5 +1,3 @@
-set(RENDERSRC)
-
 set(RENDERLIBNAME pixelariumrenderlib)
 
 set(RENDERLIBSRC

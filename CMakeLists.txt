@@ -53,12 +53,14 @@ add_executable(${PROJECT_NAME} ${SRC})
 message(STATUS "Linking " pixelariumimagelib)
 target_link_libraries(${PROJECT_NAME}
   PRIVATE pixelariumimagelib
-  PRIVATE pixelariumrenderlib)
+  PRIVATE pixelariumrenderlib
+  PRIVATE pixelariumutilslib)
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC ${PROJECT_SOURCE_DIR}/src
   PUBLIC ${PROJECT_SOURCE_DIR}/lib
   PUBLIC ${PROJECT_SOURCE_DIR}/lib/imaging
+  PUBLIC ${spdlog_DIR}/include
   PUBLIC ${imgui_DIR}
   PUBLIC ${imgui_DIR}/backends
   PUBLIC ${glfw_INCLUDE_DIR}
@@ -71,8 +73,7 @@ if(WIN32)
   target_link_libraries(${PROJECT_NAME}
     PRIVATE opengl32.lib
     PRIVATE glfw
-    PRIVATE OpenGL::GL
-    PRIVATE spdlog::spdlog_header_only)
+    PRIVATE OpenGL::GL)
 endif()
 if(LINUX) 
   target_link_libraries(${PROJECT_NAME}

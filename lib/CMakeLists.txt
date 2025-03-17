@@ -1,2 +1,3 @@
+add_subdirectory(utilities)
 add_subdirectory(imaging)
 add_subdirectory(rendering)

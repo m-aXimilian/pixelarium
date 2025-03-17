@@ -3,10 +3,12 @@
 #include <GLFW/glfw3.h>
 
 #include <cstdio>
+#include <memory>
 
 #include "Image.hpp"
 #include "imgui.h"
 #include "rendering/CvMatRender.hpp"
+#include "utilities/ILog.hpp"
 
 namespace pixelarium::ui
 {
@@ -26,6 +28,7 @@ class AppGLFW
 {
    public:
     AppGLFW();
+    AppGLFW(std::unique_ptr<utils::log::ILog>& log);
     int Run();
 
    private:
@@ -34,6 +37,7 @@ class AppGLFW
 
    private:
     // LogLevelSelection log_level_ = static_cast<LogLevelSelection>(0);
+    utils::log::ILog* _logger;
     GLFWwindow* window = nullptr;
     ImGuiWindowFlags window_flags = 0;
     std::shared_ptr<pixelarium::imaging::Image> _img;
