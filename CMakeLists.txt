@@ -48,6 +48,13 @@ set(SRC
   ${imgui_DIR}/backends/imgui_impl_opengl3.cpp
   ${imgui_DIR}/backends/imgui_impl_glfw.cpp)
 
+#====================
+# needed for the spdlogger implemntation
+# this is not nice, but it won't work when, e.g. doing it from lower level cmake files
+add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
+add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+#====================
+
 add_executable(${PROJECT_NAME} ${SRC})
 
 message(STATUS "Linking " pixelariumimagelib)

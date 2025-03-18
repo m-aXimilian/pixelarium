@@ -27,11 +27,12 @@ enum LogLevelSelection
 class AppGLFW
 {
    public:
-    AppGLFW();
-    AppGLFW(std::unique_ptr<utils::log::ILog>& log);
+    AppGLFW() { this->InitMainWindow(); }
+    AppGLFW(std::unique_ptr<utils::log::ILog>& log) : _logger(log.get()) { this->InitMainWindow(); }
     int Run();
 
    private:
+    void InitMainWindow();
     void MenuBar();
     void LoadImageProt();
 
