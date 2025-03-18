@@ -1,5 +1,4 @@
 #include "CvMatRender.hpp"
-#include <gl/GL.h>
 
 #include <cstdint>
 #include <memory>
