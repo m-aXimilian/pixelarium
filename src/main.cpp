@@ -4,6 +4,7 @@
 #include "AppGLFW.hpp"
 #include "utilities/ILog.hpp"
 #include "utilities/SpdLogger.hpp"
+#include "uiresources.h"
 
 int main(int argc, char** argv)
 {
@@ -16,7 +17,7 @@ int main(int argc, char** argv)
     auto app = pixelarium::ui::AppGLFW(logger);
     // auto app = pixelarium::ui::AppGLFW();
 
-    logger->Info("Starting Application");
+    logger->Info(std::format("Starting Application {}", PIXELARIUM_TITLE));
     logger->Error("Starting Application");
     return app.Run();
 }

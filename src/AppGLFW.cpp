@@ -221,7 +221,7 @@ void pixelarium::ui::AppGLFW::LoadImageProt()
         // __FUNCTION__);
         if (this->_logger)
         {
-            this->_logger->Warn("Creating image");
+            this->_logger->Warn(std::format("Creating image {}", p));
         }
         // this->_img = Image(p);
         this->_img = std::make_shared<Image>(p);

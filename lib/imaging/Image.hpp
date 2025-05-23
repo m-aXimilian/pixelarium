@@ -1,10 +1,7 @@
 #pragma once
 
-#include <filesystem>
 #include <memory>
 #include <opencv2/core/mat.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/opencv.hpp>
 #include <string>
 
 namespace pixelarium::imaging
@@ -17,16 +14,18 @@ class Image
 
     // get back the defaults
     Image() = default;
-    Image(const Image& other) = default;
+    // we cannot copy an Image since this conflicts with the _img field
+    Image(const Image& other) = delete;
     Image(Image&& other) noexcept = default;
-    Image& operator=(const Image& other) = default;
+    // requires a copy ctor which we don't have
+    Image& operator=(const Image& other) = delete;
     Image& operator=(Image&& other) noexcept = default;
     ~Image() = default;
 
-    const cv::Mat& GetImage() const { return this->_img; }
+    const cv::Mat& GetImage() const { return *this->_img.get(); }
 
    private:
-    cv::Mat _img;
+    std::unique_ptr<cv::Mat> _img;
 };
 
 }  // namespace pixelarium::imaging

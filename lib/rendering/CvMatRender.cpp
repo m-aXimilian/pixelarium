@@ -7,15 +7,17 @@
 #include <tuple>
 #include <utility>
 #include "imaging/Image.hpp"
+#include <opencv2/imgproc.hpp>
 
 using namespace pixelarium::imaging;
 
 pixelarium::render::CvMatRender::CvMatRender(const std::shared_ptr<Image>& img)
     : _base(img), _texture(0)
 {
-    this->_img = this->_base->GetImage().clone();
+    // this->_img = this->_base->GetImage().clone();
     // // storing a copy of the to-be-rendered image with a "well-behaved"
     // cv::cvtColor(this->_img, this->_img, cv::COLOR_BGR2RGBA);
+    this->_img = this->_base->GetImage().clone();
 }
 
 /*static*/ void pixelarium::render::matToTexture(const cv::Mat& image,

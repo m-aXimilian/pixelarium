@@ -1,5 +1,5 @@
 #pragma once
-// windows. must come before GL/GL.h here.
+// windows.h must come before GL/GL.h here.
 // clang format would change this, effectively rendering the build broken.
 // clang-format off
 #include <memory>
