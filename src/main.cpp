@@ -15,7 +15,7 @@ int main(int argc, char** argv)
 #ifdef _WIN32
       logger = make_unique<SpdLogger>(string(getenv("APPDATA")) + "/pixelarium/logfile.log", "default");
 #else
-      logger = make_unique<SpdLogger>(std::string(getenv("HOME")) + "/.cache/sutura/log.log", "default");
+      logger = make_unique<SpdLogger>(std::string(getenv("HOME")) + "/.cache/pixelarium/log.log", "default");
 #endif
 
     auto app = pixelarium::ui::AppGLFW(logger);
