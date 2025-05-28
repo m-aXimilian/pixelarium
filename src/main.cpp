@@ -11,11 +11,14 @@ int main(int argc, char** argv)
     using namespace pixelarium::utils::log;
     using namespace std;
     cout << "ok\n";
-
-    unique_ptr<ILog> logger = make_unique<SpdLogger>(string(getenv("APPDATA")) + "/pixelarium/logfile.log", "default");
+    unique_ptr<ILog> logger;
+#ifdef _WIN32
+      logger = make_unique<SpdLogger>(string(getenv("APPDATA")) + "/pixelarium/logfile.log", "default");
+#else
+      logger = make_unique<SpdLogger>(std::string(getenv("HOME")) + "/.cache/sutura/log.log", "default");
+#endif
 
     auto app = pixelarium::ui::AppGLFW(logger);
-    // auto app = pixelarium::ui::AppGLFW();
 
     logger->Info(std::format("Starting Application {}", PIXELARIUM_TITLE));
     logger->Error("Starting Application");
