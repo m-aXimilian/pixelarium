@@ -7,12 +7,12 @@
 #include <stdexcept>
 #include <string_view>
 
-pixelarium::imaging::Image::Image(const std::string& uri)
+pixelarium::imaging::PixelariumImage::PixelariumImage(const std::string& uri)
 {
     if (!std::filesystem::exists(uri))
     {
         throw std::runtime_error(std::format("File not {} found", uri));
     }
 
-    this->_img = std::make_unique<cv::Mat>(cv::imread(uri));
+    this->img_ = std::make_unique<cv::Mat>(cv::imread(uri));
 }

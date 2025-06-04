@@ -10,7 +10,7 @@
 
 using namespace pixelarium::imaging;
 
-pixelarium::render::CvMatRender::CvMatRender(const std::shared_ptr<Image>& img)
+pixelarium::render::CvMatRender::CvMatRender(const std::shared_ptr<PixelariumImage>& img)
     : _base(img), _texture(0)
 {
     // this->_img = this->_base->GetImage().clone();

@@ -22,7 +22,7 @@ using namespace pixelarium::imaging;
     return false;
 }
 
-/*static*/ ImVec2 pixelarium::ui::ascpet_const_dimensions(const pixelarium::imaging::Image& img, const ImVec2& curr_dim)
+/*static*/ ImVec2 pixelarium::ui::ascpet_const_dimensions(const pixelarium::imaging::PixelariumImage& img, const ImVec2& curr_dim)
 {
     const auto w_fact = (static_cast<float>(curr_dim.x) / img.GetImage().cols);
     const auto h_fact = (static_cast<float>(curr_dim.y) / img.GetImage().rows);
@@ -224,7 +224,7 @@ void pixelarium::ui::AppGLFW::LoadImageProt()
             this->_logger->Warn(std::format("Creating image {}", p));
         }
         // this->_img = Image(p);
-        this->_img = std::make_shared<Image>(p);
+        this->_img = std::make_shared<PixelariumImage>(p);
         this->_render = pixelarium::render::CvMatRender(this->_img);
         this->_imagep = true;
     }

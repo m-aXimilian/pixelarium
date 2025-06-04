@@ -6,26 +6,36 @@
 
 namespace pixelarium::imaging
 {
-class Image
+class PixelariumImage
 {
    public:
 
-    explicit Image(const std::string& uri);
+    explicit PixelariumImage(const std::string& uri);
 
     // get back the defaults
-    Image() = default;
+    PixelariumImage() = default;
     // we cannot copy an Image since this conflicts with the _img field
-    Image(const Image& other) = delete;
-    Image(Image&& other) noexcept = default;
+    PixelariumImage(const PixelariumImage& other) = delete;
+    PixelariumImage(PixelariumImage&& other) noexcept
+        : img_(std::move(other.img_)) {}
     // requires a copy ctor which we don't have
-    Image& operator=(const Image& other) = delete;
-    Image& operator=(Image&& other) noexcept = default;
-    ~Image() = default;
+    PixelariumImage& operator=(const PixelariumImage& other) = delete;
+    PixelariumImage& operator=(PixelariumImage&& other) noexcept
+    {
+        if (this != &other)
+        {
+            img_ = std::move(other.img_);
+        }
 
-    const cv::Mat& GetImage() const { return *this->_img.get(); }
+        return *this;
+    }
+
+    ~PixelariumImage() = default;
+
+    const cv::Mat& GetImage() const { return *this->img_.get(); }
 
    private:
-    std::unique_ptr<cv::Mat> _img;
+    std::unique_ptr<cv::Mat> img_;
 };
 
 }  // namespace pixelarium::imaging

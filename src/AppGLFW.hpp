@@ -14,7 +14,7 @@ namespace pixelarium::ui
 {
 static bool dim_changed_p(const ImVec2& ref_rect, const ImVec2& new_rect);
 
-static ImVec2 ascpet_const_dimensions(const pixelarium::imaging::Image& img, const ImVec2& curr_dim);
+static ImVec2 ascpet_const_dimensions(const pixelarium::imaging::PixelariumImage& img, const ImVec2& curr_dim);
 
 enum LogLevelSelection
 {
@@ -41,7 +41,7 @@ class AppGLFW
     utils::log::ILog* _logger;
     GLFWwindow* window = nullptr;
     ImGuiWindowFlags window_flags = 0;
-    std::shared_ptr<pixelarium::imaging::Image> _img;
+    std::shared_ptr<pixelarium::imaging::PixelariumImage> _img;
     pixelarium::render::CvMatRender _render;
     bool _imagep{false};
     ImVec2 _curr_dim;

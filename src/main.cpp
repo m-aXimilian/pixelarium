@@ -2,9 +2,10 @@
 #include <memory>
 
 #include "AppGLFW.hpp"
+#include "resources/resource.hpp"
+#include "uiresources.h"
 #include "utilities/ILog.hpp"
 #include "utilities/SpdLogger.hpp"
-#include "uiresources.h"
 
 int main(int argc, char** argv)
 {
@@ -19,6 +20,8 @@ int main(int argc, char** argv)
 #endif
 
     auto app = pixelarium::ui::AppGLFW(logger);
+
+    auto image_pool{std::make_unique<pixelarium::resources::ImageResourcePool>()};
 
     logger->Info(std::format("Starting Application {}", PIXELARIUM_TITLE));
     logger->Error("Starting Application");
