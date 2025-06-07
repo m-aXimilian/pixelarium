@@ -21,11 +21,25 @@ namespace pixelarium::render
 class CvMatRender
 {
    public:
+    // we want the default constructor for the time being
+    // (although it does not make much sense and should
+    // get removed in the future)
+    // as the using AppGLFW constructs it empty as a member
+    // when coming to life.
     CvMatRender() = default;
+    CvMatRender(CvMatRender&) = delete;
+    CvMatRender(const CvMatRender&) = delete;
+    CvMatRender(CvMatRender&&) = delete;
+    CvMatRender& operator=(CvMatRender&) = default;
+    CvMatRender& operator=(CvMatRender&&) = default;
+    ~CvMatRender();
     explicit CvMatRender(const std::shared_ptr<pixelarium::imaging::PixelariumImage>& img);
+
+   public:
     GLuint Render();
     GLuint Render(float factor);
     GLuint Render(size_t width, size_t height);
+    void ResetRenderImage() { this->img_ = this->base_->GetImage().clone(); }
 
    private:
     cv::Mat img_;

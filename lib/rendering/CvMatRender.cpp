@@ -3,6 +3,7 @@
 #include <memory>
 #include <opencv2/core/mat.hpp>
 #include <opencv2/imgproc.hpp>
+#include <stdexcept>
 
 #include "imaging/Image.hpp"
 
@@ -13,8 +14,17 @@ pixelarium::render::CvMatRender::CvMatRender(const std::shared_ptr<PixelariumIma
     // storing a copy of the to-be-rendered image
     // because it will be resized and filtered eventually which we absolutely
     // must not do on the original image
-    this->img_ = this->base_->GetImage().clone();
+    this->ResetRenderImage();
     cv::cvtColor(this->img_, this->img_, cv::COLOR_BGR2RGBA);
+}
+
+pixelarium::render::CvMatRender::~CvMatRender()
+{
+    if (texture_)
+    {
+        glDeleteTextures(1, &texture_);
+        texture_ = 0;
+    }
 }
 
 GLuint pixelarium::render::CvMatRender::uploadTexture()
