@@ -1,90 +1,84 @@
 #include "CvMatRender.hpp"
 
-#include <cstdint>
 #include <memory>
 #include <opencv2/core/mat.hpp>
-#include <tuple>
-#include <utility>
-#include "imaging/Image.hpp"
 #include <opencv2/imgproc.hpp>
+
+#include "imaging/Image.hpp"
 
 using namespace pixelarium::imaging;
 
-pixelarium::render::CvMatRender::CvMatRender(const std::shared_ptr<PixelariumImage>& img)
-    : _base(img), _texture(0)
+pixelarium::render::CvMatRender::CvMatRender(const std::shared_ptr<PixelariumImage>& img) : base_(img), texture_(0)
 {
-    // this->_img = this->_base->GetImage().clone();
-    // // storing a copy of the to-be-rendered image with a "well-behaved"
-    // cv::cvtColor(this->_img, this->_img, cv::COLOR_BGR2RGBA);
-    this->_img = this->_base->GetImage().clone();
+    // storing a copy of the to-be-rendered image
+    // because it will be resized and filtered eventually which we absolutely
+    // must not do on the original image
+    this->img_ = this->base_->GetImage().clone();
+    cv::cvtColor(this->img_, this->img_, cv::COLOR_BGR2RGBA);
 }
 
-/*static*/ void pixelarium::render::matToTexture(const cv::Mat& image,
-                                                 GLuint* texture)
+GLuint pixelarium::render::CvMatRender::uploadTexture()
 {
-    // only generate the texture when it's not already present
-    if (*texture == 0)
+    if (img_.empty())
     {
-        glGenTextures(1, texture);
+        throw std::runtime_error("Image data is empty.");
     }
 
-    glBindTexture(GL_TEXTURE_2D, *texture);
+    if (!this->texture_)
+    {
+        glGenTextures(1, &this->texture_);
+        if (this->texture_ == 0)
+        {
+            throw std::runtime_error("Failed to generate OpenGL texture.");
+        }
+    }
+
+    glBindTexture(GL_TEXTURE_2D, this->texture_);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    // auto image = img.GetImage();
-    switch (image.type())
+    const int width = img_.cols;
+    const int height = img_.rows;
+
+    GLenum format = (img_.type() == CV_32FC3 || img_.type() == CV_32FC1) ? GL_RGB : GL_RGBA;
+    GLenum type = (img_.type() == CV_16U || img_.type() == CV_16UC3) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_BYTE;
+    GLenum internalFormat = GL_RGBA;
+    if (img_.type() == CV_32FC3 || img_.type() == CV_32FC1)
     {
-        case CV_16U:
-        case CV_16UC3:
-        case 26:
-            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.cols, image.rows, 0,
-                         GL_RGBA, GL_UNSIGNED_SHORT, image.data);
-            break;
-        case 5:
-        case 29:
-            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.cols, image.rows, 0,
-                         GL_RGBA, GL_FLOAT, image.data);
-            break;
-        default:
-            glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.cols, image.rows, 0,
-                         GL_RGBA, GL_UNSIGNED_BYTE, image.data);
-            break;
+        internalFormat = GL_RGB;
     }
-}
 
-GLuint* pixelarium::render::CvMatRender::Render()
-{
-    // storing a copy of the to-be-rendered image with a "well-behaved"
-    cv::cvtColor(this->_img, this->_img, cv::COLOR_BGR2RGBA);
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, img_.data);
 
-    matToTexture(this->_img, &this->_texture);
-    return &this->_texture;
-}
-
-GLuint* pixelarium::render::CvMatRender::Render(float factor)
-{
-    cv::resize(this->_base->GetImage(), this->_img, cv::Size(0,0), factor, factor, cv::INTER_LINEAR_EXACT);
-
-    return this->Render();
-}
-
-GLuint* pixelarium::render::CvMatRender::Render(size_t width, size_t height)
-{
-    // this is nasty as it knows about what Render is doing
-    const auto sz{this->_base->GetImage().size()};
-
-    const auto get_factor = [](auto opt1, auto opt2) -> float
+    GLenum error = glGetError();
+    if (error != GL_NO_ERROR)
     {
-        return opt1 < opt2 ? opt1 : opt2;
-    };
+        throw std::runtime_error("OpenGL error during texture upload: " + std::to_string(error));
+    }
+
+    return this->texture_;
+}
+
+GLuint pixelarium::render::CvMatRender::Render() { return this->uploadTexture(); }
+
+GLuint pixelarium::render::CvMatRender::Render(float factor)
+{
+    cv::resize(this->base_->GetImage(), this->img_, cv::Size(0, 0), factor, factor, cv::INTER_LINEAR_EXACT);
+
+    return this->uploadTexture();
+}
+
+GLuint pixelarium::render::CvMatRender::Render(size_t width, size_t height)
+{
+    const auto sz{this->base_->GetImage().size()};
+
+    const auto get_factor = [](auto opt1, auto opt2) -> float { return opt1 < opt2 ? opt1 : opt2; };
 
     auto factor = get_factor(width / static_cast<float>(sz.width), height / static_cast<float>(sz.height));
-    // cv::resize(this->_base->GetImage(), this->_img, cv::Size(0,0), factor, factor, cv::INTER_LINEAR_EXACT);
+    // cv::resize(this->base_->GetImage(), this->img_, cv::Size(0, 0), factor, factor, cv::INTER_LINEAR_EXACT);
 
     return this->Render(factor);
 }
-

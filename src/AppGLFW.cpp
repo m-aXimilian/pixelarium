@@ -22,7 +22,7 @@ using namespace pixelarium::imaging;
     return false;
 }
 
-/*static*/ ImVec2 pixelarium::ui::ascpet_const_dimensions(const pixelarium::imaging::PixelariumImage& img, const ImVec2& curr_dim)
+/*static*/ ImVec2 pixelarium::ui::aspect_const_dimensions(const pixelarium::imaging::PixelariumImage& img, const ImVec2& curr_dim)
 {
     const auto w_fact = (static_cast<float>(curr_dim.x) / img.GetImage().cols);
     const auto h_fact = (static_cast<float>(curr_dim.y) / img.GetImage().rows);
@@ -133,27 +133,28 @@ int pixelarium::ui::AppGLFW::Run()
 
         this->MenuBar();
 
-        if (this->_imagep)
+        if (this->imagep_)
         {
             // auto render = render::CvMatRender(this->_img);
-            ImGui::Begin("An image", &this->_imagep, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar);
-            this->_curr_dim = ImGui::GetContentRegionAvail();
+            ImGui::Begin("An image", &this->imagep_, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar);
+            this->curr_dim_ = ImGui::GetContentRegionAvail();
             auto new_dim = ImGui::GetContentRegionAvail();
-            auto texture = dim_changed_p(this->_curr_dim, new_dim)
-                               ? this->_render.Render(static_cast<size_t>(this->_curr_dim.x),
-                                                      static_cast<size_t>(this->_curr_dim.y))
-                               : this->_render.Render();
+            auto texture = dim_changed_p(this->curr_dim_, new_dim)
+                               ? this->render_.Render(static_cast<size_t>(this->curr_dim_.x),
+                                                      static_cast<size_t>(this->curr_dim_.y))
+                               : this->render_.Render();
 
-            this->_curr_dim = new_dim;
+            this->curr_dim_ = new_dim;
 
             // random aspect ratio
             // ImGui::Image(reinterpret_cast<Textured>(
             //                  reinterpret_cast<void*>(*texture)),
             //              this->_curr_dim);
-            ImVec2 dim(this->_img->GetImage().cols, this->_img->GetImage().rows);
+            ImVec2 dim(this->img_->GetImage().cols, this->img_->GetImage().rows);
             // aspect ratio constant render
-            ImGui::Image(reinterpret_cast<ImTextureID>(reinterpret_cast<void*>(*texture)),
-                         ascpet_const_dimensions(*this->_img, new_dim));
+            ImGui::Image(reinterpret_cast<ImTextureID>(reinterpret_cast<void*>(texture)),
+                         aspect_const_dimensions(*this->img_, new_dim));
+            // ImGui::Image(reinterpret_cast<ImTextureID>(reinterpret_cast<void*>(texture)), ImVec2(img_->GetImage().cols, img_->GetImage().rows));
 
             ImGui::End();
         }
@@ -219,13 +220,13 @@ void pixelarium::ui::AppGLFW::LoadImageProt()
     {
         // lg::Logger::Debug("Adding image from " + std::string(p),
         // __FUNCTION__);
-        if (this->_logger)
+        if (this->logger_)
         {
-            this->_logger->Warn(std::format("Creating image {}", p));
+            this->logger_->Warn(std::format("Creating image {}", p));
         }
         // this->_img = Image(p);
-        this->_img = std::make_shared<PixelariumImage>(p);
-        this->_render = pixelarium::render::CvMatRender(this->_img);
-        this->_imagep = true;
+        this->img_ = std::make_shared<PixelariumImage>(p);
+        this->render_ = pixelarium::render::CvMatRender(this->img_);
+        this->imagep_ = true;
     }
 }

@@ -18,20 +18,21 @@
 
 namespace pixelarium::render
 {
-static void matToTexture(const cv::Mat& image, GLuint* texture);
 class CvMatRender
 {
    public:
     CvMatRender() = default;
     explicit CvMatRender(const std::shared_ptr<pixelarium::imaging::PixelariumImage>& img);
-    GLuint* Render();
-    GLuint* Render(float factor);
-    GLuint* Render(size_t width, size_t height);
+    GLuint Render();
+    GLuint Render(float factor);
+    GLuint Render(size_t width, size_t height);
 
    private:
-    cv::Mat _img;
-    std::shared_ptr<pixelarium::imaging::PixelariumImage> _base;
-    GLuint _texture;
+    cv::Mat img_;
+    std::shared_ptr<pixelarium::imaging::PixelariumImage> base_;
+    GLuint texture_;
+
+    GLuint uploadTexture();
 };
 
 }  // namespace pixelarium::render
