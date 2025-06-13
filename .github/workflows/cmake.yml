@@ -24,3 +24,7 @@ jobs:
       run: cmake -B ${{github.workspace}}/build -S .
     - name: build
       run: cmake --build ${{github.workspace}}/build
+    - name: test
+      run: |
+        cd ${{github.workspace}}/build
+        ctest -C Debug

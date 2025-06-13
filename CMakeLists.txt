@@ -57,11 +57,11 @@ add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 
 add_executable(${PROJECT_NAME} ${SRC})
 
-message(STATUS "Linking " pixelariumimagelib)
 target_link_libraries(${PROJECT_NAME}
   PRIVATE pixelariumimagelib
   PRIVATE pixelariumrenderlib
-  PRIVATE pixelariumutilslib)
+  PRIVATE pixelariumutilslib
+  PRIVATE pixelariumresourcelib)
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC ${PROJECT_SOURCE_DIR}/src
@@ -90,4 +90,14 @@ if(APPLE)
   target_link_libraries(${PROJECT_NAME}
     PUBLIC glfw
     PUBLIC "-framework OpenGL")
+endif()
+
+
+option(PIXELARIUM_BUILD_UNITTESTS "Generate Unittests" ON)
+
+
+if(PIXELARIUM_BUILD_UNITTESTS)
+  include(CTest)
+  enable_testing()
+  add_subdirectory(tests)
 endif()

@@ -2,25 +2,28 @@
 #include <memory>
 
 #include "AppGLFW.hpp"
+#include "resources/resource.hpp"
+#include "uiresources.h"
 #include "utilities/ILog.hpp"
 #include "utilities/SpdLogger.hpp"
-#include "uiresources.h"
 
 int main(int argc, char** argv)
 {
-    using namespace pixelarium::utils::log;
+    using namespace pixelarium;
     using namespace std;
     cout << "ok\n";
-    unique_ptr<ILog> logger;
+    unique_ptr<utils::log::ILog> logger;
 #ifdef _WIN32
-      logger = make_unique<SpdLogger>(string(getenv("APPDATA")) + "/pixelarium/logfile.log", "default");
+    logger = make_unique<utils::log::SpdLogger>(string(getenv("APPDATA")) + "/pixelarium/logfile.log", "default");
 #else
-      logger = make_unique<SpdLogger>(std::string(getenv("HOME")) + "/.cache/pixelarium/log.log", "default");
+    logger = make_unique<utils::log::SpdLogger>(std::string(getenv("HOME")) + "/.cache/pixelarium/log.log", "default");
 #endif
+    logger->Info(std::format("{}: Starting Application {}", __FUNCTION__, PIXELARIUM_TITLE));
 
-    auto app = pixelarium::ui::AppGLFW(logger);
+    logger->ChangeLevel(utils::log::LogLevel::Debug);
+    auto image_pool{std::make_unique<resources::ImageResourcePool>()};
 
-    logger->Info(std::format("Starting Application {}", PIXELARIUM_TITLE));
-    logger->Error("Starting Application");
+    auto app = pixelarium::ui::AppGLFW(logger, image_pool);
+
     return app.Run();
 }

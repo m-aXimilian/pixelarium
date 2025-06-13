@@ -13,25 +13,41 @@
 #endif
 #include <GLFW/glfw3.h>  // Will drag system OpenGL headers
 #endif
-#include "imaging/Image.hpp"
+#include "imaging/PixelariumImage.hpp"
 // clang-format on
 
 namespace pixelarium::render
 {
-static void matToTexture(const cv::Mat& image, GLuint* texture);
 class CvMatRender
 {
    public:
+    // we want the default constructor for the time being
+    // (although it does not make much sense and should
+    // get removed in the future)
+    // as the using AppGLFW constructs it empty as a member
+    // when coming to life.
     CvMatRender() = default;
-    explicit CvMatRender(const std::shared_ptr<pixelarium::imaging::Image>& img);
-    GLuint* Render();
-    GLuint* Render(float factor);
-    GLuint* Render(size_t width, size_t height);
+    CvMatRender(CvMatRender&) = delete;
+    CvMatRender(const CvMatRender&) = delete;
+    CvMatRender(CvMatRender&&) = delete;
+    CvMatRender& operator=(CvMatRender&) = default;
+    CvMatRender& operator=(CvMatRender&&) = default;
+    ~CvMatRender();
+    explicit CvMatRender(const std::shared_ptr<pixelarium::imaging::PixelariumImage>& img);
+
+   public:
+    GLuint Render();
+    GLuint Render(float factor);
+    GLuint Render(size_t width, size_t height);
+    void ResetRenderImage() { this->img_ = this->base_->GetImage().clone(); }
+    void ResetRenderImage(const std::shared_ptr<pixelarium::imaging::PixelariumImage>& img);
 
    private:
-    cv::Mat _img;
-    std::shared_ptr<pixelarium::imaging::Image> _base;
-    GLuint _texture;
+    cv::Mat img_;
+    std::shared_ptr<pixelarium::imaging::PixelariumImage> base_;
+    GLuint texture_;
+
+    GLuint uploadTexture();
 };
 
 }  // namespace pixelarium::render
