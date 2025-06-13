@@ -47,7 +47,7 @@ bool pixelarium::resources::ImageResourcePool::UpdateResource(size_t id, std::un
     auto search{this->resources_.find(id)};
     if (search == this->resources_.end()) return false;
 
-    this->resources_.at(id) = std::move(res);
+    search->second = std::move(res);
 
     return true;
 }
