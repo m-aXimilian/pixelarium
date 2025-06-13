@@ -15,7 +15,7 @@ struct IResource
 };
 
 template <typename R>
-concept ResT = requires(R& r) { static_cast<IResource>(r); };
+concept ResT = requires(R& r) { static_cast<IResource&>(r); };
 
 // template <ResT R>
 template <typename R>
@@ -27,7 +27,7 @@ class IResourcePool
     virtual size_t SetResource(std::unique_ptr<R> res) = 0;
     virtual bool UpdateResource(size_t id, std::unique_ptr<R> res) = 0;
     virtual bool DeleteResource(size_t id) = 0;
-    virtual void EnumerateResources(std::function<void(size_t, const R&)>& func) = 0;
+    virtual void EnumerateResources(const std::function<void(size_t, const R&)>& func) = 0;
 };
 
 // Now with the =GetResource= method, I do not want to transfer ownership to the caller of that method. The ownership
@@ -50,7 +50,7 @@ class ImageResourcePool : public IResourcePool<imaging::PixelariumImage>
     bool UpdateResource(size_t id, std::unique_ptr<imaging::PixelariumImage> res) override;
     bool DeleteResource(size_t id) override;
 
-    void EnumerateResources(std::function<void(size_t, const imaging::PixelariumImage&)>& func) override;
+    void EnumerateResources(const std::function<void(size_t, const imaging::PixelariumImage&)>& func) override;
 
    private:
     std::unordered_map<size_t, std::unique_ptr<imaging::PixelariumImage>> resources_;

@@ -69,7 +69,7 @@ bool pixelarium::resources::ImageResourcePool::DeleteResource(size_t id)
 /// @param func A function to call for each resource.  The function should accept the resource ID and a const reference
 /// to a PixelariumImage.
 void pixelarium::resources::ImageResourcePool::EnumerateResources(
-    std::function<void(size_t, const imaging::PixelariumImage&)>& func)
+    const std::function<void(size_t, const imaging::PixelariumImage&)>& func)
 {
     for (const auto& e : this->resources_)
     {
