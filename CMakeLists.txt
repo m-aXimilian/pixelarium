@@ -91,3 +91,13 @@ if(APPLE)
     PUBLIC glfw
     PUBLIC "-framework OpenGL")
 endif()
+
+
+option(PIXELARIUM_BUILD_UNITTESTS "Generate Unittests" ON)
+
+
+if(PIXELARIUM_BUILD_UNITTESTS)
+  include(CTest)
+  enable_testing()
+  add_subdirectory(tests)
+endif()
