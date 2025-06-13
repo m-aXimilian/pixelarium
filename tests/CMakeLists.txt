@@ -1,4 +1,4 @@
-include(${PROJECT_SOURCE_DIR}/modules/googletest.cmake)
+include(${PROJECT_SOURCE_DIR}/cmake/googletest.cmake)
 
 add_executable(libpixelarium_UnitTests
   lib/resources/test_resource.cpp)
