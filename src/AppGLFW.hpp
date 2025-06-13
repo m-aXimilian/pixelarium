@@ -3,11 +3,13 @@
 #include <GLFW/glfw3.h>
 
 #include <cstdio>
+#include <format>
 #include <memory>
 
-#include "Image.hpp"
+#include "PixelariumImage.hpp"
 #include "imgui.h"
 #include "rendering/CvMatRender.hpp"
+#include "resources/resource.hpp"
 #include "utilities/ILog.hpp"
 
 namespace pixelarium::ui
@@ -28,7 +30,24 @@ class AppGLFW
 {
    public:
     AppGLFW() { this->InitMainWindow(); }
-    AppGLFW(std::unique_ptr<utils::log::ILog>& log) : logger_(log.get()) { this->InitMainWindow(); }
+    AppGLFW(std::unique_ptr<utils::log::ILog>& log) : AppGLFW()
+    {
+        logger_ = log.get();
+        if (logger_)
+        {
+            logger_->Debug(std::format("{}: Initiating a new window", __FUNCTION__).c_str());
+
+            if (pool_)
+            {
+                logger_->Debug(std::format("{}: We have an image resource pool!", __FUNCTION__).c_str());
+            }
+        }
+    }
+    AppGLFW(std::unique_ptr<utils::log::ILog>& log, std::unique_ptr<pixelarium::resources::ImageResourcePool>& pool)
+        : AppGLFW(log)
+    {
+        pool_ = pool.get();
+    };
     int Run();
 
    private:
@@ -39,6 +58,7 @@ class AppGLFW
    private:
     // LogLevelSelection log_level_ = static_cast<LogLevelSelection>(0);
     utils::log::ILog* logger_;
+    resources::ImageResourcePool* pool_;
     GLFWwindow* window = nullptr;
     ImGuiWindowFlags window_flags_ = 0;
     std::shared_ptr<pixelarium::imaging::PixelariumImage> img_;

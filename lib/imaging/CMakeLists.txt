@@ -6,7 +6,7 @@ message(STATUS "Found opencv: " ${OpenCV_INCLUDE_DIRS})
 message(STATUS "OpenCV_LIBs from: " ${OpenCV_LIBS})
 
 set(IMAGELIBSRC
-  Image.cpp)
+  PixelariumImage.cpp)
 
 set(IMAGELIBLIBNAME pixelariumimagelib)
 

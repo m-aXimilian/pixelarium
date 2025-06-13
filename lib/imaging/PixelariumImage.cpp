@@ -1,11 +1,10 @@
-#include "Image.hpp"
+#include "PixelariumImage.hpp"
 
 #include <filesystem>
 #include <format>
 #include <memory>
 #include <opencv2/imgcodecs.hpp>
 #include <stdexcept>
-#include <string_view>
 
 pixelarium::imaging::PixelariumImage::PixelariumImage(const std::string& uri)
 {

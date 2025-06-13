@@ -17,10 +17,11 @@ class SpdLogger : public ILog
     void Debug(const std::string& msg) override;
     void Warn(const std::string& msg) override;
     void Error(const std::string& msg) override;
+    void ChangeLevel(LogLevel lvl) override;
 
    private:
-    std::shared_ptr<spdlog::logger> _logger;
-    std::string _file;
-    std::string _name;
+    std::shared_ptr<spdlog::logger> logger_;
+    std::string file_;
+    std::string name_;
 };
 }  // namespace pixelarium::utils::log

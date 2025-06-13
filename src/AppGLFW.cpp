@@ -1,8 +1,9 @@
 #include "AppGLFW.hpp"
 
+#include <format>
 #include <memory>
 
-#include "imaging/Image.hpp"
+#include "imaging/PixelariumImage.hpp"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -22,7 +23,8 @@ using namespace pixelarium::imaging;
     return false;
 }
 
-/*static*/ ImVec2 pixelarium::ui::aspect_const_dimensions(const pixelarium::imaging::PixelariumImage& img, const ImVec2& curr_dim)
+/*static*/ ImVec2 pixelarium::ui::aspect_const_dimensions(const pixelarium::imaging::PixelariumImage& img,
+                                                          const ImVec2& curr_dim)
 {
     const auto w_fact = (static_cast<float>(curr_dim.x) / img.GetImage().cols);
     const auto h_fact = (static_cast<float>(curr_dim.y) / img.GetImage().rows);
@@ -154,7 +156,12 @@ int pixelarium::ui::AppGLFW::Run()
             // aspect ratio constant render
             ImGui::Image(reinterpret_cast<ImTextureID>(reinterpret_cast<void*>(texture)),
                          aspect_const_dimensions(*this->img_, new_dim));
-            // ImGui::Image(reinterpret_cast<ImTextureID>(reinterpret_cast<void*>(texture)), ImVec2(img_->GetImage().cols, img_->GetImage().rows));
+            // ImGui::Image(reinterpret_cast<ImTextureID>(reinterpret_cast<void*>(texture)),
+            // ImVec2(img_->GetImage().cols, img_->GetImage().rows));
+
+            // We can do everything else from within the image buffer that ImGui offers
+            // ImGui::Separator();
+            // ImGui::Text("This is a text within the image frame");
 
             ImGui::End();
         }
@@ -216,13 +223,11 @@ void pixelarium::ui::AppGLFW::LoadImageProt()
     auto res{pfd::open_file("Load Inputs", pfd::path::home(), {"All Files", "*"}, pfd::opt::multiselect).result()};
     for (auto& p : res)
     {
-        // lg::Logger::Debug("Adding image from " + std::string(p),
-        // __FUNCTION__);
         if (this->logger_)
         {
-            this->logger_->Warn(std::format("Creating image {}", p));
+            this->logger_->Debug(std::format("{}: Creating image {}", __FUNCTION__, p));
         }
-        // this->_img = Image(p);
+
         this->img_ = std::make_shared<PixelariumImage>(p);
         this->render_ = pixelarium::render::CvMatRender(this->img_);
         this->imagep_ = true;

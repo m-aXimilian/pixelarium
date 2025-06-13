@@ -34,7 +34,7 @@ class PixelariumImage
 
     const cv::Mat& GetImage() const { return *this->img_.get(); }
 
-   private:
+   protected:
     std::unique_ptr<cv::Mat> img_;
 };
 

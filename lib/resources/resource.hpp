@@ -4,7 +4,7 @@
 #include <optional>
 #include <unordered_map>
 
-#include "imaging/Image.hpp"
+#include "imaging/PixelariumImage.hpp"
 
 namespace pixelarium::resources
 {
