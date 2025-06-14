@@ -11,20 +11,13 @@
 #include "rendering/CvMatRender.hpp"
 #include "resources/resource.hpp"
 #include "utilities/ILog.hpp"
+#include "views/PixelariumImageView.hpp"
 
 namespace pixelarium::ui
 {
-static bool dim_changed_p(const ImVec2& ref_rect, const ImVec2& new_rect);
+// static bool dim_changed_p(const ImVec2& ref_rect, const ImVec2& new_rect);
 
-static ImVec2 aspect_const_dimensions(const pixelarium::imaging::PixelariumImage& img, const ImVec2& curr_dim);
-
-enum LogLevelSelection
-{
-    Debug = 0,
-    Info = 1,
-    Warning = 2,
-    Error = 3
-};
+// static ImVec2 aspect_const_dimensions(const pixelarium::imaging::PixelariumImage& img, const ImVec2& curr_dim);
 
 class AppGLFW
 {
@@ -53,12 +46,12 @@ class AppGLFW
     void LoadImageProt();
 
    private:
-    // LogLevelSelection log_level_ = static_cast<LogLevelSelection>(0);
     utils::log::ILog& logger_;
     resources::ImageResourcePool* pool_;
     GLFWwindow* window = nullptr;
     ImGuiWindowFlags window_flags_ = 0;
-    std::shared_ptr<pixelarium::imaging::PixelariumImage> img_;
+    // std::shared_ptr<pixelarium::imaging::PixelariumImage> img_;
+    std::shared_ptr<pixelarium::ui::PixelariumImageView> image_view_;
     pixelarium::render::CvMatRender render_;
     bool imagep_{false};
     bool demop_{false};

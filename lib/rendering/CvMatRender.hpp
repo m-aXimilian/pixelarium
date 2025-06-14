@@ -31,7 +31,7 @@ class CvMatRender
     CvMatRender(const CvMatRender&) = delete;
     CvMatRender(CvMatRender&&) = delete;
     CvMatRender& operator=(CvMatRender&) = default;
-    CvMatRender& operator=(CvMatRender&&) = default;
+    CvMatRender& operator=(CvMatRender&& other) = default;
     ~CvMatRender();
     explicit CvMatRender(const std::shared_ptr<pixelarium::imaging::PixelariumImage>& img);
 

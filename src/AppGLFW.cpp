@@ -11,29 +11,9 @@
 #include "rendering/CvMatRender.hpp"
 #include "uiresources.h"
 #include "utilities/ILog.hpp"
+#include "views/PixelariumImageView.hpp"
 
 using namespace pixelarium::imaging;
-
-/*static*/ bool pixelarium::ui::dim_changed_p(const ImVec2& ref_rect, const ImVec2& new_rect)
-{
-    if (std::abs(ref_rect.y - new_rect.y) > 5 || std::abs(ref_rect.x - new_rect.x))
-    {
-        return true;
-    }
-
-    return false;
-}
-
-/*static*/ ImVec2 pixelarium::ui::aspect_const_dimensions(const pixelarium::imaging::PixelariumImage& img,
-                                                          const ImVec2& curr_dim)
-{
-    const auto w_fact = (static_cast<float>(curr_dim.x) / img.GetImage().cols);
-    const auto h_fact = (static_cast<float>(curr_dim.y) / img.GetImage().rows);
-
-    const auto fact = w_fact < h_fact ? w_fact : h_fact;
-
-    return ImVec2(img.GetImage().cols * fact, img.GetImage().rows * fact);
-}
 
 void pixelarium::ui::AppGLFW::InitMainWindow()
 {
@@ -135,37 +115,11 @@ int pixelarium::ui::AppGLFW::Run()
         ImGui::DockSpaceOverViewport(ImGui::GetID("Backspace"));
 
         this->MenuBar();
-        if (demop_)
-            ImGui::ShowDemoWindow(&this->demop_);
-        if (this->imagep_)
+        if (demop_) ImGui::ShowDemoWindow(&this->demop_);
+
+        if (this->image_view_)
         {
-            // auto render = render::CvMatRender(this->_img);
-            ImGui::Begin("An image", &this->imagep_, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar);
-            this->curr_dim_ = ImGui::GetContentRegionAvail();
-            auto new_dim = ImGui::GetContentRegionAvail();
-            auto texture = dim_changed_p(this->curr_dim_, new_dim)
-                               ? this->render_.Render(static_cast<size_t>(this->curr_dim_.x),
-                                                      static_cast<size_t>(this->curr_dim_.y))
-                               : this->render_.Render();
-
-            this->curr_dim_ = new_dim;
-
-            // random aspect ratio
-            // ImGui::Image(reinterpret_cast<Textured>(
-            //                  reinterpret_cast<void*>(*texture)),
-            //              this->_curr_dim);
-            ImVec2 dim(this->img_->GetImage().cols, this->img_->GetImage().rows);
-            // aspect ratio constant render
-            ImGui::Image(reinterpret_cast<ImTextureID>(reinterpret_cast<void*>(texture)),
-                         aspect_const_dimensions(*this->img_, new_dim));
-            // ImGui::Image(reinterpret_cast<ImTextureID>(reinterpret_cast<void*>(texture)),
-            // ImVec2(img_->GetImage().cols, img_->GetImage().rows));
-
-            // We can do everything else from within the image buffer that ImGui offers
-            // ImGui::Separator();
-            // ImGui::Text("This is a text within the image frame");
-
-            ImGui::End();
+            this->image_view_->ShowImage();
         }
 
         // Rendering
@@ -212,8 +166,7 @@ void pixelarium::ui::AppGLFW::MenuBar()
                         log_level_ = n;
                         this->logger_.ChangeLevel(static_cast<utils::log::LogLevel>(1 << log_level_));
                     }
-                    if (is_selected)
-                        ImGui::SetItemDefaultFocus();
+                    if (is_selected) ImGui::SetItemDefaultFocus();
                 }
                 ImGui::EndCombo();
             }
@@ -245,8 +198,8 @@ void pixelarium::ui::AppGLFW::LoadImageProt()
     {
         this->logger_.Debug(std::format("{}: Creating image {}", __FUNCTION__, p));
 
-        this->img_ = std::make_shared<PixelariumImage>(p);
-        this->render_ = pixelarium::render::CvMatRender(this->img_);
-        this->imagep_ = true;
+        auto img = std::make_shared<PixelariumImage>(p);
+        this->image_view_ = std::make_shared<PixelariumImageView>(img);
+        this->image_view_->ToggleView(true);
     }
 }
