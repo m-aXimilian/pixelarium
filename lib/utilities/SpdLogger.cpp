@@ -71,6 +71,5 @@ void SpdLogger::ChangeLevel(LogLevel lvl)
 
     // you will only get this message for log levels <= info! I.e., not for error or warning.
     this->logger_->info(
-        std::format("{}: Changed log level to  {}({})", __FUNCTION__, LogLevelToString(lvl), static_cast<int>(lvl))
-            .c_str());
+        std::format("{}: Changed log level to  {}({})", __FUNCTION__, LogLevelToString(lvl), static_cast<int>(lvl)));
 }
