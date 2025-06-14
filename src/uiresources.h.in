@@ -8,7 +8,5 @@
 #define LOGLEVELSELECT "Log Level"
 #define SHOWIMGUIDEMOS "ImGui Demos"
 
-namespace
-{
-const char* LOGLEVELS[] = {"Trace", "Debug", "Info", "Warning", "Error"};
-}
+inline constexpr const char* LOGLEVELS[] = {"Trace", "Debug", "Info", "Warning", "Error"};
+
