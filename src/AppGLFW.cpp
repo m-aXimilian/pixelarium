@@ -202,12 +202,12 @@ void pixelarium::ui::AppGLFW::MenuBar()
         // main menu
         if (ImGui::BeginMenu(MAINMENUNAME))
         {
-            if (ImGui::BeginCombo(LOGLEVELSELECT, LOGLEVELS[log_level_]))
+            if (ImGui::BeginCombo(LOGLEVELSELECT, LOGLEVELS[log_level_].data()))
             {
-                for (int n = 0; n < IM_ARRAYSIZE(LOGLEVELS); n++)
+                for (int n = 0; n < static_cast<int>(LOGLEVELS.size()); n++)
                 {
                     bool is_selected = (LOGLEVELS[log_level_] == LOGLEVELS[n]);
-                    if (ImGui::Selectable(LOGLEVELS[n], is_selected))
+                    if (ImGui::Selectable(LOGLEVELS[n].data(), is_selected))
                     {
                         log_level_ = n;
                         this->logger_.ChangeLevel(static_cast<utils::log::LogLevel>(1 << log_level_));
