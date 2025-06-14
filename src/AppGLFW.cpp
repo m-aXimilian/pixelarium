@@ -10,6 +10,7 @@
 #include "portable-file-dialogs.h"
 #include "rendering/CvMatRender.hpp"
 #include "uiresources.h"
+#include "utilities/ILog.hpp"
 
 using namespace pixelarium::imaging;
 
@@ -134,7 +135,8 @@ int pixelarium::ui::AppGLFW::Run()
         ImGui::DockSpaceOverViewport(ImGui::GetID("Backspace"));
 
         this->MenuBar();
-
+        if (demop_)
+            ImGui::ShowDemoWindow(&this->demop_);
         if (this->imagep_)
         {
             // auto render = render::CvMatRender(this->_img);
@@ -200,6 +202,24 @@ void pixelarium::ui::AppGLFW::MenuBar()
         // main menu
         if (ImGui::BeginMenu(MAINMENUNAME))
         {
+            if (ImGui::BeginCombo(LOGLEVELSELECT, LOGLEVELS[log_level_]))
+            {
+                for (int n = 0; n < IM_ARRAYSIZE(LOGLEVELS); n++)
+                {
+                    bool is_selected = (LOGLEVELS[log_level_] == LOGLEVELS[n]);
+                    if (ImGui::Selectable(LOGLEVELS[n], is_selected))
+                    {
+                        log_level_ = n;
+                        this->logger_.ChangeLevel(static_cast<utils::log::LogLevel>(1 << log_level_));
+                    }
+                    if (is_selected)
+                        ImGui::SetItemDefaultFocus();
+                }
+                ImGui::EndCombo();
+            }
+
+            ImGui::MenuItem(SHOWIMGUIDEMOS, NULL, &this->demop_);
+
             ImGui::EndMenu();
         }
 
@@ -223,10 +243,7 @@ void pixelarium::ui::AppGLFW::LoadImageProt()
     auto res{pfd::open_file("Load Inputs", pfd::path::home(), {"All Files", "*"}, pfd::opt::multiselect).result()};
     for (auto& p : res)
     {
-        if (this->logger_)
-        {
-            this->logger_->Debug(std::format("{}: Creating image {}", __FUNCTION__, p));
-        }
+        this->logger_.Debug(std::format("{}: Creating image {}", __FUNCTION__, p));
 
         this->img_ = std::make_shared<PixelariumImage>(p);
         this->render_ = pixelarium::render::CvMatRender(this->img_);

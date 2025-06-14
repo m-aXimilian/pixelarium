@@ -29,19 +29,16 @@ enum LogLevelSelection
 class AppGLFW
 {
    public:
-    AppGLFW() { this->InitMainWindow(); }
-    AppGLFW(std::unique_ptr<utils::log::ILog>& log) : AppGLFW()
+    explicit AppGLFW(std::unique_ptr<utils::log::ILog>& log) : logger_(*log)
     {
-        logger_ = log.get();
-        if (logger_)
-        {
-            logger_->Debug(std::format("{}: Initiating a new window", __FUNCTION__).c_str());
+        logger_.Debug(std::format("{}: Initiating a new window", __FUNCTION__).c_str());
 
-            if (pool_)
-            {
-                logger_->Debug(std::format("{}: We have an image resource pool!", __FUNCTION__).c_str());
-            }
+        if (pool_)
+        {
+            logger_.Debug(std::format("{}: We have an image resource pool!", __FUNCTION__).c_str());
         }
+
+        this->InitMainWindow();
     }
     AppGLFW(std::unique_ptr<utils::log::ILog>& log, std::unique_ptr<pixelarium::resources::ImageResourcePool>& pool)
         : AppGLFW(log)
@@ -57,13 +54,15 @@ class AppGLFW
 
    private:
     // LogLevelSelection log_level_ = static_cast<LogLevelSelection>(0);
-    utils::log::ILog* logger_;
+    utils::log::ILog& logger_;
     resources::ImageResourcePool* pool_;
     GLFWwindow* window = nullptr;
     ImGuiWindowFlags window_flags_ = 0;
     std::shared_ptr<pixelarium::imaging::PixelariumImage> img_;
     pixelarium::render::CvMatRender render_;
     bool imagep_{false};
+    bool demop_{false};
+    int log_level_{0};
     ImVec2 curr_dim_;
 };
 
