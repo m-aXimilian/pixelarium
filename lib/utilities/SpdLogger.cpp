@@ -5,7 +5,6 @@
 #include <spdlog/spdlog.h>
 
 #include <memory>
-#include <sstream>
 #include <string>
 
 #include "ILog.hpp"
@@ -51,31 +50,27 @@ void SpdLogger::ChangeLevel(LogLevel lvl)
         case LogLevel::Trace:
             this->logger_->set_level(spdlog::level::trace);
             spdlog::flush_on(spdlog::level::trace);
-            st << "Trace";
             break;
         case LogLevel::Info:
             this->logger_->set_level(spdlog::level::info);
             spdlog::flush_on(spdlog::level::info);
-            st << "Info";
             break;
         case LogLevel::Warn:
             this->logger_->set_level(spdlog::level::warn);
             spdlog::flush_on(spdlog::level::warn);
-            st << "Warn";
             break;
         case LogLevel::Error:
             this->logger_->set_level(spdlog::level::err);
             spdlog::flush_on(spdlog::level::err);
-            st << "Error";
             break;
         case LogLevel::Debug:
         default:
             this->logger_->set_level(spdlog::level::debug);
             spdlog::flush_on(spdlog::level::debug);
-            st << "Debug";
     }
 
     // you will only get this message for log levels <= info! I.e., not for error or warning.
     this->logger_->info(
-        std::format("{}: Changed log level to  {}({})", __FUNCTION__, LogLevelToString(lvl), static_cast<int>(lvl)));
+        std::format("{}: Changed log level to  {}({})", __FUNCTION__, LogLevelToString(lvl), static_cast<int>(lvl))
+            .c_str());
 }
