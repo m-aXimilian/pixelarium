@@ -28,6 +28,7 @@ class IResourcePool
     virtual bool UpdateResource(size_t id, std::unique_ptr<R> res) = 0;
     virtual bool DeleteResource(size_t id) = 0;
     virtual void EnumerateResources(const std::function<void(size_t, const R&)>& func) = 0;
+    virtual size_t GetTotalSize() const = 0;
 };
 
 // Now with the =GetResource= method, I do not want to transfer ownership to the caller of that method. The ownership
@@ -52,6 +53,7 @@ class ImageResourcePool : public IResourcePool<imaging::PixelariumImage>
 
     void EnumerateResources(const std::function<void(size_t, const imaging::PixelariumImage&)>& func) override;
 
+    size_t GetTotalSize() const override { return resources_.size();}
    private:
     std::unordered_map<size_t, std::unique_ptr<imaging::PixelariumImage>> resources_;
 };

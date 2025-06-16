@@ -117,9 +117,19 @@ int pixelarium::ui::AppGLFW::Run()
         this->MenuBar();
         if (demop_) ImGui::ShowDemoWindow(&this->demop_);
 
-        if (this->image_view_)
+        // if (this->image_view_)
+        // {
+        //     this->image_view_->ShowImage();
+        // }
+
+        if (ImGui::BeginListBox("ListBox"))
         {
-            this->image_view_->ShowImage();
+            pool_.EnumerateResources([](size_t id, const imaging::PixelariumImage& img) -> void
+            {
+                ImGui::Selectable(std::format("Image {}", id).c_str());
+            });
+
+            ImGui::EndListBox();
         }
 
         // Rendering
@@ -198,8 +208,6 @@ void pixelarium::ui::AppGLFW::LoadImageProt()
     {
         this->logger_.Debug(std::format("{}: Creating image {}", __FUNCTION__, p));
 
-        auto img = std::make_shared<PixelariumImage>(p);
-        this->image_view_ = std::make_shared<PixelariumImageView>(img);
-        this->image_view_->ToggleView(true);
+        image_view_model_->AddImage(std::move(std::make_unique<PixelariumImage>(p)));
     }
 }

@@ -40,6 +40,7 @@ add_subdirectory(lib)
 set(SRC
   src/AppGLFW.cpp
   src/views/PixelariumImageView.cpp
+  src/viewmodels/ImageViewFactory.cpp
   src/main.cpp
   ${imgui_DIR}/imgui.cpp
   ${imgui_DIR}/imgui_demo.cpp
