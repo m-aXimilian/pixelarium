@@ -11,33 +11,21 @@
 #include "rendering/CvMatRender.hpp"
 #include "resources/resource.hpp"
 #include "utilities/ILog.hpp"
+#include "viewmodels/ImageViewFactory.hpp"
 #include "views/PixelariumImageView.hpp"
 
 namespace pixelarium::ui
 {
-// static bool dim_changed_p(const ImVec2& ref_rect, const ImVec2& new_rect);
-
-// static ImVec2 aspect_const_dimensions(const pixelarium::imaging::PixelariumImage& img, const ImVec2& curr_dim);
-
 class AppGLFW
 {
    public:
-    explicit AppGLFW(std::unique_ptr<utils::log::ILog>& log) : logger_(*log)
+    AppGLFW(std::unique_ptr<utils::log::ILog>& log, std::unique_ptr<pixelarium::resources::ImageResourcePool>& pool)
+        : logger_(*log), pool_(*pool)
     {
-        logger_.Debug(std::format("{}: Initiating a new window", __FUNCTION__).c_str());
-
-        if (pool_)
-        {
-            logger_.Debug(std::format("{}: We have an image resource pool!", __FUNCTION__).c_str());
-        }
+        image_view_model_ = std::make_unique<ImageViewFactory>(pool_);
 
         this->InitMainWindow();
     }
-    AppGLFW(std::unique_ptr<utils::log::ILog>& log, std::unique_ptr<pixelarium::resources::ImageResourcePool>& pool)
-        : AppGLFW(log)
-    {
-        pool_ = pool.get();
-    };
     int Run();
 
    private:
@@ -47,12 +35,13 @@ class AppGLFW
 
    private:
     utils::log::ILog& logger_;
-    resources::ImageResourcePool* pool_;
+    resources::ImageResourcePool& pool_;
     GLFWwindow* window = nullptr;
     ImGuiWindowFlags window_flags_ = 0;
     // std::shared_ptr<pixelarium::imaging::PixelariumImage> img_;
-    std::shared_ptr<pixelarium::ui::PixelariumImageView> image_view_;
-    pixelarium::render::CvMatRender render_;
+    // std::shared_ptr<pixelarium::ui::PixelariumImageView> image_view_;
+    std::unique_ptr<ImageViewFactory> image_view_model_;
+    // pixelarium::render::CvMatRender render_;
     bool imagep_{false};
     bool demop_{false};
     int log_level_{0};

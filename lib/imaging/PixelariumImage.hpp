@@ -14,8 +14,12 @@ class PixelariumImage
 
     // get back the defaults
     PixelariumImage() = default;
-    // we cannot copy an Image since this conflicts with the _img field
-    PixelariumImage(const PixelariumImage& other) = delete;
+    PixelariumImage(const PixelariumImage& other)
+    {
+        // be ware!!
+        // we make a copy of the image data here!
+        img_ = std::make_unique<cv::Mat>(*other.img_);
+    };
     PixelariumImage(PixelariumImage&& other) noexcept
         : img_(std::move(other.img_)) {}
     // requires a copy ctor which we don't have
