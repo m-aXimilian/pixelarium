@@ -209,6 +209,6 @@ void pixelarium::ui::AppGLFW::LoadImageProt()
     {
         this->logger_.Debug(std::format("{}: Creating image {}", __FUNCTION__, p));
 
-        image_view_model_->AddImage(std::move(std::make_unique<PixelariumImage>(p)));
+        image_view_model_->AddImage(std::make_unique<PixelariumImage>(p));
     }
 }
