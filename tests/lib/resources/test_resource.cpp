@@ -90,3 +90,17 @@ TEST(ImageResourcePoolTest, EnumerateResources)
     EXPECT_NE(std::find(found_ids.begin(), found_ids.end(), id1), found_ids.end());
     EXPECT_NE(std::find(found_ids.begin(), found_ids.end(), id2), found_ids.end());
 }
+
+TEST(ImageResourcePoolTest, TemplatedEnumerate)
+{
+    ImageResourcePool pool;
+    auto id1 = pool.SetResource(std::make_unique<DummyImage>());
+    auto id2 = pool.SetResource(std::make_unique<DummyImage>());
+    std::vector<size_t> found_ids{};
+
+    pool.Enumerate([&found_ids](size_t id, const pixelarium::imaging::PixelariumImage& img) { found_ids.push_back(id); });
+
+    EXPECT_EQ(found_ids.size(), 2);
+    EXPECT_NE(std::find(found_ids.begin(), found_ids.end(), id1), found_ids.end());
+    EXPECT_NE(std::find(found_ids.begin(), found_ids.end(), id2), found_ids.end());
+}

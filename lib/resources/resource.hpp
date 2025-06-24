@@ -1,5 +1,6 @@
 #pragma once
 
+#include <concepts>
 #include <functional>
 #include <memory>
 #include <optional>
@@ -17,17 +18,16 @@ struct IResource
 template <typename R>
 concept ResT = requires(R& r) { static_cast<IResource&>(r); };
 
-// template <ResT R>
-template <typename R>
+template <typename ResT>
 class IResourcePool
 {
    public:
     virtual ~IResourcePool() = default;
-    virtual std::optional<const R*> GetResource(size_t id) const = 0;
-    virtual size_t SetResource(std::unique_ptr<R> res) = 0;
-    virtual bool ModifyResource(size_t id, std::unique_ptr<R> res) = 0;
+    virtual std::optional<const ResT*> GetResource(size_t id) const = 0;
+    virtual size_t SetResource(std::unique_ptr<ResT> res) = 0;
+    virtual bool ModifyResource(size_t id, std::unique_ptr<ResT> res) = 0;
     virtual bool DeleteResource(size_t id) = 0;
-    virtual void EnumerateResources(const std::function<void(size_t, const R&)>& func) = 0;
+    virtual void EnumerateResources(const std::function<void(size_t, const ResT&)>& func) = 0;
     virtual size_t GetTotalSize() const = 0;
 };
 
@@ -53,7 +53,18 @@ class ImageResourcePool : public IResourcePool<imaging::PixelariumImage>
 
     void EnumerateResources(const std::function<void(size_t, const imaging::PixelariumImage&)>& func) override;
 
-    size_t GetTotalSize() const override { return resources_.size();}
+    template <typename Callable>
+    requires std::invocable<Callable, size_t, const imaging::PixelariumImage&>
+    void Enumerate(Callable&& func) const
+    {
+        for (const auto& e : this->resources_)
+        {
+            func(e.first, *e.second);
+        }
+    }
+
+    size_t GetTotalSize() const override { return resources_.size(); }
+
    private:
     std::unordered_map<size_t, std::unique_ptr<imaging::PixelariumImage>> resources_;
 };
