@@ -124,10 +124,8 @@ int pixelarium::ui::AppGLFW::Run()
 
         if (ImGui::BeginListBox("ListBox"))
         {
-            pool_.EnumerateResources([](size_t id, const imaging::PixelariumImage& img) -> void
-            {
-                ImGui::Selectable(std::format("Image {}", id).c_str());
-            });
+            pool_.EnumerateResources([](size_t id, const imaging::PixelariumImage&) -> void
+                                     { ImGui::Selectable(std::format("Image {}", id).c_str()); });
 
             ImGui::EndListBox();
         }
@@ -203,11 +201,12 @@ void pixelarium::ui::AppGLFW::MenuBar()
 
 void pixelarium::ui::AppGLFW::LoadImageProt()
 {
+    size_t last_id{};
     auto res{pfd::open_file("Load Inputs", pfd::path::home(), {"All Files", "*"}, pfd::opt::multiselect).result()};
     for (auto& p : res)
     {
         this->logger_.Debug(std::format("{}: Creating image {}", __FUNCTION__, p));
 
-        image_view_model_->AddImage(std::make_unique<PixelariumImage>(p));
+        last_id = image_view_model_->AddImage(std::make_unique<PixelariumImage>(p));
     }
 }
