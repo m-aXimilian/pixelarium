@@ -42,7 +42,7 @@ size_t pixelarium::resources::ImageResourcePool::SetResource(unique_ptr<Pixelari
 /// @param id The ID of the resource to update.
 /// @param res A unique pointer to the new resource.
 /// @return True if the resource was updated, false otherwise.
-bool pixelarium::resources::ImageResourcePool::UpdateResource(size_t id, std::unique_ptr<imaging::PixelariumImage> res)
+bool pixelarium::resources::ImageResourcePool::ModifyResource(size_t id, std::unique_ptr<imaging::PixelariumImage> res)
 {
     auto search{this->resources_.find(id)};
     if (search == this->resources_.end()) return false;
