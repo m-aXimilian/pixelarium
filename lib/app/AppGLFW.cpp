@@ -1,21 +1,16 @@
 #include "AppGLFW.hpp"
 
-#include <format>
-#include <memory>
-
-#include "imaging/PixelariumImage.hpp"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include "portable-file-dialogs.h"
-#include "rendering/CvMatRender.hpp"
-#include "uiresources.h"
-#include "utilities/ILog.hpp"
-#include "views/PixelariumImageView.hpp"
+#include "uiresources_app.h"
 
-using namespace pixelarium::imaging;
+static void glfw_error_callback(int error, const char* description)
+{
+    fprintf(stderr, "GLFW Error %d: %s\n", error, description);
+}
 
-void pixelarium::ui::AppGLFW::InitMainWindow()
+void pixelarium::application::AppGLFW::InitMainWindow()
 {
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
@@ -100,7 +95,7 @@ void pixelarium::ui::AppGLFW::InitMainWindow()
     ImGui_ImplOpenGL3_Init(glsl_version);
 }
 
-int pixelarium::ui::AppGLFW::Run()
+int pixelarium::application::AppGLFW::RunInternal()
 {
     ImGuiIO& io = ImGui::GetIO();
     (void)io;
@@ -115,20 +110,8 @@ int pixelarium::ui::AppGLFW::Run()
         ImGui::DockSpaceOverViewport(ImGui::GetID("Backspace"));
 
         this->MenuBar();
-        if (demop_) ImGui::ShowDemoWindow(&this->demop_);
 
-        // if (this->image_view_)
-        // {
-        //     this->image_view_->ShowImage();
-        // }
-
-        if (ImGui::BeginListBox("ListBox"))
-        {
-            pool_.EnumerateResources([](size_t id, const imaging::PixelariumImage&) -> void
-                                     { ImGui::Selectable(std::format("Image {}", id).c_str()); });
-
-            ImGui::EndListBox();
-        }
+        this->Run();
 
         // Rendering
         ImGui::Render();
@@ -146,6 +129,7 @@ int pixelarium::ui::AppGLFW::Run()
 
         glfwSwapBuffers(this->window);
     }
+
     // Cleanup
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -157,7 +141,7 @@ int pixelarium::ui::AppGLFW::Run()
     return 0;
 }
 
-void pixelarium::ui::AppGLFW::MenuBar()
+void pixelarium::application::AppGLFW::MenuBar()
 {
     if (ImGui::BeginMainMenuBar())
     {
@@ -179,34 +163,36 @@ void pixelarium::ui::AppGLFW::MenuBar()
                 ImGui::EndCombo();
             }
 
-            ImGui::MenuItem(SHOWIMGUIDEMOS, NULL, &this->demop_);
+            // consumer main menu bar entries
+            this->MenuBarOptionsColumn1();
 
             ImGui::EndMenu();
         }
 
-        // file menu
-        if (ImGui::BeginMenu(FILEMENUNAME))
-        {
-            if (ImGui::MenuItem("Load File"))
-            {
-                this->LoadImageProt();
-            }
-
-            ImGui::EndMenu();
-        }
+        // consumer menu bar columns
+        this->MenuBarOptionsColumn2();
+        this->MenuBarOptionsColumn3();
+        this->MenuBarOptionsColumn4();
+        this->MenuBarOptionsColumn5();
 
         ImGui::EndMainMenuBar();
     }
 }
 
-void pixelarium::ui::AppGLFW::LoadImageProt()
+void pixelarium::application::AppGLFW::LogLevelSelect()
 {
-    size_t last_id{};
-    auto res{pfd::open_file("Load Inputs", pfd::path::home(), {"All Files", "*"}, pfd::opt::multiselect).result()};
-    for (auto& p : res)
+    if (ImGui::BeginCombo(LOGLEVELSELECT, LOGLEVELS[log_level_].data()))
     {
-        this->logger_.Debug(std::format("{}: Creating image {}", __FUNCTION__, p));
-
-        last_id = image_view_model_->AddImage(std::make_unique<PixelariumImage>(p));
+        for (int n = 0; n < static_cast<int>(LOGLEVELS.size()); n++)
+        {
+            bool is_selected = (LOGLEVELS[log_level_] == LOGLEVELS[n]);
+            if (ImGui::Selectable(LOGLEVELS[n].data(), is_selected))
+            {
+                log_level_ = n;
+                this->logger_.ChangeLevel(static_cast<utils::log::LogLevel>(1 << log_level_));
+            }
+            if (is_selected) ImGui::SetItemDefaultFocus();
+        }
+        ImGui::EndCombo();
     }
 }

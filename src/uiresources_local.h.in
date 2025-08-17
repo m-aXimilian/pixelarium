@@ -1,0 +1,10 @@
+#pragma once
+
+/*-- Gets filled in during the cmake configuration step --*/
+
+// #cmakedefine PIXELARIUM_TITLE "@PIXELARIUM_TITLE@"
+
+// #define MAINMENUNAME "Menu"
+// #define FILEMENUNAME "File"
+// #define LOGLEVELSELECT "Log Level"
+#define SHOWIMGUIDEMOS "ImGui Demos"
