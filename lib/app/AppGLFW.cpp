@@ -95,7 +95,7 @@ void pixelarium::application::AppGLFW::InitMainWindow()
     ImGui_ImplOpenGL3_Init(glsl_version);
 }
 
-int pixelarium::application::AppGLFW::RunInternal()
+int pixelarium::application::AppGLFW::RunLoop()
 {
     ImGuiIO& io = ImGui::GetIO();
     (void)io;

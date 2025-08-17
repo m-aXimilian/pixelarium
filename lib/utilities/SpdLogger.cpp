@@ -19,12 +19,12 @@ SpdLogger::SpdLogger(const std::string& file_sink, const std::string& name)
     logger_->info("Logger initiated");
 }
 
-void SpdLogger::Info(const std::string& msg) { this->logger_->info(msg); }
-void SpdLogger::Debug(const std::string& msg) { this->logger_->debug(msg); }
-void SpdLogger::Warn(const std::string& msg) { this->logger_->warn(msg); }
-void SpdLogger::Error(const std::string& msg) { this->logger_->error(msg); }
+void SpdLogger::Info(const std::string& msg) const { this->logger_->info(msg); }
+void SpdLogger::Debug(const std::string& msg) const { this->logger_->debug(msg); }
+void SpdLogger::Warn(const std::string& msg) const { this->logger_->warn(msg); }
+void SpdLogger::Error(const std::string& msg) const { this->logger_->error(msg); }
 
-void SpdLogger::ChangeLevel(LogLevel lvl)
+void SpdLogger::ChangeLevel(LogLevel lvl) const
 {
     constexpr auto LogLevelToString = [](LogLevel l) -> const char*
     {

@@ -12,9 +12,9 @@ namespace pixelarium::application
 class AppGLFW
 {
    public:
-    explicit AppGLFW(std::unique_ptr<utils::log::ILog>& log) : logger_(*log) { this->InitMainWindow(); }
+    explicit AppGLFW(const utils::log::ILog& log) : logger_(log) { this->InitMainWindow(); }
 
-    void Start() { this->RunInternal(); }
+    void Start() { this->RunLoop(); }
 
    protected:
     virtual void MenuBarOptionsColumn1() {}
@@ -24,10 +24,10 @@ class AppGLFW
     virtual void MenuBarOptionsColumn5() {}
     virtual void Run() {}
 
-    utils::log::ILog& logger_;
+    const utils::log::ILog& logger_;
 
    private:
-    int RunInternal();
+    int RunLoop();
     void InitMainWindow();
     void MenuBar();
     void LogLevelSelect();
