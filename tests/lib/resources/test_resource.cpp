@@ -43,22 +43,22 @@ TEST(ImageResourcePoolTest, GetNonExistentResourceReturnsEmptyOptional)
     EXPECT_FALSE(pool.GetResource(12345));
 }
 
-TEST(ImageResourcePoolTest, UpdateResourceSuccess)
+TEST(ImageResourcePoolTest, ModifyResourceSuccess)
 {
     ImageResourcePool pool;
     auto id = pool.SetResource(std::make_unique<DummyImage>());
     auto new_img = std::make_unique<DummyImage>();
-    EXPECT_TRUE(pool.UpdateResource(id, std::move(new_img)));
+    EXPECT_TRUE(pool.ModifyResource(id, std::move(new_img)));
     auto res = pool.GetResource(id);
     EXPECT_TRUE(res.has_value());
     EXPECT_NE(res.value(), nullptr);
 }
 
-TEST(ImageResourcePoolTest, UpdateResourceFail)
+TEST(ImageResourcePoolTest, ModifyResourceFail)
 {
     ImageResourcePool pool;
     auto new_img = std::make_unique<DummyImage>();
-    EXPECT_FALSE(pool.UpdateResource(999, std::move(new_img)));
+    EXPECT_FALSE(pool.ModifyResource(999, std::move(new_img)));
 }
 
 TEST(ImageResourcePoolTest, DeleteResourceSuccess)

@@ -12,7 +12,7 @@ namespace pixelarium::resources
 {
 struct IResource
 {
-    virtual ~IResource() = 0;
+    virtual ~IResource() = default;
 };
 
 template <typename R>
@@ -25,7 +25,7 @@ class IResourcePool
     virtual ~IResourcePool() = default;
     virtual std::optional<const ResT*> GetResource(size_t id) const = 0;
     virtual size_t SetResource(std::unique_ptr<ResT> res) = 0;
-    virtual bool UpdateResource(size_t id, std::unique_ptr<ResT> res) = 0;
+    virtual bool ModifyResource(size_t id, std::unique_ptr<ResT> res) = 0;
     virtual bool DeleteResource(size_t id) = 0;
     virtual void EnumerateResources(const std::function<void(size_t, const ResT&)>& func) = 0;
     virtual size_t GetTotalSize() const = 0;
@@ -48,7 +48,7 @@ class ImageResourcePool : public IResourcePool<imaging::PixelariumImage>
 
     std::optional<const imaging::PixelariumImage*> GetResource(size_t id) const override;
     size_t SetResource(std::unique_ptr<imaging::PixelariumImage> res) override;
-    bool UpdateResource(size_t id, std::unique_ptr<imaging::PixelariumImage> res) override;
+    bool ModifyResource(size_t id, std::unique_ptr<imaging::PixelariumImage> res) override;
     bool DeleteResource(size_t id) override;
 
     void EnumerateResources(const std::function<void(size_t, const imaging::PixelariumImage&)>& func) override;
