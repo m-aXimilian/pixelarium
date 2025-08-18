@@ -38,7 +38,7 @@ if(APPLE)
 endif()
 
 target_include_directories(${APPLIBNAME}
-  PUBLIC ${CMAKE_BINARY_DIR}
-  PUBLIC ${PROJECT_SOURCE_DIR}/lib
+  PRIVATE ${CMAKE_BINARY_DIR}
+  PRIVATE ${PROJECT_SOURCE_DIR}/lib
   PUBLIC ${imgui_DIR}
   PUBLIC ${imgui_DIR}/backends)
