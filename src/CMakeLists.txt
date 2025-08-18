@@ -1,6 +1,4 @@
-set(PIXELARIUM_TITLE ${CMAKE_PROJECT_NAME})
-
 message(STATUS "Configuring Resources")
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/uiresources.h.in
-  ${CMAKE_BINARY_DIR}/uiresources.h @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/app_resources_local.h.in
+  ${CMAKE_BINARY_DIR}/app_resources_local.h @ONLY)

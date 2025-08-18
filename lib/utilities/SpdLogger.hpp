@@ -13,11 +13,11 @@ class SpdLogger : public ILog
    public:
     explicit SpdLogger(const std::string& file_sink, const std::string& name);
 
-    void Info(const std::string& msg) override;
-    void Debug(const std::string& msg) override;
-    void Warn(const std::string& msg) override;
-    void Error(const std::string& msg) override;
-    void ChangeLevel(LogLevel lvl) override;
+    void Info(const std::string& msg) const override;
+    void Debug(const std::string& msg) const override;
+    void Warn(const std::string& msg) const override;
+    void Error(const std::string& msg) const override;
+    void ChangeLevel(LogLevel lvl) const override;
 
    private:
     std::shared_ptr<spdlog::logger> logger_;

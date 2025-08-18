@@ -1,0 +1,13 @@
+#pragma once
+
+#include <array>
+#include <string_view>
+
+#cmakedefine PIXELARIUM_TITLE "@PIXELARIUM_TITLE@"
+
+#define MAINMENUNAME "Menu"
+#define FILEMENUNAME "File"
+#define LOGLEVELSELECT "Log Level"
+
+
+inline constexpr std::array<std::string_view, 5> LOGLEVELS = {"Trace", "Debug", "Info", "Warning", "Error"};

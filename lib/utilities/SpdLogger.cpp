@@ -1,12 +1,13 @@
 #include "SpdLogger.hpp"
 
 #include <spdlog/common.h>
-#include <spdlog/spdlog.h>
 #include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/spdlog.h>
+
 #include <memory>
 #include <string>
-#include "ILog.hpp"
 
+#include "ILog.hpp"
 
 using namespace pixelarium::utils::log;
 
@@ -18,22 +19,32 @@ SpdLogger::SpdLogger(const std::string& file_sink, const std::string& name)
     logger_->info("Logger initiated");
 }
 
-void SpdLogger::Info(const std::string& msg)
-{
-    this->logger_->info(msg);
-}
-void SpdLogger::Debug(const std::string& msg)
-{
-    this->logger_->debug(msg);
-}
-void SpdLogger::Warn(const std::string& msg)
-{
-    this->logger_->warn(msg);
-}
-void SpdLogger::Error(const std::string& msg) { this->logger_->error(msg); }
+void SpdLogger::Info(const std::string& msg) const { this->logger_->info(msg); }
+void SpdLogger::Debug(const std::string& msg) const { this->logger_->debug(msg); }
+void SpdLogger::Warn(const std::string& msg) const { this->logger_->warn(msg); }
+void SpdLogger::Error(const std::string& msg) const { this->logger_->error(msg); }
 
-void SpdLogger::ChangeLevel(LogLevel lvl)
+void SpdLogger::ChangeLevel(LogLevel lvl) const
 {
+    constexpr auto LogLevelToString = [](LogLevel l) -> const char*
+    {
+        switch (l)
+        {
+            case LogLevel::Trace:
+                return "Trace";
+            case LogLevel::Debug:
+                return "Debug";
+            case LogLevel::Info:
+                return "Info";
+            case LogLevel::Warn:
+                return "Warn";
+            case LogLevel::Error:
+                return "Error";
+            default:
+                return "Not Found";
+        }
+    };
+
     switch (lvl)
     {
         case LogLevel::Trace:
@@ -58,5 +69,7 @@ void SpdLogger::ChangeLevel(LogLevel lvl)
             spdlog::flush_on(spdlog::level::debug);
     }
 
-    this->logger_->debug("Changed log level;");
+    // you will only get this message for log levels <= info! I.e., not for error or warning.
+    this->logger_->info(
+        std::format("{}: Changed log level to  {}({})", __FUNCTION__, LogLevelToString(lvl), static_cast<int>(lvl)));
 }

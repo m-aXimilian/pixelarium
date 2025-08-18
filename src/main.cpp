@@ -1,9 +1,8 @@
 #include <iostream>
 #include <memory>
 
-#include "AppGLFW.hpp"
+#include "MyApp.hpp"
 #include "resources/resource.hpp"
-#include "uiresources.h"
 #include "utilities/ILog.hpp"
 #include "utilities/SpdLogger.hpp"
 
@@ -18,12 +17,12 @@ int main(int argc, char** argv)
 #else
     logger = make_unique<utils::log::SpdLogger>(std::string(getenv("HOME")) + "/.cache/pixelarium/log.log", "default");
 #endif
-    logger->Info(std::format("{}: Starting Application {}", __FUNCTION__, PIXELARIUM_TITLE));
+    logger->Info(std::format("{}: Starting Application {}", __FUNCTION__, "Pixelarium"));
 
     logger->ChangeLevel(utils::log::LogLevel::Debug);
     auto image_pool{std::make_unique<resources::ImageResourcePool>()};
 
-    auto app = pixelarium::ui::AppGLFW(logger, image_pool);
+    pixelarium::ui::MyApp app = pixelarium::ui::MyApp(*logger, *image_pool);
 
-    return app.Run();
+    app.Start();
 }

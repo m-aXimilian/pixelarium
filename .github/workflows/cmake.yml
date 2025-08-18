@@ -21,9 +21,9 @@ jobs:
         sudo apt update
         sudo apt -y install libopencv-dev libglfw3 libglfw3-dev libxkbcommon-dev libxinerama-dev libxcursor-dev libxi-dev
     - name: configure
-      run: cmake -B ${{github.workspace}}/build -S .
+      run: cmake --preset gcc-debug
     - name: build
-      run: cmake --build ${{github.workspace}}/build
+      run: cmake --build build --preset debug
     - name: test
       run: |
         cd ${{github.workspace}}/build

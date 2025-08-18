@@ -14,11 +14,11 @@ enum class LogLevel
 class ILog
 {
    public:
-    virtual void Info(const std::string& msg) = 0;
-    virtual void Debug(const std::string& msg) = 0;
-    virtual void Warn(const std::string& msg) = 0;
-    virtual void Error(const std::string& msg) = 0;
-    virtual void ChangeLevel(LogLevel lvl) = 0;
+    virtual void Info(const std::string& msg) const = 0;
+    virtual void Debug(const std::string& msg) const = 0;
+    virtual void Warn(const std::string& msg) const = 0;
+    virtual void Error(const std::string& msg) const = 0;
+    virtual void ChangeLevel(LogLevel lvl) const = 0;
 
     virtual ~ILog() {}
 };

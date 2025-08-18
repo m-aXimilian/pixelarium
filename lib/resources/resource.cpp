@@ -1,6 +1,7 @@
 #include "resource.hpp"
 
 #include <atomic>
+#include <functional>
 #include <optional>
 
 using pixelarium::imaging::PixelariumImage;
