@@ -1,11 +1,3 @@
-set(imgui_DIR ${PROJECT_SOURCE_DIR}/modules/imgui)
-# set(glfw_DIR ${PROJECT_SOURCE_DIR}/modules/glfw)
-
-message(STATUS "IMGUI:\t" ${imgui_DIR})
-# message(STATUS "GLFW:\t" ${glfw_DIR})
-
-# add_directory(${glfw_DIR})
-
 set(PIXELARIUM_TITLE ${CMAKE_PROJECT_NAME})
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/uiresources_app.h.in
   ${CMAKE_BINARY_DIR}/uiresources_app.h @ONLY)
@@ -28,9 +20,25 @@ add_library(${APPLIBNAME}
 target_link_libraries(${APPLIBNAME}
   PRIVATE pixelariumutilslib)
 
+# This needs to be public to let the consumer know about it.
+if(WIN32)
+  target_link_libraries(${APPLIBNAME}
+    PUBLIC opengl32.lib
+    PUBLIC glfw
+    PUBLIC OpenGL::GL)
+endif()
+if(LINUX)
+  target_link_libraries(${APPLIBNAME}
+    PUBLIC glfw GL)
+endif()
+if(APPLE)
+  target_link_libraries(${APPLIBNAME}
+    PUBLIC glfw
+    PUBLIC "-framework OpenGL")
+endif()
+
 target_include_directories(${APPLIBNAME}
   PUBLIC ${CMAKE_BINARY_DIR}
   PUBLIC ${PROJECT_SOURCE_DIR}/lib
   PUBLIC ${imgui_DIR}
-  PUBLIC ${imgui_DIR}/backends
-  PUBLIC ${glfw_INCLUDE_DIR})
+  PUBLIC ${imgui_DIR}/backends)

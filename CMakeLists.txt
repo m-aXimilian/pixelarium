@@ -6,13 +6,16 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CXX_STANDARD 20)
 set(CXX_STANDARD_REQUIRED true)
 
-set(glfw_DIR ${PROJECT_SOURCE_DIR}/modules/glfw)
+# setting global module directories
+set(glfw3_module_DIR ${PROJECT_SOURCE_DIR}/modules/glfw)
+set(glfw3_DIR "${glfw3_module_DIR}/CMake")
+set(imgui_DIR ${PROJECT_SOURCE_DIR}/modules/imgui)
 set(pfd_DIR ${PROJECT_SOURCE_DIR}/modules/portable-file-dialogs)
 set(spdlog_DIR ${PROJECT_SOURCE_DIR}/modules/spdlog)
 
 find_package(OpenGL REQUIRED)
 
-message(STATUS "GLFW:\t" ${glfw_DIR})
+message(STATUS "GLFW:\t" ${glfw3_module_DIR})
 message(STATUS "PFD:\t\t" ${pfd_DIR})
 message(STATUS "SPDLOG:\t" ${spdlog_DIR})
 
@@ -31,7 +34,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin/Release)
 
 add_subdirectory(${pfd_DIR})
 add_subdirectory(${spdlog_DIR})
-add_subdirectory(${glfw_DIR})
+add_subdirectory(${glfw3_module_DIR})
 add_subdirectory(src)
 add_subdirectory(lib)
 
@@ -42,7 +45,7 @@ set(SRC
   src/main.cpp)
 
 #====================
-# needed for the spdlogger implemntation
+# needed for the spdlogger implementation
 # this is not nice, but it won't work when, e.g. doing it from lower level cmake files
 add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
@@ -66,24 +69,6 @@ target_include_directories(${PROJECT_NAME}
   PUBLIC ${pfd_DIR}
   PUBLIC ${LIBCZI_INCLUDE_DIR}
   PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-
-
-if(WIN32)
-  target_link_libraries(${PROJECT_NAME}
-    PRIVATE opengl32.lib
-    PRIVATE glfw
-    PRIVATE OpenGL::GL)
-endif()
-if(LINUX) 
-  target_link_libraries(${PROJECT_NAME}
-    PRIVATE glfw GL)
-endif()
-if(APPLE)
-  target_link_libraries(${PROJECT_NAME}
-    PUBLIC glfw
-    PUBLIC "-framework OpenGL")
-endif()
-
 
 option(PIXELARIUM_BUILD_UNITTESTS "Generate Unittests" ON)
 

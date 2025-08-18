@@ -33,6 +33,5 @@ class AppGLFW
     void LogLevelSelect();
     int log_level_{0};
     GLFWwindow* window = nullptr;
-    ImGuiWindowFlags window_flags_ = 0;
 };
 }  // namespace pixelarium::application
