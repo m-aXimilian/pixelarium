@@ -1,0 +1,8 @@
+#pragma once
+
+// Currently, there is no need for this to be a configurable header.
+// It is left as such to keep the API open for possible build-system
+// injections in future.
+
+#define SHOWIMGUIDEMOS "ImGui Demos"
+#define SHOWIMAGEGALLERY "Image Gallery"

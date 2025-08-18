@@ -26,11 +26,12 @@ class MyApp : public application::AppGLFW
 
    private:
     void LoadImageProt();
+    void ImageGalleryRender();
 
    private:
     resources::ImageResourcePool& pool_;
     std::unique_ptr<ImageViewFactory> image_view_model_;
-    bool imagep_{false};
+    bool image_listp_{false};
     bool demop_{false};
     ImVec2 curr_dim_;
 };

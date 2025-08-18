@@ -6,13 +6,17 @@
 #include "imaging/PixelariumImage.hpp"
 #include "imgui.h"
 #include "portable-file-dialogs.h"
-#include "uiresources_app.h"
-#include "uiresources_local.h"
+#include "app_resources_default.h"
+#include "app_resources_local.h"
 #include "utilities/ILog.hpp"
 
 using namespace pixelarium::imaging;
 
-void pixelarium::ui::MyApp::MenuBarOptionsColumn1() { ImGui::MenuItem(SHOWIMGUIDEMOS, NULL, &this->demop_); }
+void pixelarium::ui::MyApp::MenuBarOptionsColumn1()
+{
+    ImGui::MenuItem(SHOWIMGUIDEMOS, NULL, &this->demop_);
+    ImGui::MenuItem(SHOWIMAGEGALLERY, NULL, &this->image_listp_);
+}
 
 void pixelarium::ui::MyApp::MenuBarOptionsColumn2()
 {
@@ -30,12 +34,11 @@ void pixelarium::ui::MyApp::MenuBarOptionsColumn2()
 void pixelarium::ui::MyApp::Run()
 {
     if (demop_) ImGui::ShowDemoWindow(&this->demop_);
+    if (image_listp_) this->ImageGalleryRender();
+}
 
-    // if (this->image_view_)
-    // {
-    //     this->image_view_->ShowImage();
-    // }
-
+void pixelarium::ui::MyApp::ImageGalleryRender()
+{
     if (ImGui::BeginListBox("ListBox"))
     {
         pool_.EnumerateResources([](size_t id, const imaging::PixelariumImage&) -> void

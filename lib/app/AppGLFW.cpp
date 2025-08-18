@@ -3,7 +3,7 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include "uiresources_app.h"
+#include "app_resources_default.h"
 
 static void glfw_error_callback(int error, const char* description)
 {
