@@ -27,7 +27,7 @@ class IResourcePool
     virtual size_t SetResource(std::unique_ptr<ResT> res) = 0;
     virtual bool ModifyResource(size_t id, std::unique_ptr<ResT> res) = 0;
     virtual bool DeleteResource(size_t id) = 0;
-    virtual void EnumerateResources(const std::function<void(size_t, const ResT&)>& func) = 0;
+    virtual void EnumerateResources(const std::function<void(size_t, size_t, const imaging::PixelariumImage&)>& func) = 0;
     virtual size_t GetTotalSize() const = 0;
 };
 
@@ -51,15 +51,16 @@ class ImageResourcePool : public IResourcePool<imaging::PixelariumImage>
     bool ModifyResource(size_t id, std::unique_ptr<imaging::PixelariumImage> res) override;
     bool DeleteResource(size_t id) override;
 
-    void EnumerateResources(const std::function<void(size_t, const imaging::PixelariumImage&)>& func) override;
+    void EnumerateResources(const std::function<void(size_t, size_t, const imaging::PixelariumImage&)>& func) override;
 
     template <typename Callable>
-    requires std::invocable<Callable, size_t, const imaging::PixelariumImage&>
+    requires std::invocable<Callable, size_t, size_t, const imaging::PixelariumImage&>
     void Enumerate(Callable&& func) const
     {
+        size_t idx{0};
         for (const auto& e : this->resources_)
         {
-            func(e.first, *e.second);
+            func(e.first, idx, *e.second);
         }
     }
 

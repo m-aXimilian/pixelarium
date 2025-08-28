@@ -1,6 +1,7 @@
 #include "resource.hpp"
 
 #include <atomic>
+#include <cstddef>
 #include <functional>
 #include <optional>
 
@@ -70,10 +71,12 @@ bool pixelarium::resources::ImageResourcePool::DeleteResource(size_t id)
 /// @param func A function to call for each resource.  The function should accept the resource ID and a const reference
 /// to a PixelariumImage.
 void pixelarium::resources::ImageResourcePool::EnumerateResources(
-    const std::function<void(size_t, const imaging::PixelariumImage&)>& func)
+    const std::function<void(size_t, size_t, const imaging::PixelariumImage&)>& func)
 {
+    size_t idx{0};
     for (const auto& e : this->resources_)
     {
-        func(e.first, *e.second);
+        func(e.first, idx, *e.second);
+        ++idx;
     }
 }

@@ -13,5 +13,6 @@ pixelarium::imaging::PixelariumImage::PixelariumImage(const std::string& uri)
         throw std::runtime_error(std::format("File not {} found", uri));
     }
 
+    this->uri_ = std::filesystem::path(uri);
     this->img_ = std::make_unique<cv::Mat>(cv::imread(uri));
 }
