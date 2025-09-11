@@ -68,12 +68,17 @@ void pixelarium::ui::MyApp::ImageGalleryRender()
 
     // and then just enumerate the render manager
     this->render_manager_->Enumerate(
-        [](resources::ResourceKey key, RenderImageStateWrapper& render_state)
+        [&](resources::ResourceKey key, RenderImageStateWrapper& render_state)
         {
-            render_state.show_state = true;
-            render_state.view->ToggleView(render_state.show_state);
+            // render_state.show_state = *render_state.view->GetStatus();
             render_state.view->ShowImage();
+            if (!*render_state.view->GetStatus())
+            {
+                this->render_manager_->MarkForDeletion(key);
+            }
         });
+
+    // this->render_manager_->UpdateCollection();
 }
 
 void pixelarium::ui::MyApp::LoadImageProt()

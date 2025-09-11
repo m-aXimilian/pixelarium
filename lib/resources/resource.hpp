@@ -69,5 +69,6 @@ class ImageResourcePool : public IResourcePool<imaging::PixelariumImage>
 
    private:
     std::unordered_map<size_t, std::unique_ptr<imaging::PixelariumImage>> resources_;
+    std::mutex mut_;
 };
 }  // namespace pixelarium::resources

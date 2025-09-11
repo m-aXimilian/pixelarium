@@ -22,7 +22,8 @@ class PixelariumImageView
     PixelariumImageView& operator=(PixelariumImageView&) = delete;
     PixelariumImageView& operator=(PixelariumImageView&&) = delete;
 
-    void ToggleView(bool target) { open_p = target; }
+    // void ToggleView(bool target) { open_p = target; }
+    const bool* GetStatus() const noexcept { return &this->open_p; }
     void ShowImage();
 
    private:

@@ -3,6 +3,7 @@
 #include <atomic>
 #include <cstddef>
 #include <functional>
+#include <mutex>
 #include <optional>
 
 using pixelarium::imaging::PixelariumImage;
@@ -35,7 +36,10 @@ std::optional<const PixelariumImage*> pixelarium::resources::ImageResourcePool::
 size_t pixelarium::resources::ImageResourcePool::SetResource(unique_ptr<PixelariumImage> res)
 {
     auto key{::GenerateId()};
-    this->resources_.insert({key, std::move(res)});
+    {
+        std::lock_guard<std::mutex> guard(this->mut_);
+        this->resources_.insert({key, std::move(res)});
+    }
 
     return key;
 }

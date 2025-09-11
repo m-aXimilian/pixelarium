@@ -28,7 +28,7 @@ ImVec2 aspect_const_dimensions(const pixelarium::imaging::PixelariumImage& img, 
 
 void PixelariumImageView::ShowImage()
 {
-    if (this->open_p)
+    // if (this->open_p)
     {
         ImGui::Begin(img_->Name().c_str(), &this->open_p,
                      ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar);

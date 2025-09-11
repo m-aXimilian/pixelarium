@@ -1,6 +1,10 @@
 #pragma once
+#include <cstdio>
+#include <list>
 #include <memory>
+#include <mutex>
 #include <unordered_map>
+#include <vector>
 
 #include "PixelariumImage.hpp"
 #include "resources/resource.hpp"
@@ -28,6 +32,7 @@ class RenderImageManager
 
     void Add(resources::ResourceKey key) noexcept
     {
+        std::lock_guard<std::mutex> guard(this->mut_);
         // clang-format off
         this->render_image_map_.insert(
             {
@@ -35,7 +40,7 @@ class RenderImageManager
                 RenderImageStateWrapper
                 {
                     .view{ this->view_factory_->RenderImage(key) },
-                    .show_state = false
+                    .show_state = true
                 }
             }
             );
@@ -63,8 +68,33 @@ class RenderImageManager
         }
     }
 
-   private:
+    void MarkForDeletion(resources::ResourceKey key)
+    {
+        std::lock_guard<std::mutex> guard(this->mut_);
+        keys_to_delete_.push_back(key);
+    }
+
+    void UpdateCollection()
+    {
+        // std::erase_if(this->render_image_map_,
+        //               [](const auto& el)
+        //               {
+        //                   const auto& [k, v] = el;
+        //                   return k == false;
+        //               });
+        std::lock_guard<std::mutex> guard(this->mut_);
+        for (const auto& key : keys_to_delete_)
+        {
+            this->render_image_map_.erase(key);
+        }
+
+        keys_to_delete_.clear();
+    }
+
+private:
     std::unordered_map<resources::ResourceKey, RenderImageStateWrapper> render_image_map_;
     std::unique_ptr<ImageViewFactory> view_factory_;
+    std::mutex mut_;
+    std::list<resources::ResourceKey> keys_to_delete_;
 };
 }  // namespace pixelarium::ui
