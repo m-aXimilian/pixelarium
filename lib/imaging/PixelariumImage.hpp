@@ -5,7 +5,6 @@
 #include <memory>
 #include <opencv2/core/mat.hpp>
 #include <string>
-#include <string_view>
 
 namespace pixelarium::imaging
 {
@@ -39,15 +38,16 @@ class PixelariumImage
         // be ware!!
         // we make a copy of the image data here!
         img_ = std::make_unique<cv::Mat>(*other.img_);
+        uri_ = other.uri_;
     };
-    PixelariumImage(PixelariumImage&& other) noexcept
-        : img_(std::move(other.img_)) {}
+    PixelariumImage(PixelariumImage&& other) noexcept : img_(std::move(other.img_)) {}
     PixelariumImage& operator=(const PixelariumImage& other) = delete;
     PixelariumImage& operator=(PixelariumImage&& other) noexcept
     {
         if (this != &other)
         {
             img_ = std::move(other.img_);
+            uri_ = other.uri_;
         }
 
         return *this;
@@ -60,7 +60,16 @@ class PixelariumImage
 
     const cv::Mat& GetImage() const { return *this->img_.get(); }
 
-    const std::string Name() const { return this->uri_.filename(); }
+    const std::string Name() const noexcept
+    {
+        if (!this->uri_.empty())
+        {
+            return this->uri_.filename();
+        }
+
+        return {};
+    }
+
     static ImageFileType Type() { return PixelariumImage::type_; }
 
    protected:
@@ -69,8 +78,6 @@ class PixelariumImage
     std::filesystem::path uri_;
 
     static ImageFileType type_;
-    
-    
 };
 
 }  // namespace pixelarium::imaging

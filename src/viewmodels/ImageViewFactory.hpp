@@ -13,12 +13,6 @@ class ImageViewFactory
    public:
     explicit ImageViewFactory(Pool& pool) : image_pool_(pool) {}
 
-    [[nodiscard("Image Id is ignored")]]
-    size_t AddImage(std::unique_ptr<imaging::PixelariumImage> res) const noexcept
-    {
-        return image_pool_.SetResource(std::move(res));
-    }
-
     std::unique_ptr<PixelariumImageView> RenderImage(size_t id);
 
    private:

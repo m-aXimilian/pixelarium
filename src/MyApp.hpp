@@ -4,11 +4,10 @@
 #include <memory>
 
 #include "AppGLFW.hpp"
+#include "RenderImageManager.hpp"
 #include "imgui.h"
 #include "resources/resource.hpp"
 #include "utilities/ILog.hpp"
-#include "viewmodels/ImageViewFactory.hpp"
-#include "views/PixelariumImageView.hpp"
 
 namespace pixelarium::ui
 {
@@ -16,9 +15,8 @@ class MyApp : public application::AppGLFW
 {
    public:
     MyApp(const utils::log::ILog& log, pixelarium::resources::ImageResourcePool& pool)
-        : application::AppGLFW(log), pool_(pool)
+        : application::AppGLFW(log), pool_(pool), render_manager_(std::make_unique<RenderImageManager>(pool))
     {
-        image_view_factory_ = std::make_unique<ImageViewFactory>(pool_);
     }
 
    protected:
@@ -32,8 +30,7 @@ class MyApp : public application::AppGLFW
 
    private:
     resources::ImageResourcePool& pool_;
-    std::unique_ptr<ImageViewFactory> image_view_factory_;
-    std::unique_ptr<PixelariumImageView> view_;
+    std::unique_ptr<RenderImageManager> render_manager_;
     bool image_listp_{false};
     bool demop_{false};
     ImVec2 curr_dim_;

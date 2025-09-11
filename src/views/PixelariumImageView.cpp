@@ -30,7 +30,9 @@ void PixelariumImageView::ShowImage()
 {
     if (this->open_p)
     {
-        ImGui::Begin("An image", &this->open_p, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar);
+        ImGui::Begin(img_->Name().c_str(), &this->open_p,
+                     ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar);
+
         this->curr_dim_ = ImGui::GetContentRegionAvail();
         auto new_dim = ImGui::GetContentRegionAvail();
         auto texture =
@@ -46,7 +48,8 @@ void PixelariumImageView::ShowImage()
                      aspect_const_dimensions(*this->img_, new_dim));
 
         ImGui::Separator();
-        ImGui::Text("%s", std::format("Dimensions W: {}, H: {}", curr_dim_.x, curr_dim_.y).c_str());
+        ImGui::Text("%s", std::format("   Raw Dimensions W : {}, H: {}", dim.x, dim.y).c_str());
+        ImGui::Text("%s", std::format("Render Dimensions W : {}, H: {}", curr_dim_.x, curr_dim_.y).c_str());
 
         ImGui::End();
     }

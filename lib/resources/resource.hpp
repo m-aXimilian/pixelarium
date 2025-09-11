@@ -10,6 +10,7 @@
 
 namespace pixelarium::resources
 {
+    using ResourceKey = size_t;
 struct IResource
 {
     virtual ~IResource() = default;
@@ -24,10 +25,10 @@ class IResourcePool
    public:
     virtual ~IResourcePool() = default;
     virtual std::optional<const ResT*> GetResource(size_t id) const = 0;
-    virtual size_t SetResource(std::unique_ptr<ResT> res) = 0;
-    virtual bool ModifyResource(size_t id, std::unique_ptr<ResT> res) = 0;
-    virtual bool DeleteResource(size_t id) = 0;
-    virtual void EnumerateResources(const std::function<void(size_t, size_t, const imaging::PixelariumImage&)>& func) = 0;
+    virtual ResourceKey SetResource(std::unique_ptr<ResT> res) = 0;
+    virtual bool ModifyResource(ResourceKey id, std::unique_ptr<ResT> res) = 0;
+    virtual bool DeleteResource(ResourceKey id) = 0;
+    virtual void EnumerateResources(const std::function<void(ResourceKey, size_t, const imaging::PixelariumImage&)>& func) = 0;
     virtual size_t GetTotalSize() const = 0;
 };
 
@@ -46,15 +47,15 @@ class ImageResourcePool : public IResourcePool<imaging::PixelariumImage>
     ImageResourcePool& operator=(ImageResourcePool&) = delete;
     ImageResourcePool& operator=(ImageResourcePool&&) = delete;
 
-    std::optional<const imaging::PixelariumImage*> GetResource(size_t id) const override;
-    size_t SetResource(std::unique_ptr<imaging::PixelariumImage> res) override;
-    bool ModifyResource(size_t id, std::unique_ptr<imaging::PixelariumImage> res) override;
-    bool DeleteResource(size_t id) override;
+    std::optional<const imaging::PixelariumImage*> GetResource(ResourceKey id) const override;
+    ResourceKey SetResource(std::unique_ptr<imaging::PixelariumImage> res) override;
+    bool ModifyResource(ResourceKey id, std::unique_ptr<imaging::PixelariumImage> res) override;
+    bool DeleteResource(ResourceKey id) override;
 
-    void EnumerateResources(const std::function<void(size_t, size_t, const imaging::PixelariumImage&)>& func) override;
+    void EnumerateResources(const std::function<void(ResourceKey, size_t, const imaging::PixelariumImage&)>& func) override;
 
     template <typename Callable>
-    requires std::invocable<Callable, size_t, size_t, const imaging::PixelariumImage&>
+    requires std::invocable<Callable, ResourceKey, size_t, const imaging::PixelariumImage&>
     void Enumerate(Callable&& func) const
     {
         size_t idx{0};
