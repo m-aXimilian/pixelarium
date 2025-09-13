@@ -2,11 +2,11 @@
 
 #include <memory>
 
-#include "PixelariumImage.hpp"
+#include "imaging/PixelariumImage.hpp"
 #include "imgui.h"
 #include "rendering/CvMatRender.hpp"
 
-namespace pixelarium::ui
+namespace pixelarium::render
 {
 class PixelariumImageView
 {
@@ -22,13 +22,14 @@ class PixelariumImageView
     PixelariumImageView& operator=(PixelariumImageView&) = delete;
     PixelariumImageView& operator=(PixelariumImageView&&) = delete;
 
-    void ToggleView(bool target) { open_p = target; }
+    // void ToggleView(bool target) { open_p = target; }
+    const bool* GetStatus() const noexcept { return &this->open_p; }
     void ShowImage();
 
    private:
     const std::shared_ptr<Image> img_;
     Render render_;
-    bool open_p{false};
+    bool open_p{true};
     ImVec2 curr_dim_{};
 };
-}  // namespace pixelarium::ui
+}  // namespace pixelarium::render
