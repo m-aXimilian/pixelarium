@@ -1,7 +1,9 @@
 #include "resource.hpp"
 
 #include <atomic>
+#include <cstddef>
 #include <functional>
+#include <mutex>
 #include <optional>
 
 using pixelarium::imaging::PixelariumImage;
@@ -20,7 +22,7 @@ size_t GenerateId() { return id_.fetch_add(1, memory_order_relaxed); }
 /// @brief Retrieves a resource from the pool.
 /// @param id The ID of the resource to retrieve.
 /// @return A pointer to the resource if found, otherwise an empty optional.
-std::optional<const PixelariumImage*> pixelarium::resources::ImageResourcePool::GetResource(size_t id) const
+std::optional<const PixelariumImage*> pixelarium::resources::ImageResourcePool::GetResource(ResourceKey id) const
 {
     auto search{this->resources_.find(id)};
     if (search == this->resources_.end()) return std::nullopt;
@@ -34,7 +36,10 @@ std::optional<const PixelariumImage*> pixelarium::resources::ImageResourcePool::
 size_t pixelarium::resources::ImageResourcePool::SetResource(unique_ptr<PixelariumImage> res)
 {
     auto key{::GenerateId()};
-    this->resources_.insert({key, std::move(res)});
+    {
+        std::lock_guard<std::mutex> guard(this->mut_);
+        this->resources_.insert({key, std::move(res)});
+    }
 
     return key;
 }
@@ -43,7 +48,8 @@ size_t pixelarium::resources::ImageResourcePool::SetResource(unique_ptr<Pixelari
 /// @param id The ID of the resource to update.
 /// @param res A unique pointer to the new resource.
 /// @return True if the resource was updated, false otherwise.
-bool pixelarium::resources::ImageResourcePool::ModifyResource(size_t id, std::unique_ptr<imaging::PixelariumImage> res)
+bool pixelarium::resources::ImageResourcePool::ModifyResource(ResourceKey id,
+                                                              std::unique_ptr<imaging::PixelariumImage> res)
 {
     auto search{this->resources_.find(id)};
     if (search == this->resources_.end()) return false;
@@ -56,7 +62,7 @@ bool pixelarium::resources::ImageResourcePool::ModifyResource(size_t id, std::un
 /// @brief Deletes a resource from the pool.
 /// @param id The ID of the resource to delete.
 /// @return True if the resource was deleted, false otherwise.
-bool pixelarium::resources::ImageResourcePool::DeleteResource(size_t id)
+bool pixelarium::resources::ImageResourcePool::DeleteResource(ResourceKey id)
 {
     auto search{this->resources_.find(id)};
     if (search == this->resources_.end()) return false;
@@ -70,10 +76,12 @@ bool pixelarium::resources::ImageResourcePool::DeleteResource(size_t id)
 /// @param func A function to call for each resource.  The function should accept the resource ID and a const reference
 /// to a PixelariumImage.
 void pixelarium::resources::ImageResourcePool::EnumerateResources(
-    const std::function<void(size_t, const imaging::PixelariumImage&)>& func)
+    const std::function<void(ResourceKey, size_t, const imaging::PixelariumImage&)>& func)
 {
+    size_t idx{0};
     for (const auto& e : this->resources_)
     {
-        func(e.first, *e.second);
+        func(e.first, idx, *e.second);
+        ++idx;
     }
 }

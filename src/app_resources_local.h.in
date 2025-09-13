@@ -3,6 +3,10 @@
 // Currently, there is no need for this to be a configurable header.
 // It is left as such to keep the API open for possible build-system
 // injections in future.
+// clang-format off
+#define SHOWIMGUIDEMOS      "ImGui Demos"
+#define SHOWIMAGEGALLERY    "Image Gallery"
+#define AUTOSHOWSELECTED    "Auto View"
+#define OPENIMAGE           "Open"
 
-#define SHOWIMGUIDEMOS "ImGui Demos"
-#define SHOWIMAGEGALLERY "Image Gallery"
+// clang-format on

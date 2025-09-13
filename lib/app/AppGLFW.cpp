@@ -1,15 +1,29 @@
 #include "AppGLFW.hpp"
 
+#include "app_resources_default.h"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include "app_resources_default.h"
 
+/// @brief GLFW error callback function.
+/// @param error The error code.
+/// @param description A description of the error.
 static void glfw_error_callback(int error, const char* description)
 {
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
+/// @brief Initializes the main application window using GLFW.
+///
+/// This function sets up the GLFW error callback, initializes GLFW,
+/// selects appropriate OpenGL and GLSL versions based on platform,
+/// creates the main application window, sets up the OpenGL context,
+/// enables vsync, and initializes the Dear ImGui context, style, and
+/// platform/renderer backends.  It uses the primary monitor's workarea
+/// to determine the screen resolution but creates a window of a fixed size (1200x800).
+///
+/// @return void.  The function returns void and uses error handling internally to manage GLFW and window creation
+/// failures.  The application may continue to run in a failed state, but the window will not be initialized.
 void pixelarium::application::AppGLFW::InitMainWindow()
 {
     glfwSetErrorCallback(glfw_error_callback);
@@ -95,6 +109,8 @@ void pixelarium::application::AppGLFW::InitMainWindow()
     ImGui_ImplOpenGL3_Init(glsl_version);
 }
 
+/// @brief Main application loop.  This function handles window events, rendering, and ImGui integration.
+/// @return 0 if the application closes successfully.
 int pixelarium::application::AppGLFW::RunLoop()
 {
     ImGuiIO& io = ImGui::GetIO();
@@ -141,6 +157,10 @@ int pixelarium::application::AppGLFW::RunLoop()
     return 0;
 }
 
+/// @brief Creates and displays the main menu bar.
+///
+/// This function constructs the application's main menu bar using ImGui.  It includes a log level selector
+/// and calls other functions to populate additional menu bar sections.
 void pixelarium::application::AppGLFW::MenuBar()
 {
     if (ImGui::BeginMainMenuBar())
@@ -179,6 +199,7 @@ void pixelarium::application::AppGLFW::MenuBar()
     }
 }
 
+/// @brief Allows the user to select the log level via a combo box.
 void pixelarium::application::AppGLFW::LogLevelSelect()
 {
     if (ImGui::BeginCombo(LOGLEVELSELECT, LOGLEVELS[log_level_].data()))

@@ -1,7 +1,10 @@
 set(RENDERLIBNAME pixelariumrenderlib)
 
 set(RENDERLIBSRC
-  CvMatRender.cpp)
+  CvMatRender.cpp
+  RenderImageManager.cpp
+  PixelariumImageView.cpp
+  ImageViewFactory.cpp)
 
 add_library(${RENDERLIBNAME} STATIC
   ${RENDERLIBSRC})
@@ -10,4 +13,5 @@ target_link_libraries(${RENDERLIBNAME}
   PRIVATE pixelariumimagelib)
 
 target_include_directories(${RENDERLIBNAME}
-  PRIVATE ${CMAKE_SOURCE_DIR}/lib)
+  PRIVATE ${CMAKE_SOURCE_DIR}/lib
+  PRIVATE ${imgui_DIR})
