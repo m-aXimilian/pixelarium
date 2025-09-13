@@ -4,8 +4,8 @@
 #include <memory>
 
 #include "AppGLFW.hpp"
-#include "rendering/RenderImageManager.hpp"
 #include "imgui.h"
+#include "rendering/RenderImageManager.hpp"
 #include "resources/resource.hpp"
 #include "utilities/ILog.hpp"
 
@@ -15,7 +15,9 @@ class MyApp : public application::AppGLFW
 {
    public:
     MyApp(const utils::log::ILog& log, pixelarium::resources::ImageResourcePool& pool)
-        : application::AppGLFW(log), pool_(pool), render_manager_(std::make_unique<render::RenderImageManager>(pool, log))
+        : application::AppGLFW(log),
+          pool_(pool),
+          render_manager_(std::make_unique<render::RenderImageManager>(pool, log))
     {
     }
 
@@ -27,6 +29,7 @@ class MyApp : public application::AppGLFW
    private:
     void LoadImageProt();
     void ImageGalleryRender();
+    void RenderImages();
 
    private:
     resources::ImageResourcePool& pool_;

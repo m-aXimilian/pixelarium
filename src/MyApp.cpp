@@ -37,6 +37,22 @@ void pixelarium::ui::MyApp::Run()
 {
     if (demop_) ImGui::ShowDemoWindow(&this->demop_);
     if (image_listp_) this->ImageGalleryRender();
+
+    this->RenderImages();
+}
+
+void pixelarium::ui::MyApp::RenderImages()
+{
+    this->render_manager_->Enumerate(
+        [&](resources::ResourceKey key, render::RenderImageStateWrapper& render_state)
+        {
+            render_state.view->ShowImage();
+
+            if (!*render_state.view->GetStatus())
+            {
+                this->render_manager_->MarkForDeletion(key);
+            }
+        });
 }
 
 void pixelarium::ui::MyApp::ImageGalleryRender()
@@ -81,18 +97,6 @@ void pixelarium::ui::MyApp::ImageGalleryRender()
         // Try add the selected index to the manager
         this->render_manager_->Add(this->selected_image_);
     }
-
-    // and then just enumerate the render manager
-    this->render_manager_->Enumerate(
-        [&](resources::ResourceKey key, render::RenderImageStateWrapper& render_state)
-        {
-            render_state.view->ShowImage();
-
-            if (!*render_state.view->GetStatus())
-            {
-                this->render_manager_->MarkForDeletion(key);
-            }
-        });
 
     ImGui::End();  // end gallery window
 }

@@ -9,5 +9,4 @@
 #define AUTOSHOWSELECTED    "Auto View"
 #define OPENIMAGE           "Open"
 
-
-// clang-format off
+// clang-format on
