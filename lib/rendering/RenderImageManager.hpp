@@ -4,10 +4,10 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "resources/resource.hpp"
-#include "utilities/ILog.hpp"
 #include "ImageViewFactory.hpp"
 #include "PixelariumImageView.hpp"
+#include "resources/resource.hpp"
+#include "utilities/ILog.hpp"
 
 // This is intended as an additional abstraction
 // aggregating views that should be rendered (or not)
@@ -61,4 +61,4 @@ class RenderImageManager
 
     const utils::log::ILog& log_;
 };
-}  // namespace pixelarium::ui
+}  // namespace pixelarium::render

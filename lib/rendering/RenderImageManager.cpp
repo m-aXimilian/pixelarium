@@ -1,7 +1,7 @@
 #include "RenderImageManager.hpp"
+
 #include <format>
 
-namespace px = pixelarium;
 using namespace std;
 
 void pixelarium::render::RenderImageManager::UpdateCollection()
@@ -38,8 +38,7 @@ void pixelarium::render::RenderImageManager::Add(resources::ResourceKey key) noe
     // we don't want to add what's already there
     // or empty render images
     auto current_view = this->view_factory_->RenderImage(key);
-    if (this->render_image_map_.contains(key) ||
-        current_view == nullptr)
+    if (this->render_image_map_.contains(key) || current_view == nullptr)
     {
         return;
     }

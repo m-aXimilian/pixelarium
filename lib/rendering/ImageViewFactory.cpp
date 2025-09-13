@@ -1,15 +1,14 @@
 #include "ImageViewFactory.hpp"
+
 #include <memory>
 #include <optional>
 
-using namespace pixelarium::render;
-
-std::unique_ptr<PixelariumImageView> ImageViewFactory::RenderImage(size_t image_id)
+std::unique_ptr<pixelarium::render::PixelariumImageView> pixelarium::render::ImageViewFactory::RenderImage(
+    size_t image_id)
 {
     auto img{this->image_pool_.GetResource(image_id)};
 
-    if (!img.has_value() ||
-        img.value()->Empty())
+    if (!img.has_value() || img.value()->Empty())
     {
         return nullptr;
     }

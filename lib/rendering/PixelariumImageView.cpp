@@ -4,8 +4,6 @@
 
 #include "imgui.h"
 
-using namespace pixelarium::render;
-
 static bool dim_changed_p(const ImVec2& ref_rect, const ImVec2& new_rect)
 {
     if (std::abs(ref_rect.y - new_rect.y) > 5 || std::abs(ref_rect.x - new_rect.x))
@@ -26,36 +24,35 @@ ImVec2 aspect_const_dimensions(const pixelarium::imaging::PixelariumImage& img, 
     return ImVec2(img.GetImage().cols * fact, img.GetImage().rows * fact);
 }
 
-void PixelariumImageView::ShowImage()
+void pixelarium::render::PixelariumImageView::ShowImage()
 {
     if (this->img_ == nullptr || this->img_->Empty() || this->img_->Name().empty())
     {
         // do nothing
         return;
     }
-    // if (this->open_p)
-    {
-        ImGui::Begin(img_->Name().c_str(), &this->open_p,
-                     ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar);
 
-        this->curr_dim_ = ImGui::GetContentRegionAvail();
-        auto new_dim = ImGui::GetContentRegionAvail();
-        auto texture =
-            dim_changed_p(this->curr_dim_, new_dim)
-                ? this->render_.Render(static_cast<size_t>(this->curr_dim_.x), static_cast<size_t>(this->curr_dim_.y))
-                : this->render_.Render();
+    ImGui::Begin(img_->Name().c_str(), &this->open_p,
+                 ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar);
 
-        this->curr_dim_ = new_dim;
+    this->curr_dim_ = ImGui::GetContentRegionAvail();
+    auto new_dim = ImGui::GetContentRegionAvail();
+    auto texture =
+        dim_changed_p(this->curr_dim_, new_dim)
+        ? this->render_.Render(static_cast<size_t>(this->curr_dim_.x), static_cast<size_t>(this->curr_dim_.y))
+        : this->render_.Render();
 
-        ImVec2 dim(this->img_->GetImage().cols, this->img_->GetImage().rows);
+    this->curr_dim_ = new_dim;
 
-        ImGui::Image(reinterpret_cast<ImTextureID>(reinterpret_cast<void*>(texture)),
-                     aspect_const_dimensions(*this->img_, new_dim));
+    ImVec2 dim(this->img_->GetImage().cols, this->img_->GetImage().rows);
 
-        ImGui::Separator();
-        ImGui::Text("%s", std::format("   Raw Dimensions W : {}, H: {}", dim.x, dim.y).c_str());
-        ImGui::Text("%s", std::format("Render Dimensions W : {}, H: {}", curr_dim_.x, curr_dim_.y).c_str());
+    ImGui::Image(reinterpret_cast<ImTextureID>(reinterpret_cast<void*>(texture)),
+                 aspect_const_dimensions(*this->img_, new_dim));
 
-        ImGui::End();
-    }
+    ImGui::Separator();
+    ImGui::Text("%s", std::format("   Raw Dimensions W : {}, H: {}", dim.x, dim.y).c_str());
+    ImGui::Text("%s", std::format("Render Dimensions W : {}, H: {}", curr_dim_.x, curr_dim_.y).c_str());
+
+    ImGui::End();
+
 }

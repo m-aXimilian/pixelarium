@@ -1,8 +1,8 @@
 #pragma once
 
+#include "PixelariumImageView.hpp"
 #include "imaging/PixelariumImage.hpp"
 #include "resources/resource.hpp"
-#include "PixelariumImageView.hpp"
 namespace pixelarium::render
 {
 class ImageViewFactory
@@ -18,4 +18,4 @@ class ImageViewFactory
    private:
     Pool& image_pool_;
 };
-}  // namespace pixelarium::ui
+}  // namespace pixelarium::render
