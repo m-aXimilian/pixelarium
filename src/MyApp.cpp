@@ -41,12 +41,18 @@ void pixelarium::ui::MyApp::Run()
 
 void pixelarium::ui::MyApp::ImageGalleryRender()
 {
+    ImGui::SetNextWindowSize(ImVec2(300, 500));
+    ImGui::Begin(SHOWIMAGEGALLERY);
+
+    // this updates the render collection
+    // essentially deleting render views that were
+    // marked for deletion
     this->render_manager_->UpdateCollection();
 
     static size_t selected_index{0};
     int highlight_index{-1};
 
-    if (ImGui::BeginListBox("Image List"))
+    if (ImGui::BeginListBox("Image List", ImVec2(200, 400)))
     {
         pool_.EnumerateResources(
             [&](size_t id, size_t idx, const imaging::PixelariumImage& img) -> void
@@ -87,6 +93,8 @@ void pixelarium::ui::MyApp::ImageGalleryRender()
                 this->render_manager_->MarkForDeletion(key);
             }
         });
+
+    ImGui::End(); // end gallery window
 }
 
 void pixelarium::ui::MyApp::LoadImageProt()
