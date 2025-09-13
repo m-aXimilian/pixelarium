@@ -64,7 +64,7 @@ class PixelariumImage
     {
         if (!this->uri_.empty())
         {
-            return this->uri_.filename();
+            return this->uri_.filename().string();
         }
 
         return {};
