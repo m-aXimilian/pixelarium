@@ -29,7 +29,7 @@ class PixelariumImageView
    private:
     const std::shared_ptr<Image> img_;
     Render render_;
-    bool open_p{false};
+    bool open_p{true};
     ImVec2 curr_dim_{};
 };
 }  // namespace pixelarium::ui

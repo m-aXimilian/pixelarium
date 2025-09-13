@@ -41,6 +41,8 @@ void pixelarium::ui::MyApp::Run()
 
 void pixelarium::ui::MyApp::ImageGalleryRender()
 {
+    this->render_manager_->UpdateCollection();
+
     static size_t selected_index{0};
     int highlight_index{-1};
 
@@ -70,15 +72,13 @@ void pixelarium::ui::MyApp::ImageGalleryRender()
     this->render_manager_->Enumerate(
         [&](resources::ResourceKey key, RenderImageStateWrapper& render_state)
         {
-            // render_state.show_state = *render_state.view->GetStatus();
             render_state.view->ShowImage();
+
             if (!*render_state.view->GetStatus())
             {
                 this->render_manager_->MarkForDeletion(key);
             }
         });
-
-    // this->render_manager_->UpdateCollection();
 }
 
 void pixelarium::ui::MyApp::LoadImageProt()
@@ -90,6 +90,5 @@ void pixelarium::ui::MyApp::LoadImageProt()
         this->logger_.Debug(std::format("{}: Creating image {}", __FUNCTION__, p));
 
         pool_.SetResource(std::make_unique<PixelariumImage>(p));
-        // last_id = image_view_factory_->AddImage(std::make_unique<PixelariumImage>(p));
     }
 }

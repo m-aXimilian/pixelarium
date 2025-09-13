@@ -28,6 +28,11 @@ ImVec2 aspect_const_dimensions(const pixelarium::imaging::PixelariumImage& img, 
 
 void PixelariumImageView::ShowImage()
 {
+    if (this->img_ == nullptr || this->img_->Empty() || this->img_->Name().empty())
+    {
+        // do nothing
+        return;
+    }
     // if (this->open_p)
     {
         ImGui::Begin(img_->Name().c_str(), &this->open_p,

@@ -70,6 +70,8 @@ class PixelariumImage
         return {};
     }
 
+    bool Empty() const noexcept { return this->img_->empty(); }
+
     static ImageFileType Type() { return PixelariumImage::type_; }
 
    protected:

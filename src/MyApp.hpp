@@ -15,7 +15,7 @@ class MyApp : public application::AppGLFW
 {
    public:
     MyApp(const utils::log::ILog& log, pixelarium::resources::ImageResourcePool& pool)
-        : application::AppGLFW(log), pool_(pool), render_manager_(std::make_unique<RenderImageManager>(pool))
+        : application::AppGLFW(log), pool_(pool), render_manager_(std::make_unique<RenderImageManager>(pool, log))
     {
     }
 

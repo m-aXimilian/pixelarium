@@ -1,13 +1,11 @@
 #pragma once
-#include <cstdio>
-#include <list>
 #include <memory>
 #include <mutex>
 #include <unordered_map>
-#include <vector>
+#include <unordered_set>
 
-#include "PixelariumImage.hpp"
 #include "resources/resource.hpp"
+#include "utilities/ILog.hpp"
 #include "viewmodels/ImageViewFactory.hpp"
 #include "views/PixelariumImageView.hpp"
 
@@ -18,7 +16,7 @@ namespace pixelarium::ui
 struct RenderImageStateWrapper
 {
     std::unique_ptr<PixelariumImageView> view;
-    bool show_state;
+    const bool* show_state;
 };
 
 class RenderImageManager
@@ -26,36 +24,16 @@ class RenderImageManager
     using Pool = resources::ImageResourcePool;
 
    public:
-    explicit RenderImageManager(Pool& pool);
-
-    void Clear() noexcept { this->render_image_map_.clear(); }
-
-    void Add(resources::ResourceKey key) noexcept
+    explicit RenderImageManager(Pool& pool, const utils::log::ILog& log)
+        : view_factory_(std::make_unique<ImageViewFactory>(pool)), log_(log)
     {
-        std::lock_guard<std::mutex> guard(this->mut_);
-        // clang-format off
-        this->render_image_map_.insert(
-            {
-                key,
-                RenderImageStateWrapper
-                {
-                    .view{ this->view_factory_->RenderImage(key) },
-                    .show_state = true
-                }
-            }
-            );
-        // clang-format on
     }
 
-    bool Remove(resources::ResourceKey key) noexcept
-    {
-        if (this->render_image_map_.erase(key) == 1)
-        {
-            return true;
-        }
+    void Clear() noexcept;
 
-        return false;
-    }
+    void Add(resources::ResourceKey key) noexcept;
+
+    bool Remove(resources::ResourceKey key) noexcept;
 
     // can't be const because func mutates the state
     template <typename Callable>
@@ -64,37 +42,23 @@ class RenderImageManager
     {
         for (auto& [key, val] : this->render_image_map_)
         {
-            func(key, val);
+            if (val.view != nullptr)
+            {
+                func(key, val);
+            }
         }
     }
 
-    void MarkForDeletion(resources::ResourceKey key)
-    {
-        std::lock_guard<std::mutex> guard(this->mut_);
-        keys_to_delete_.push_back(key);
-    }
+    void MarkForDeletion(resources::ResourceKey key);
 
-    void UpdateCollection()
-    {
-        // std::erase_if(this->render_image_map_,
-        //               [](const auto& el)
-        //               {
-        //                   const auto& [k, v] = el;
-        //                   return k == false;
-        //               });
-        std::lock_guard<std::mutex> guard(this->mut_);
-        for (const auto& key : keys_to_delete_)
-        {
-            this->render_image_map_.erase(key);
-        }
+    void UpdateCollection();
 
-        keys_to_delete_.clear();
-    }
-
-private:
+   private:
     std::unordered_map<resources::ResourceKey, RenderImageStateWrapper> render_image_map_;
     std::unique_ptr<ImageViewFactory> view_factory_;
     std::mutex mut_;
-    std::list<resources::ResourceKey> keys_to_delete_;
+    std::unordered_set<resources::ResourceKey> keys_to_delete_;
+
+    const utils::log::ILog& log_;
 };
 }  // namespace pixelarium::ui
