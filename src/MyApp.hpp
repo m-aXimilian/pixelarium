@@ -31,7 +31,8 @@ class MyApp : public application::AppGLFW
    private:
     resources::ImageResourcePool& pool_;
     std::unique_ptr<RenderImageManager> render_manager_;
-    bool image_listp_{false};
+    bool image_listp_{true};
+    bool auto_show_selectd_image_{true};
     bool demop_{false};
     ImVec2 curr_dim_;
     size_t selected_image_{0};

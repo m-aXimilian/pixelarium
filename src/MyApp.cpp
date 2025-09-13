@@ -65,8 +65,16 @@ void pixelarium::ui::MyApp::ImageGalleryRender()
         ImGui::EndListBox();
     }
 
-    // Try add the selected index to the manager
-    this->render_manager_->Add(this->selected_image_);
+    ImGui::Checkbox(AUTOSHOWSELECTED, &this->auto_show_selectd_image_);
+    ImGui::SameLine();  // put the button next to the checkbox
+    // note that the button will only show when the checkbox is toggled off
+    // this is intended behavior as the selected image will render automatically
+    // when the checkbox is toggled on
+    if(this->auto_show_selectd_image_ || ImGui::Button(OPENIMAGE))
+    {
+        // Try add the selected index to the manager
+        this->render_manager_->Add(this->selected_image_);
+    }
 
     // and then just enumerate the render manager
     this->render_manager_->Enumerate(
