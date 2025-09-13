@@ -4,7 +4,7 @@
 
 #include "imgui.h"
 
-using namespace pixelarium::ui;
+using namespace pixelarium::render;
 
 static bool dim_changed_p(const ImVec2& ref_rect, const ImVec2& new_rect)
 {

@@ -4,7 +4,7 @@
 namespace px = pixelarium;
 using namespace std;
 
-void pixelarium::ui::RenderImageManager::UpdateCollection()
+void pixelarium::render::RenderImageManager::UpdateCollection()
 {
     // this->log_.Debug(std::format("{}: Updating collection", __PRETTY_FUNCTION__));
     // here we must not lock the mutex because the Remove function will also lock it -> deadlock!
@@ -16,13 +16,13 @@ void pixelarium::ui::RenderImageManager::UpdateCollection()
 
     keys_to_delete_.clear();
 }
-void pixelarium::ui::RenderImageManager::MarkForDeletion(resources::ResourceKey key)
+void pixelarium::render::RenderImageManager::MarkForDeletion(resources::ResourceKey key)
 {
     this->log_.Debug(std::format("{} marking key: \"{}\" for deletion.", __PRETTY_FUNCTION__, key));
     lock_guard<mutex> guard(this->mut_);
     keys_to_delete_.insert(key);
 }
-bool pixelarium::ui::RenderImageManager::Remove(resources::ResourceKey key) noexcept
+bool pixelarium::render::RenderImageManager::Remove(resources::ResourceKey key) noexcept
 {
     bool remove_state{false};
     this->log_.Debug(std::format("{} removing key: \"{}\" from renderlist.", __PRETTY_FUNCTION__, key));
@@ -33,7 +33,7 @@ bool pixelarium::ui::RenderImageManager::Remove(resources::ResourceKey key) noex
 
     return remove_state;
 }
-void pixelarium::ui::RenderImageManager::Add(resources::ResourceKey key) noexcept
+void pixelarium::render::RenderImageManager::Add(resources::ResourceKey key) noexcept
 {
     // we don't want to add what's already there
     // or empty render images
@@ -60,4 +60,4 @@ void pixelarium::ui::RenderImageManager::Add(resources::ResourceKey key) noexcep
             );
     // clang-format on
 }
-void pixelarium::ui::RenderImageManager::Clear() noexcept { this->render_image_map_.clear(); }
+void pixelarium::render::RenderImageManager::Clear() noexcept { this->render_image_map_.clear(); }

@@ -4,12 +4,12 @@
 #include <format>
 #include <memory>
 
-#include "RenderImageManager.hpp"
 #include "app_resources_default.h"
 #include "app_resources_local.h"
 #include "imaging/PixelariumImage.hpp"
 #include "imgui.h"
 #include "portable-file-dialogs.h"
+#include "rendering/RenderImageManager.hpp"
 #include "utilities/ILog.hpp"
 
 using namespace pixelarium::imaging;
@@ -76,7 +76,7 @@ void pixelarium::ui::MyApp::ImageGalleryRender()
     // note that the button will only show when the checkbox is toggled off
     // this is intended behavior as the selected image will render automatically
     // when the checkbox is toggled on
-    if(this->auto_show_selectd_image_ || ImGui::Button(OPENIMAGE))
+    if (this->auto_show_selectd_image_ || ImGui::Button(OPENIMAGE))
     {
         // Try add the selected index to the manager
         this->render_manager_->Add(this->selected_image_);
@@ -84,7 +84,7 @@ void pixelarium::ui::MyApp::ImageGalleryRender()
 
     // and then just enumerate the render manager
     this->render_manager_->Enumerate(
-        [&](resources::ResourceKey key, RenderImageStateWrapper& render_state)
+        [&](resources::ResourceKey key, render::RenderImageStateWrapper& render_state)
         {
             render_state.view->ShowImage();
 
@@ -94,7 +94,7 @@ void pixelarium::ui::MyApp::ImageGalleryRender()
             }
         });
 
-    ImGui::End(); // end gallery window
+    ImGui::End();  // end gallery window
 }
 
 void pixelarium::ui::MyApp::LoadImageProt()

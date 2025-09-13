@@ -1,9 +1,9 @@
 #pragma once
 
-#include "PixelariumImage.hpp"
+#include "imaging/PixelariumImage.hpp"
 #include "resources/resource.hpp"
-#include "views/PixelariumImageView.hpp"
-namespace pixelarium::ui
+#include "PixelariumImageView.hpp"
+namespace pixelarium::render
 {
 class ImageViewFactory
 {

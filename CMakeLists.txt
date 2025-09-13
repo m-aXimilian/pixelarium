@@ -40,9 +40,6 @@ add_subdirectory(lib)
 
 set(SRC
   src/MyApp.cpp
-  src/RenderImageManager.cpp
-  src/views/PixelariumImageView.cpp
-  src/viewmodels/ImageViewFactory.cpp
   src/main.cpp)
 
 #====================

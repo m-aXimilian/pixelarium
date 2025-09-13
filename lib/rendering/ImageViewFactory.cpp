@@ -2,7 +2,7 @@
 #include <memory>
 #include <optional>
 
-using namespace pixelarium::ui;
+using namespace pixelarium::render;
 
 std::unique_ptr<PixelariumImageView> ImageViewFactory::RenderImage(size_t image_id)
 {

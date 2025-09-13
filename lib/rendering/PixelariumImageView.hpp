@@ -2,11 +2,11 @@
 
 #include <memory>
 
-#include "PixelariumImage.hpp"
+#include "imaging/PixelariumImage.hpp"
 #include "imgui.h"
 #include "rendering/CvMatRender.hpp"
 
-namespace pixelarium::ui
+namespace pixelarium::render
 {
 class PixelariumImageView
 {
@@ -32,4 +32,4 @@ class PixelariumImageView
     bool open_p{true};
     ImVec2 curr_dim_{};
 };
-}  // namespace pixelarium::ui
+}  // namespace pixelarium::render

@@ -6,12 +6,12 @@
 
 #include "resources/resource.hpp"
 #include "utilities/ILog.hpp"
-#include "viewmodels/ImageViewFactory.hpp"
-#include "views/PixelariumImageView.hpp"
+#include "ImageViewFactory.hpp"
+#include "PixelariumImageView.hpp"
 
 // This is intended as an additional abstraction
 // aggregating views that should be rendered (or not)
-namespace pixelarium::ui
+namespace pixelarium::render
 {
 struct RenderImageStateWrapper
 {
