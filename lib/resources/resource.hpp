@@ -7,7 +7,7 @@
 #include <optional>
 #include <unordered_map>
 
-#include "imaging/PixelariumImage.hpp"
+#include "imaging/IPixelariumImage.hpp"
 
 namespace pixelarium::resources
 {
@@ -29,7 +29,7 @@ class IResourcePool
     virtual ResourceKey SetResource(std::unique_ptr<ResT> res) = 0;
     virtual bool ModifyResource(ResourceKey id, std::unique_ptr<ResT> res) = 0;
     virtual bool DeleteResource(ResourceKey id) = 0;
-    virtual void EnumerateResources(const std::function<void(ResourceKey, size_t, const imaging::PixelariumImage&)>& func) = 0;
+    virtual void EnumerateResources(const std::function<void(ResourceKey, size_t, const imaging::IPixelariumImage&)>& func) = 0;
     virtual size_t GetTotalSize() const = 0;
 };
 
@@ -38,7 +38,7 @@ class IResourcePool
 // reside with the =ResourcePool=!
 // In fact, the intention is, that there is no way back once the =ResourcePool= took ownership of an object.
 // Callers can get references, but no ownership. A caller might delete a resource though.
-class ImageResourcePool : public IResourcePool<imaging::PixelariumImage>
+class ImageResourcePool : public IResourcePool<imaging::IPixelariumImage>
 {
    public:
     ImageResourcePool() = default;
@@ -48,15 +48,15 @@ class ImageResourcePool : public IResourcePool<imaging::PixelariumImage>
     ImageResourcePool& operator=(ImageResourcePool&) = delete;
     ImageResourcePool& operator=(ImageResourcePool&&) = delete;
 
-    std::optional<std::weak_ptr<imaging::PixelariumImage>> GetResource(ResourceKey id) const override;
-    ResourceKey SetResource(std::unique_ptr<imaging::PixelariumImage> res) override;
-    bool ModifyResource(ResourceKey id, std::unique_ptr<imaging::PixelariumImage> res) override;
+    std::optional<std::weak_ptr<imaging::IPixelariumImage>> GetResource(ResourceKey id) const override;
+    ResourceKey SetResource(std::unique_ptr<imaging::IPixelariumImage> res) override;
+    bool ModifyResource(ResourceKey id, std::unique_ptr<imaging::IPixelariumImage> res) override;
     bool DeleteResource(ResourceKey id) override;
 
-    void EnumerateResources(const std::function<void(ResourceKey, size_t, const imaging::PixelariumImage&)>& func) override;
+    void EnumerateResources(const std::function<void(ResourceKey, size_t, const imaging::IPixelariumImage&)>& func) override;
 
     template <typename Callable>
-    requires std::invocable<Callable, ResourceKey, size_t, const imaging::PixelariumImage&>
+    requires std::invocable<Callable, ResourceKey, size_t, const imaging::IPixelariumImage&>
     void Enumerate(Callable&& func) const
     {
         size_t idx{0};
@@ -69,7 +69,7 @@ class ImageResourcePool : public IResourcePool<imaging::PixelariumImage>
     size_t GetTotalSize() const override { return resources_.size(); }
 
    private:
-    std::unordered_map<size_t, std::shared_ptr<imaging::PixelariumImage>> resources_;
+    std::unordered_map<size_t, std::shared_ptr<imaging::IPixelariumImage>> resources_;
     std::mutex mut_;
 };
 }  // namespace pixelarium::resources
