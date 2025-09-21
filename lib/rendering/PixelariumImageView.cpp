@@ -40,13 +40,13 @@ ImVec2 aspect_const_dimensions(const pixelarium::imaging::PixelariumImage& img, 
 /// fit the available window space.  The raw and rendered dimensions are displayed below the image.
 void pixelarium::render::PixelariumImageView::ShowImage()
 {
-    if (this->img_ == nullptr || this->img_->Empty() || this->img_->Name().empty())
+    if (this->img_.Empty() || this->img_.Name().empty())
     {
         // do nothing
         return;
     }
 
-    ImGui::Begin(img_->Name().c_str(), &this->open_p, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar);
+    ImGui::Begin(img_.Name().c_str(), &this->open_p, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar);
 
     this->curr_dim_ = ImGui::GetContentRegionAvail();
     auto new_dim = ImGui::GetContentRegionAvail();
@@ -57,10 +57,10 @@ void pixelarium::render::PixelariumImageView::ShowImage()
 
     this->curr_dim_ = new_dim;
 
-    ImVec2 dim(this->img_->GetImage().cols, this->img_->GetImage().rows);
+    ImVec2 dim(this->img_.GetImage().cols, this->img_.GetImage().rows);
 
     ImGui::Image(reinterpret_cast<ImTextureID>(reinterpret_cast<void*>(texture)),
-                 aspect_const_dimensions(*this->img_, new_dim));
+                 aspect_const_dimensions(this->img_, new_dim));
 
     ImGui::Separator();
     ImGui::Text("%s", std::format("   Raw Dimensions W : {}, H: {}", dim.x, dim.y).c_str());

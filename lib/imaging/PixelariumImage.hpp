@@ -17,6 +17,7 @@ enum class ImageFileType
     JPG = 2,
     CZI = 3,
 };
+
 /// @brief This aims to be a generic image abstraction
 /// meant for codec specific implementation.
 
@@ -41,7 +42,14 @@ class PixelariumImage
         uri_ = other.uri_;
     };
     PixelariumImage(PixelariumImage&& other) noexcept : img_(std::move(other.img_)) {}
-    PixelariumImage& operator=(const PixelariumImage& other) = delete;
+    PixelariumImage& operator=(const PixelariumImage& other)
+    {
+        this->img_ = std::make_unique<cv::Mat>(*other.img_);
+        this->uri_ = other.uri_;
+
+        return *this;
+    };
+
     PixelariumImage& operator=(PixelariumImage&& other) noexcept
     {
         if (this != &other)

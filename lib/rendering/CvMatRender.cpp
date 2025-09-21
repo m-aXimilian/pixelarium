@@ -11,7 +11,7 @@ using namespace pixelarium::imaging;
 
 /// @brief Constructor for the CvMatRender class.
 /// @param img A shared pointer to the PixelariumImage to be rendered.
-pixelarium::render::CvMatRender::CvMatRender(const std::shared_ptr<PixelariumImage>& img) : base_(img), texture_(0)
+pixelarium::render::CvMatRender::CvMatRender(const PixelariumImage& img) : base_(img), texture_(0)
 {
     // storing a copy of the to-be-rendered image
     // because it will be resized and filtered eventually which we absolutely
@@ -33,7 +33,7 @@ pixelarium::render::CvMatRender::~CvMatRender()
 
 /// @brief Resets the render image with a new PixelariumImage.
 /// @param img A shared pointer to the new PixelariumImage.
-void pixelarium::render::CvMatRender::ResetRenderImage(const std::shared_ptr<pixelarium::imaging::PixelariumImage>& img)
+void pixelarium::render::CvMatRender::ResetRenderImage(const pixelarium::imaging::PixelariumImage& img)
 {
     this->base_ = img;
     this->ResetRenderImage();
@@ -97,7 +97,7 @@ GLuint pixelarium::render::CvMatRender::Render() { return this->uploadTexture();
 /// @return The ID of the OpenGL texture.
 GLuint pixelarium::render::CvMatRender::Render(float factor)
 {
-    cv::resize(this->base_->GetImage(), this->img_, cv::Size(0, 0), factor, factor, cv::INTER_LINEAR_EXACT);
+    cv::resize(this->base_.GetImage(), this->img_, cv::Size(0, 0), factor, factor, cv::INTER_LINEAR_EXACT);
 
     return this->uploadTexture();
 }
@@ -108,7 +108,7 @@ GLuint pixelarium::render::CvMatRender::Render(float factor)
 /// @return The ID of the OpenGL texture.
 GLuint pixelarium::render::CvMatRender::Render(size_t width, size_t height)
 {
-    const auto sz{this->base_->GetImage().size()};
+    const auto sz{this->base_.GetImage().size()};
 
     const auto get_factor = [](auto opt1, auto opt2) -> float { return opt1 < opt2 ? opt1 : opt2; };
 

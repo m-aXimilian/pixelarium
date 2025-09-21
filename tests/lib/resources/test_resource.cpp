@@ -23,8 +23,9 @@ TEST(ImageResourcePoolTest, SetAndGetResource)
     auto img = std::make_unique<DummyImage>();
     auto id = pool.SetResource(std::move(img));
     auto res = pool.GetResource(id);
+    auto res_img = res.value().lock();
     EXPECT_TRUE(res.has_value());
-    EXPECT_NE(res.value(), nullptr);
+    EXPECT_NE(res_img, nullptr);
 }
 
 TEST(ImageResourcePoolTest, SetWrappedRawPointerGet)
@@ -33,8 +34,9 @@ TEST(ImageResourcePoolTest, SetWrappedRawPointerGet)
     auto img = new DummyImage();
     auto id = pool.SetResource(std::unique_ptr<pixelarium::imaging::PixelariumImage>(img));
     auto res = pool.GetResource(id);
+    auto res_img = res.value().lock();
     EXPECT_TRUE(res.has_value());
-    EXPECT_NE(res.value(), nullptr);
+    EXPECT_NE(res_img, nullptr);
 }
 
 TEST(ImageResourcePoolTest, GetNonExistentResourceReturnsEmptyOptional)
@@ -50,8 +52,9 @@ TEST(ImageResourcePoolTest, ModifyResourceSuccess)
     auto new_img = std::make_unique<DummyImage>();
     EXPECT_TRUE(pool.ModifyResource(id, std::move(new_img)));
     auto res = pool.GetResource(id);
+    auto res_img = res.value().lock();
     EXPECT_TRUE(res.has_value());
-    EXPECT_NE(res.value(), nullptr);
+    EXPECT_NE(res_img, nullptr);
 }
 
 TEST(ImageResourcePoolTest, ModifyResourceFail)
