@@ -24,6 +24,6 @@ std::unique_ptr<pixelarium::render::PixelariumImageView> pixelarium::render::Ima
     }
 
     // beware: here we copy the actual image resource over to the new image
-    return std::make_unique<PixelariumImageView>(*img);
+    return std::make_unique<PixelariumImageView>(img);
 }
 

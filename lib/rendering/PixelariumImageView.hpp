@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "imaging/PixelariumImage.hpp"
+#include "imaging/IPixelariumImage.hpp"
 #include "imgui.h"
 #include "rendering/CvMatRender.hpp"
 
@@ -10,11 +10,11 @@ namespace pixelarium::render
 {
 class PixelariumImageView
 {
-    using Image = imaging::PixelariumImage;
+    using Image = imaging::IPixelariumImage;
     using Render = render::CvMatRender;
 
    public:
-    explicit PixelariumImageView(const Image& img) : img_(img) { render_ = Render(img_); }
+    explicit PixelariumImageView(std::shared_ptr<Image> img) : img_(img) { render_ = Render(img_); }
     PixelariumImageView() = delete;
     PixelariumImageView(PixelariumImageView&) = delete;
     PixelariumImageView(const PixelariumImageView&) = delete;
@@ -27,7 +27,7 @@ class PixelariumImageView
     void ShowImage();
 
    private:
-    const Image& img_;
+    std::shared_ptr<Image> img_;
     Render render_;
     bool open_p{true};
     ImVec2 curr_dim_{};

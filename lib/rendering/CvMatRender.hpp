@@ -13,7 +13,7 @@
 #endif
 #include <GLFW/glfw3.h>  // Will drag system OpenGL headers
 #endif
-#include "imaging/PixelariumImage.hpp"
+#include "imaging/IPixelariumImage.hpp"
 // clang-format on
 
 namespace pixelarium::render
@@ -33,18 +33,18 @@ class CvMatRender
     CvMatRender& operator=(CvMatRender&) = default;
     CvMatRender& operator=(CvMatRender&& other) = default;
     ~CvMatRender();
-    explicit CvMatRender(const pixelarium::imaging::PixelariumImage& img);
+    explicit CvMatRender(std::shared_ptr<pixelarium::imaging::IPixelariumImage>& img);
 
    public:
     GLuint Render();
     GLuint Render(float factor);
     GLuint Render(size_t width, size_t height);
-    void ResetRenderImage() { this->img_ = this->base_.GetImage().clone(); }
-    void ResetRenderImage(const pixelarium::imaging::PixelariumImage& img);
+    void ResetRenderImage();
+    void ResetRenderImage(std::shared_ptr<pixelarium::imaging::IPixelariumImage>& img);
 
    private:
     cv::Mat img_;
-    pixelarium::imaging::PixelariumImage base_;
+    std::shared_ptr<pixelarium::imaging::IPixelariumImage> base_;
     GLuint texture_;
 
     GLuint uploadTexture();
