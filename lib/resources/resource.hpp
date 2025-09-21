@@ -25,7 +25,7 @@ class IResourcePool
 {
    public:
     virtual ~IResourcePool() = default;
-    virtual std::optional<const ResT*> GetResource(size_t id) const = 0;
+    virtual std::optional<std::weak_ptr<ResT>> GetResource(size_t id) const = 0;
     virtual ResourceKey SetResource(std::unique_ptr<ResT> res) = 0;
     virtual bool ModifyResource(ResourceKey id, std::unique_ptr<ResT> res) = 0;
     virtual bool DeleteResource(ResourceKey id) = 0;
@@ -48,7 +48,7 @@ class ImageResourcePool : public IResourcePool<imaging::PixelariumImage>
     ImageResourcePool& operator=(ImageResourcePool&) = delete;
     ImageResourcePool& operator=(ImageResourcePool&&) = delete;
 
-    std::optional<const imaging::PixelariumImage*> GetResource(ResourceKey id) const override;
+    std::optional<std::weak_ptr<imaging::PixelariumImage>> GetResource(ResourceKey id) const override;
     ResourceKey SetResource(std::unique_ptr<imaging::PixelariumImage> res) override;
     bool ModifyResource(ResourceKey id, std::unique_ptr<imaging::PixelariumImage> res) override;
     bool DeleteResource(ResourceKey id) override;
@@ -69,7 +69,7 @@ class ImageResourcePool : public IResourcePool<imaging::PixelariumImage>
     size_t GetTotalSize() const override { return resources_.size(); }
 
    private:
-    std::unordered_map<size_t, std::unique_ptr<imaging::PixelariumImage>> resources_;
+    std::unordered_map<size_t, std::shared_ptr<imaging::PixelariumImage>> resources_;
     std::mutex mut_;
 };
 }  // namespace pixelarium::resources

@@ -14,7 +14,7 @@ class PixelariumImageView
     using Render = render::CvMatRender;
 
    public:
-    explicit PixelariumImageView(const std::shared_ptr<Image>& img) : img_(img) { render_ = Render(img_); }
+    explicit PixelariumImageView(const Image& img) : img_(img) { render_ = Render(img_); }
     PixelariumImageView() = delete;
     PixelariumImageView(PixelariumImageView&) = delete;
     PixelariumImageView(const PixelariumImageView&) = delete;
@@ -27,7 +27,7 @@ class PixelariumImageView
     void ShowImage();
 
    private:
-    const std::shared_ptr<Image> img_;
+    const Image& img_;
     Render render_;
     bool open_p{true};
     ImVec2 curr_dim_{};

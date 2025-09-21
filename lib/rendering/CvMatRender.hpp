@@ -33,18 +33,18 @@ class CvMatRender
     CvMatRender& operator=(CvMatRender&) = default;
     CvMatRender& operator=(CvMatRender&& other) = default;
     ~CvMatRender();
-    explicit CvMatRender(const std::shared_ptr<pixelarium::imaging::PixelariumImage>& img);
+    explicit CvMatRender(const pixelarium::imaging::PixelariumImage& img);
 
    public:
     GLuint Render();
     GLuint Render(float factor);
     GLuint Render(size_t width, size_t height);
-    void ResetRenderImage() { this->img_ = this->base_->GetImage().clone(); }
-    void ResetRenderImage(const std::shared_ptr<pixelarium::imaging::PixelariumImage>& img);
+    void ResetRenderImage() { this->img_ = this->base_.GetImage().clone(); }
+    void ResetRenderImage(const pixelarium::imaging::PixelariumImage& img);
 
    private:
     cv::Mat img_;
-    std::shared_ptr<pixelarium::imaging::PixelariumImage> base_;
+    pixelarium::imaging::PixelariumImage base_;
     GLuint texture_;
 
     GLuint uploadTexture();

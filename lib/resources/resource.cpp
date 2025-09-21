@@ -22,12 +22,12 @@ size_t GenerateId() { return id_.fetch_add(1, memory_order_relaxed); }
 /// @brief Retrieves a resource from the pool.
 /// @param id The ID of the resource to retrieve.
 /// @return A pointer to the resource if found, otherwise an empty optional.
-std::optional<const PixelariumImage*> pixelarium::resources::ImageResourcePool::GetResource(ResourceKey id) const
+std::optional<std::weak_ptr<PixelariumImage>> pixelarium::resources::ImageResourcePool::GetResource(ResourceKey id) const
 {
     auto search{this->resources_.find(id)};
     if (search == this->resources_.end()) return std::nullopt;
 
-    return search->second.get();
+    return search->second;
 }
 
 /// @brief Sets a resource in the pool.
