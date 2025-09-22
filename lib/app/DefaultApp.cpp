@@ -24,7 +24,7 @@ void pixelarium::ui::DefaultApp::MenuBarOptionsColumn2()
 {
     if (ImGui::BeginMenu(FILEMENUNAME))
     {
-        if (ImGui::MenuItem("Load File"))
+        if (ImGui::MenuItem(LOADIMAGE))
         {
             this->LoadImage();
         }
@@ -58,7 +58,7 @@ void pixelarium::ui::DefaultApp::RenderImages()
 void pixelarium::ui::DefaultApp::ImageGalleryRender()
 {
     ImGui::SetNextWindowSize(ImVec2(300, 500));
-    ImGui::Begin(SHOWIMAGEGALLERY);
+    ImGui::Begin(SHOWIMAGEGALLERY, &this->image_listp_);
 
     // this updates the render collection
     // essentially deleting render views that were
@@ -98,14 +98,19 @@ void pixelarium::ui::DefaultApp::ImageGalleryRender()
         this->render_manager_->Add(this->selected_image_);
     }
 
-    ImGui::SameLine();
-    if (ImGui::Button("Remove"))
+    if (ImGui::Button(LOADIMAGE))
+    {
+        this->LoadImage();
+    }
+
+    if (ImGui::Button(REMOVEIMAGE))
     {
         this->render_manager_->MarkForDeletion(this->selected_image_);
         this->pool_.DeleteResource(this->selected_image_);
     }
 
-    if (ImGui::Button("Clear"))
+    ImGui::SameLine();
+    if (ImGui::Button(CLEARALL))
     {
         this->render_manager_->Clear();
         this->pool_.Clear();
