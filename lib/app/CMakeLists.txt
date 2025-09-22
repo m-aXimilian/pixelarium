@@ -20,7 +20,8 @@ add_library(${APPLIBNAME}
 
 target_link_libraries(${APPLIBNAME}
   PRIVATE pixelariumutilslib
-  PRIVATE pixelariumimagelib)
+  PRIVATE pixelariumimagelib
+  PRIVATE pixelariumrenderlib)
 
 # This needs to be public to let the consumer know about it.
 if(WIN32)
