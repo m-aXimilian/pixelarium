@@ -10,6 +10,7 @@
 #include "imgui.h"
 #include "portable-file-dialogs.h"
 #include "rendering/RenderImageManager.hpp"
+#include "resources/resource.hpp"
 #include "utilities/ILog.hpp"
 
 using namespace pixelarium::imaging;
@@ -98,6 +99,19 @@ void pixelarium::ui::MyApp::ImageGalleryRender()
         this->render_manager_->Add(this->selected_image_);
     }
 
+    ImGui::SameLine();
+    if (ImGui::Button("Remove"))
+    {
+        this->render_manager_->MarkForDeletion(this->selected_image_);
+        this->pool_.DeleteResource(this->selected_image_);
+    }
+
+    if (ImGui::Button("Clear"))
+    {
+        this->render_manager_->Clear();
+        this->pool_.Clear();
+    }
+
     ImGui::End();  // end gallery window
 }
 
@@ -109,6 +123,12 @@ void pixelarium::ui::MyApp::LoadImageProt()
     {
         this->logger_.Debug(std::format("{}: Creating image {}", __FUNCTION__, p));
 
-        pool_.SetResource(PixelariumImageFactory::CreateImage(p));
+        try
+        {
+            pool_.SetResource(PixelariumImageFactory::CreateImage(p));
+        }
+        catch (const pixelarium::resources::empty_resource_exception& e)
+        {
+        }
     }
 }

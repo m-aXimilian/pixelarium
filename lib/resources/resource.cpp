@@ -35,6 +35,11 @@ std::optional<std::weak_ptr<IPixelariumImage>> pixelarium::resources::ImageResou
 /// @return The ID of the new resource.
 size_t pixelarium::resources::ImageResourcePool::SetResource(unique_ptr<IPixelariumImage> res)
 {
+    if (res == nullptr)
+    {
+        throw empty_resource_exception();
+    }
+
     auto key{::GenerateId()};
     {
         std::lock_guard<std::mutex> guard(this->mut_);

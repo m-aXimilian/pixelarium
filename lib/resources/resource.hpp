@@ -11,7 +11,18 @@
 
 namespace pixelarium::resources
 {
-    using ResourceKey = size_t;
+using ResourceKey = size_t;
+
+struct empty_resource_exception : public std::exception
+{
+    empty_resource_exception() {};
+    empty_resource_exception(const char* msg) : message_(msg) {};
+    const char* what() { return message_; }
+
+   private:
+    const char* message_ = "Empty Resource";
+};
+
 struct IResource
 {
     virtual ~IResource() = default;
@@ -29,8 +40,10 @@ class IResourcePool
     virtual ResourceKey SetResource(std::unique_ptr<ResT> res) = 0;
     virtual bool ModifyResource(ResourceKey id, std::unique_ptr<ResT> res) = 0;
     virtual bool DeleteResource(ResourceKey id) = 0;
-    virtual void EnumerateResources(const std::function<void(ResourceKey, size_t, const imaging::IPixelariumImage&)>& func) = 0;
+    virtual void EnumerateResources(
+        const std::function<void(ResourceKey, size_t, const imaging::IPixelariumImage&)>& func) = 0;
     virtual size_t GetTotalSize() const = 0;
+    virtual void Clear() = 0;
 };
 
 // Now with the =GetResource= method, I do not want to transfer ownership to the caller of that method. The ownership
@@ -52,11 +65,13 @@ class ImageResourcePool : public IResourcePool<imaging::IPixelariumImage>
     ResourceKey SetResource(std::unique_ptr<imaging::IPixelariumImage> res) override;
     bool ModifyResource(ResourceKey id, std::unique_ptr<imaging::IPixelariumImage> res) override;
     bool DeleteResource(ResourceKey id) override;
+    void Clear() override { this->resources_.clear(); }
 
-    void EnumerateResources(const std::function<void(ResourceKey, size_t, const imaging::IPixelariumImage&)>& func) override;
+    void EnumerateResources(
+        const std::function<void(ResourceKey, size_t, const imaging::IPixelariumImage&)>& func) override;
 
     template <typename Callable>
-    requires std::invocable<Callable, ResourceKey, size_t, const imaging::IPixelariumImage&>
+        requires std::invocable<Callable, ResourceKey, size_t, const imaging::IPixelariumImage&>
     void Enumerate(Callable&& func) const
     {
         size_t idx{0};
