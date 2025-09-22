@@ -5,13 +5,13 @@
 #include <opencv2/imgproc.hpp>
 #include <stdexcept>
 
-#include "imaging/PixelariumImage.hpp"
+#include "imaging/IPixelariumImage.hpp"
 
 using namespace pixelarium::imaging;
 
 /// @brief Constructor for the CvMatRender class.
 /// @param img A shared pointer to the PixelariumImage to be rendered.
-pixelarium::render::CvMatRender::CvMatRender(const std::shared_ptr<PixelariumImage>& img) : base_(img), texture_(0)
+pixelarium::render::CvMatRender::CvMatRender(std::shared_ptr<pixelarium::imaging::IPixelariumImage>& img) : base_(img), texture_(0)
 {
     // storing a copy of the to-be-rendered image
     // because it will be resized and filtered eventually which we absolutely
@@ -33,7 +33,7 @@ pixelarium::render::CvMatRender::~CvMatRender()
 
 /// @brief Resets the render image with a new PixelariumImage.
 /// @param img A shared pointer to the new PixelariumImage.
-void pixelarium::render::CvMatRender::ResetRenderImage(const std::shared_ptr<pixelarium::imaging::PixelariumImage>& img)
+void pixelarium::render::CvMatRender::ResetRenderImage(std::shared_ptr<pixelarium::imaging::IPixelariumImage>& img)
 {
     this->base_ = img;
     this->ResetRenderImage();
@@ -97,7 +97,11 @@ GLuint pixelarium::render::CvMatRender::Render() { return this->uploadTexture();
 /// @return The ID of the OpenGL texture.
 GLuint pixelarium::render::CvMatRender::Render(float factor)
 {
-    cv::resize(this->base_->GetImage(), this->img_, cv::Size(0, 0), factor, factor, cv::INTER_LINEAR_EXACT);
+    auto res_val {this->base_->TryGetImage()};
+    if (res_val.has_value())
+    {
+        cv::resize(*res_val.value(), this->img_, cv::Size(0, 0), factor, factor, cv::INTER_LINEAR_EXACT);
+    }
 
     return this->uploadTexture();
 }
@@ -108,11 +112,41 @@ GLuint pixelarium::render::CvMatRender::Render(float factor)
 /// @return The ID of the OpenGL texture.
 GLuint pixelarium::render::CvMatRender::Render(size_t width, size_t height)
 {
-    const auto sz{this->base_->GetImage().size()};
+    auto res_val {this->base_->TryGetImage()};
+
+    if (!res_val.has_value())
+    {
+        return this->Render(1.0f);
+    }
+
+    const auto sz{res_val.value()->size()};
 
     const auto get_factor = [](auto opt1, auto opt2) -> float { return opt1 < opt2 ? opt1 : opt2; };
 
     auto factor = get_factor(width / static_cast<float>(sz.width), height / static_cast<float>(sz.height));
 
     return this->Render(factor);
+}
+
+void pixelarium::render::CvMatRender::ResetRenderImage()
+{
+    if (this->base_ == nullptr)
+    {
+        return;
+    }
+
+    auto root_res = this->base_->TryGetImage();
+
+    if (!root_res.has_value())
+    {
+        return;
+    }
+
+    if (root_res.value() == nullptr)
+    {
+        return;
+    }
+
+    // we copy here
+    this->img_ = (*root_res.value()).clone();
 }

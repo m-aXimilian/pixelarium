@@ -31,17 +31,12 @@ if(UNIX)
   set(CMAKE_CXX_FLAGS "-Wall -Wextra -g --std=c++20")
 endif()
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin/Debug)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin/Release)
-
 add_subdirectory(${pfd_DIR})
 add_subdirectory(${spdlog_DIR})
 add_subdirectory(${glfw3_module_DIR})
-add_subdirectory(src)
 add_subdirectory(lib)
 
 set(SRC
-  src/MyApp.cpp
   src/main.cpp)
 
 #====================
@@ -66,7 +61,6 @@ target_include_directories(${PROJECT_NAME}
   PUBLIC ${PROJECT_SOURCE_DIR}/lib/imaging
   PUBLIC ${PROJECT_SOURCE_DIR}/lib/app
   PUBLIC ${spdlog_DIR}/include
-  PUBLIC ${pfd_DIR}
   PUBLIC ${LIBCZI_INCLUDE_DIR}
   PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 

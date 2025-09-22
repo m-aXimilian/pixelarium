@@ -10,34 +10,35 @@
       "name": "default",
       "hidden": true,
       "generator": "Ninja",
-      "binaryDir": "build",
+      "binaryDir": "${sourceDir}/build/${presetName}",
       "cacheVariables": {
-        "CMAKE_C_COMPILER": "clang",
-        "CMAKE_CXX_COMPILER": "clang++",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-        "FETCHCONTENT_FULLY_DISCONNECTED": "OFF"
+        "FETCHCONTENT_FULLY_DISCONNECTED": "OFF",
+        "CMAKE_VERBOSE_MAKEFILE": "ON",
+        "PIXELARIUM_BUILD_UNITTESTS": "ON"
       }
     },
     {
       "name": "clang-release",
       "inherits": "default",
-      "binaryDir": "build/clang-release",
       "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++",
         "CMAKE_BUILD_TYPE": "Release"
       }
     },
     {
       "name": "clang-debug",
-      "binaryDir": "build/clang-debug",
       "inherits": "default",
       "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++",
         "CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
       "name": "gcc-release",
       "inherits": "default",
-      "binaryDir": "build/gcc-release",
       "cacheVariables": {
         "CMAKE_C_COMPILER": "gcc",
         "CMAKE_CXX_COMPILER": "g++",
@@ -47,7 +48,6 @@
     {
       "name": "gcc-debug",
       "inherits": "default",
-      "binaryDir": "build/gcc-debug",
       "cacheVariables": {
         "CMAKE_C_COMPILER": "gcc",
         "CMAKE_CXX_COMPILER": "g++",
@@ -59,18 +59,27 @@
     {
       "name": "default",
       "hidden": true,
-      "configurePreset": "clang-debug",
       "jobs": 10
     },
     {
-      "name": "release",
+      "name": "clang-release",
       "inherits": "default",
-      "configuration": "Release"
+      "configurePreset": "clang-release"
     },
     {
-      "name": "debug",
+      "name": "clang-debug",
       "inherits": "default",
-      "configuration": "Debug"
+      "configurePreset": "clang-debug"
+    },
+    {
+      "name": "gcc-release",
+      "inherits": "default",
+      "configurePreset": "gcc-release"
+    },
+    {
+      "name": "gcc-debug",
+      "inherits": "default",
+      "configurePreset": "gcc-debug"
     }
   ]
 }

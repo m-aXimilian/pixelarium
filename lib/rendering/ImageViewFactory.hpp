@@ -1,13 +1,12 @@
 #pragma once
 
 #include "PixelariumImageView.hpp"
-#include "imaging/PixelariumImage.hpp"
 #include "resources/resource.hpp"
 namespace pixelarium::render
 {
 class ImageViewFactory
 {
-    using Image = imaging::PixelariumImage;
+    using Image = imaging::IPixelariumImage;
     using Pool = resources::ImageResourcePool;
 
    public:

@@ -11,10 +11,10 @@
 
 namespace pixelarium::ui
 {
-class MyApp : public application::AppGLFW
+class DefaultApp : public application::AppGLFW
 {
    public:
-    MyApp(const utils::log::ILog& log, pixelarium::resources::ImageResourcePool& pool)
+    DefaultApp(const utils::log::ILog& log, pixelarium::resources::ImageResourcePool& pool)
         : application::AppGLFW(log),
           pool_(pool),
           render_manager_(std::make_unique<render::RenderImageManager>(pool, log))
@@ -27,7 +27,7 @@ class MyApp : public application::AppGLFW
     void Run() override;
 
    private:
-    void LoadImageProt();
+    void LoadImage();
     void ImageGalleryRender();
     void RenderImages();
 
