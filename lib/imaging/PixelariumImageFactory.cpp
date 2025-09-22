@@ -26,7 +26,7 @@ constexpr pixelarium::imaging::ImageFileType ExtensionToType(const std::string& 
         return pixelarium::imaging::ImageFileType::CZI;
     }
 
-    return pixelarium::imaging::ImageFileType::UNKONWN;
+    return pixelarium::imaging::ImageFileType::UNKNOWN;
 }
 
 /*static*/ std::unique_ptr<pixelarium::imaging::IPixelariumImage>
@@ -37,10 +37,10 @@ pixelarium::imaging::PixelariumImageFactory::CreateImage(const std::string& uri)
 
     switch (target_type)
     {
-        case ImageFileType::UNKONWN:
+        case ImageFileType::UNKNOWN:
             return {};
             break;
-        case ImageFileType::ABSRACT:
+        case ImageFileType::ABSTRACT:
             return {};
             break;
         case ImageFileType::PNG:

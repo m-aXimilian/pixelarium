@@ -13,8 +13,8 @@ using ImageQueryFunctor = std::function<void(const std::string&, void*, int*)>;
 
 enum class ImageFileType
 {
-    UNKONWN = -10,
-    ABSRACT = 0,
+    UNKNOWN = -10,
+    ABSTRACT = 0,
     PNG = 1,
     JPG = 2,
     CZI = 3,
@@ -46,7 +46,7 @@ class IPixelariumImage
     virtual std::filesystem::path Uri() const noexcept = 0;
 
    public:
-    const static ImageFileType type_{ImageFileType::ABSRACT};
+    const static ImageFileType type_{ImageFileType::ABSTRACT};
 
    protected:
     std::filesystem::path uri_;

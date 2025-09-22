@@ -46,7 +46,7 @@ void pixelarium::render::PixelariumImageView::ShowImage()
         this->cached_image_ = this->img_->TryGetImage();
     }
 
-    if (this->img_->Empty() || this->img_->type_ == imaging::ImageFileType::UNKONWN || !cached_image_.has_value() || this->img_->Name().empty())
+    if (this->img_->Empty() || this->img_->type_ == imaging::ImageFileType::UNKNOWN || !cached_image_.has_value() || this->img_->Name().empty())
     {
         // do nothing
         return;
