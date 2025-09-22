@@ -12,6 +12,7 @@ pixelarium::imaging::PixelariumPng::PixelariumPng(const std::string& uri)
         throw std::runtime_error(std::format("File not {} found", uri));
     }
 
+    this->is_empty_ = false;
     this->uri_ = std::filesystem::path(uri);
 }
 
