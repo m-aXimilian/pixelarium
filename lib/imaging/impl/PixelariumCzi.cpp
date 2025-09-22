@@ -50,7 +50,7 @@ std::unique_ptr<cv::Mat> CZISubBlockToCvMat(std::shared_ptr<libCZI::IBitmapData>
 
     auto bitmap_info = bitmap->Lock();
 
-    for (int h{0}; h < height; ++h)
+    for (size_t h{0}; h < height; ++h)
     {
         unsigned char* source_row = ((unsigned char*)bitmap_info.ptrDataRoi) + bitmap_info.stride * h;
         unsigned char* target_row = fill_mat->ptr(h);
@@ -94,28 +94,12 @@ pixelarium::imaging::PixelariumCzi::PixelariumCzi(const std::string& uri)
 
 std::optional<std::unique_ptr<cv::Mat>> pixelarium::imaging::PixelariumCzi::TryGetImage()
 {
-    // czi_filename is a const wchar_t* here
-    auto stream { libCZI::CreateStreamFromFile(czi_filename) };
-    auto reader { libCZI::CreateCZIReader() };
-    reader->Open(stream);
+    auto stream = libCZI::CreateStreamFromFile(this->uri_.wstring().c_str());
+    auto cziReader = libCZI::CreateCZIReader();
+    cziReader->Open(stream);
+    auto block = cziReader->ReadSubBlock(0);
+    auto bitmap = block->CreateBitmap();
+    auto res = CZISubBlockToCvMat(bitmap, block->GetSubBlockInfo().pixelType);
 
-    std::shared_ptr<libCZI::IMetadataSegment> meta_data_segment;
-    std::shared_ptr<libCZI::ICziMetadata> czi_metadata;
-
-    try
-    {
-        meta_data_segment = reader->ReadMetadataSegment();
-        czi_metadata = meta_data_segment->CreateMetaFromMetadataSegment();
-    }
-    catch (std::exception& ex)
-    {
-        lg::Logger::Error("Could not read metadata", __FUNCTION__);
-    }
-
-    if (czi_metadata)
-    {
-        return czi_metadata;
-    }
-
-    return {};
+    return res;
 }

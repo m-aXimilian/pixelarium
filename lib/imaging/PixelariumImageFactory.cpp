@@ -4,14 +4,14 @@
 #include <cctype>
 #include <memory>
 
+#include "impl/PixelariumCzi.hpp"
 #include "impl/PixelariumJpg.hpp"
 #include "impl/PixelariumPng.hpp"
 
 constexpr pixelarium::imaging::ImageFileType ExtensionToType(const std::string& extension)
 {
     std::string lower_ext{extension};
-    std::ranges::transform(extension, lower_ext.begin(),
-                           [](const char c) -> char { return std::tolower(c); });
+    std::ranges::transform(extension, lower_ext.begin(), [](const char c) -> char { return std::tolower(c); });
 
     if (lower_ext == ".jpg" || lower_ext == ".jpeg")
     {
@@ -20,6 +20,10 @@ constexpr pixelarium::imaging::ImageFileType ExtensionToType(const std::string& 
     if (lower_ext == ".png")
     {
         return pixelarium::imaging::ImageFileType::PNG;
+    }
+    if (lower_ext == ".czi")
+    {
+        return pixelarium::imaging::ImageFileType::CZI;
     }
 
     return pixelarium::imaging::ImageFileType::UNKONWN;
@@ -46,7 +50,7 @@ pixelarium::imaging::PixelariumImageFactory::CreateImage(const std::string& uri)
             return std::make_unique<PixelariumJpg>(uri);
             break;
         case ImageFileType::CZI:
-            return {};
+            return std::make_unique<PixelariumCzi>(uri);
             break;
     }
 }

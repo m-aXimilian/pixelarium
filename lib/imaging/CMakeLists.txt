@@ -10,6 +10,7 @@ set(IMAGELIBSRC
   PixelariumImageFactory.cpp
   impl/PixelariumJpg.cpp
   impl/PixelariumPng.cpp
+  impl/PixelariumCzi.cpp
 )
 
 set(IMAGELIBLIBNAME pixelariumimagelib)
