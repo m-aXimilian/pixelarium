@@ -7,9 +7,19 @@
 namespace
 {
 
+// A Mock implementation for tests requiring _any_ instance of a IPixelariumImage
 class DummyImage : public pixelarium::imaging::IPixelariumImage
 {
-    // Implement minimal interface if needed for test
+   public:
+    std::optional<std::unique_ptr<cv::Mat>> TryGetImage() override { return {}; }
+
+    std::optional<std::unique_ptr<cv::Mat>> TryGetImage(const pixelarium::imaging::IImageQuery&) override { return {}; }
+
+    std::string Name() const noexcept override { return {}; }
+
+    bool Empty() const noexcept override { return true; }
+
+    std::filesystem::path Uri() const noexcept override { return {}; }
 };
 
 }  // anonymous namespace
@@ -84,7 +94,8 @@ TEST(ImageResourcePoolTest, EnumerateResources)
     auto id2 = pool.SetResource(std::make_unique<DummyImage>());
     std::vector<size_t> found_ids{};
 
-    pool.EnumerateResources([&found_ids](size_t id, size_t, const pixelarium::imaging::IPixelariumImage&) { found_ids.push_back(id); });
+    pool.EnumerateResources([&found_ids](size_t id, size_t, const pixelarium::imaging::IPixelariumImage&)
+                            { found_ids.push_back(id); });
 
     EXPECT_EQ(found_ids.size(), 2);
     EXPECT_NE(std::find(found_ids.begin(), found_ids.end(), id1), found_ids.end());
@@ -98,7 +109,8 @@ TEST(ImageResourcePoolTest, TemplatedEnumerate)
     auto id2 = pool.SetResource(std::make_unique<DummyImage>());
     std::vector<size_t> found_ids{};
 
-    pool.Enumerate([&found_ids](size_t id, size_t, const pixelarium::imaging::IPixelariumImage&) { found_ids.push_back(id); });
+    pool.Enumerate([&found_ids](size_t id, size_t, const pixelarium::imaging::IPixelariumImage&)
+                   { found_ids.push_back(id); });
 
     EXPECT_EQ(found_ids.size(), 2);
     EXPECT_NE(std::find(found_ids.begin(), found_ids.end(), id1), found_ids.end());
