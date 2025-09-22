@@ -12,14 +12,15 @@ pixelarium::imaging::PixelariumJpg::PixelariumJpg(const std::string& uri)
         throw std::runtime_error(std::format("File not {} found", uri));
     }
 
+    this->is_empty_ = false;
     this->uri_ = std::filesystem::path(uri);
 }
 
-const std::optional<std::unique_ptr<cv::Mat>> pixelarium::imaging::PixelariumJpg::TryGetImage()
+std::optional<std::unique_ptr<cv::Mat>> pixelarium::imaging::PixelariumJpg::TryGetImage()
 {
     try
     {
-        auto img = std::make_unique<cv::Mat>(cv::imread(this->uri_));
+        auto img = std::make_unique<cv::Mat>(cv::imread(this->uri_.string()));
 
         this->is_empty_ = false;
 

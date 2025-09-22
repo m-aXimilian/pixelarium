@@ -1,5 +1,4 @@
 #include "CvMatRender.hpp"
-#include <OpenGL/gltypes.h>
 
 #include <memory>
 #include <opencv2/core/mat.hpp>

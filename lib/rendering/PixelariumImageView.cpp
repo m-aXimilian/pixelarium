@@ -41,8 +41,12 @@ ImVec2 aspect_const_dimensions(const ImVec2& raw_dim, const ImVec2& curr_dim)
 /// fit the available window space.  The raw and rendered dimensions are displayed below the image.
 void pixelarium::render::PixelariumImageView::ShowImage()
 {
-    auto img_res = this->img_->TryGetImage();
-    if (this->img_->Empty() || this->img_->type_ == imaging::ImageFileType::UNKONWN || !img_res.has_value() || this->img_->Name().empty())
+    if (!this->cached_image_.has_value())
+    {
+        this->cached_image_ = this->img_->TryGetImage();
+    }
+
+    if (this->img_->Empty() || this->img_->type_ == imaging::ImageFileType::UNKONWN || !cached_image_.has_value() || this->img_->Name().empty())
     {
         // do nothing
         return;
@@ -59,7 +63,7 @@ void pixelarium::render::PixelariumImageView::ShowImage()
 
     this->curr_dim_ = new_dim;
 
-    ImVec2 dim(img_res.value()->cols, img_res.value()->rows);
+    ImVec2 dim(cached_image_.value()->cols, cached_image_.value()->rows);
 
     ImGui::Image(reinterpret_cast<ImTextureID>(reinterpret_cast<void*>(texture)),
                  aspect_const_dimensions(dim, new_dim));

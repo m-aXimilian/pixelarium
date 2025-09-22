@@ -9,9 +9,9 @@
 
 constexpr pixelarium::imaging::ImageFileType ExtensionToType(const std::string& extension)
 {
-    std::string lower_ext;
-    std::transform(extension.cbegin(), extension.cend(), lower_ext.begin(),
-                   [](const char c) -> char { return std::tolower(c); });
+    std::string lower_ext{extension};
+    std::ranges::transform(extension, lower_ext.begin(),
+                           [](const char c) -> char { return std::tolower(c); });
 
     if (lower_ext == ".jpg" || lower_ext == ".jpeg")
     {
@@ -29,7 +29,7 @@ constexpr pixelarium::imaging::ImageFileType ExtensionToType(const std::string& 
 pixelarium::imaging::PixelariumImageFactory::CreateImage(const std::string& uri)
 {
     const auto res{std::filesystem::path(uri)};
-    const auto target_type{ExtensionToType(res.string())};
+    const auto target_type{ExtensionToType(res.extension().string())};
 
     switch (target_type)
     {

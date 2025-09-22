@@ -14,9 +14,9 @@ class PixelariumPng : public IPixelariumImage
 
     // IPixelariumImage member implementations
    public:
-    const std::optional<std::unique_ptr<cv::Mat>> TryGetImage() override;
+    std::optional<std::unique_ptr<cv::Mat>> TryGetImage() override;
 
-    const std::optional<std::unique_ptr<cv::Mat>> TryGetImage(const IImageQuery&) override
+    std::optional<std::unique_ptr<cv::Mat>> TryGetImage(const IImageQuery&) override
     {
         // ToDo: proper error
         throw std::runtime_error("Not possible with png.");

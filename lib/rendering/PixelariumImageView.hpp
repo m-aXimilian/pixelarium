@@ -28,6 +28,7 @@ class PixelariumImageView
 
    private:
     std::shared_ptr<Image> img_;
+    std::optional<std::unique_ptr<cv::Mat>> cached_image_ {};
     Render render_;
     bool open_p{true};
     ImVec2 curr_dim_{};

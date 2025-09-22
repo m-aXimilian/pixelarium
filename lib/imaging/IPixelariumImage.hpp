@@ -35,9 +35,9 @@ class IPixelariumImage
     virtual ~IPixelariumImage() = default;
 
     // this will have to throw or something for multidimensional images
-    virtual const std::optional<std::unique_ptr<cv::Mat>> TryGetImage() = 0;
+    virtual std::optional<std::unique_ptr<cv::Mat>> TryGetImage() = 0;
 
-    virtual const std::optional<std::unique_ptr<cv::Mat>> TryGetImage(const IImageQuery&) = 0;
+    virtual std::optional<std::unique_ptr<cv::Mat>> TryGetImage(const IImageQuery&) = 0;
 
     virtual std::string Name() const noexcept = 0;
 

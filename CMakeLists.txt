@@ -19,6 +19,10 @@ message(STATUS "GLFW:\t" ${glfw3_module_DIR})
 message(STATUS "PFD:\t\t" ${pfd_DIR})
 message(STATUS "SPDLOG:\t" ${spdlog_DIR})
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+  add_compile_definitions(_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH)
+endif()
+
 if(WIN32)
   set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
   if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
