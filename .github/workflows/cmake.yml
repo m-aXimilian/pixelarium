@@ -23,8 +23,8 @@ jobs:
     - name: configure
       run: cmake --preset gcc-debug
     - name: build
-      run: cmake --build build --preset debug
+      run: cmake --build build --preset gcc-debug
     - name: test
       run: |
-        cd ${{github.workspace}}/build
+        cd ${{github.workspace}}/build/gcc-debug
         ctest -C Debug

@@ -2,15 +2,24 @@
 
 #include <algorithm>
 
-#include "imaging/PixelariumImage.hpp"
 #include "resources/resource.hpp"
 
 namespace
 {
 
-class DummyImage : public pixelarium::imaging::PixelariumImage
+// A Mock implementation for tests requiring _any_ instance of a IPixelariumImage
+class DummyImage : public pixelarium::imaging::IPixelariumImage
 {
-    // Implement minimal interface if needed for test
+   public:
+    std::optional<std::unique_ptr<cv::Mat>> TryGetImage() override { return {}; }
+
+    std::optional<std::unique_ptr<cv::Mat>> TryGetImage(const pixelarium::imaging::IImageQuery&) override { return {}; }
+
+    std::string Name() const noexcept override { return {}; }
+
+    bool Empty() const noexcept override { return true; }
+
+    std::filesystem::path Uri() const noexcept override { return {}; }
 };
 
 }  // anonymous namespace
@@ -23,18 +32,20 @@ TEST(ImageResourcePoolTest, SetAndGetResource)
     auto img = std::make_unique<DummyImage>();
     auto id = pool.SetResource(std::move(img));
     auto res = pool.GetResource(id);
+    auto res_img = res.value().lock();
     EXPECT_TRUE(res.has_value());
-    EXPECT_NE(res.value(), nullptr);
+    EXPECT_NE(res_img, nullptr);
 }
 
 TEST(ImageResourcePoolTest, SetWrappedRawPointerGet)
 {
     ImageResourcePool pool;
     auto img = new DummyImage();
-    auto id = pool.SetResource(std::unique_ptr<pixelarium::imaging::PixelariumImage>(img));
+    auto id = pool.SetResource(std::unique_ptr<pixelarium::imaging::IPixelariumImage>(img));
     auto res = pool.GetResource(id);
+    auto res_img = res.value().lock();
     EXPECT_TRUE(res.has_value());
-    EXPECT_NE(res.value(), nullptr);
+    EXPECT_NE(res_img, nullptr);
 }
 
 TEST(ImageResourcePoolTest, GetNonExistentResourceReturnsEmptyOptional)
@@ -50,8 +61,9 @@ TEST(ImageResourcePoolTest, ModifyResourceSuccess)
     auto new_img = std::make_unique<DummyImage>();
     EXPECT_TRUE(pool.ModifyResource(id, std::move(new_img)));
     auto res = pool.GetResource(id);
+    auto res_img = res.value().lock();
     EXPECT_TRUE(res.has_value());
-    EXPECT_NE(res.value(), nullptr);
+    EXPECT_NE(res_img, nullptr);
 }
 
 TEST(ImageResourcePoolTest, ModifyResourceFail)
@@ -82,7 +94,8 @@ TEST(ImageResourcePoolTest, EnumerateResources)
     auto id2 = pool.SetResource(std::make_unique<DummyImage>());
     std::vector<size_t> found_ids{};
 
-    pool.EnumerateResources([&found_ids](size_t id, size_t, const pixelarium::imaging::PixelariumImage&) { found_ids.push_back(id); });
+    pool.EnumerateResources([&found_ids](size_t id, size_t, const pixelarium::imaging::IPixelariumImage&)
+                            { found_ids.push_back(id); });
 
     EXPECT_EQ(found_ids.size(), 2);
     EXPECT_NE(std::find(found_ids.begin(), found_ids.end(), id1), found_ids.end());
@@ -96,7 +109,8 @@ TEST(ImageResourcePoolTest, TemplatedEnumerate)
     auto id2 = pool.SetResource(std::make_unique<DummyImage>());
     std::vector<size_t> found_ids{};
 
-    pool.Enumerate([&found_ids](size_t id, size_t, const pixelarium::imaging::PixelariumImage&) { found_ids.push_back(id); });
+    pool.Enumerate([&found_ids](size_t id, size_t, const pixelarium::imaging::IPixelariumImage&)
+                   { found_ids.push_back(id); });
 
     EXPECT_EQ(found_ids.size(), 2);
     EXPECT_NE(std::find(found_ids.begin(), found_ids.end(), id1), found_ids.end());

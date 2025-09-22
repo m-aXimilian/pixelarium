@@ -9,14 +9,21 @@
 std::unique_ptr<pixelarium::render::PixelariumImageView> pixelarium::render::ImageViewFactory::RenderImage(
     size_t image_id)
 {
-    auto img{this->image_pool_.GetResource(image_id)};
+    auto res{this->image_pool_.GetResource(image_id)};
 
-    if (!img.has_value() || img.value()->Empty())
+    if (!res.has_value())
     {
-        return nullptr;
+        return {};
+    }
+
+    auto img {res.value().lock()};
+
+    if (img->Empty())
+    {
+        return {};
     }
 
     // beware: here we copy the actual image resource over to the new image
-    return std::make_unique<PixelariumImageView>(std::make_shared<Image>(*img.value()));
+    return std::make_unique<PixelariumImageView>(img);
 }
 
