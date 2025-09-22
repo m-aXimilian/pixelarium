@@ -9,7 +9,7 @@ pixelarium::imaging::PixelariumPng::PixelariumPng(const std::string& uri)
 {
     if (!std::filesystem::exists(uri))
     {
-        throw std::runtime_error(std::format("File not {} found", uri));
+        throw std::runtime_error("Render file not found.");
     }
 
     this->is_empty_ = false;
