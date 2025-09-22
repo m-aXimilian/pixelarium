@@ -1,4 +1,4 @@
-#include "MyApp.hpp"
+#include "DefaultApp.hpp"
 
 #include <cstddef>
 #include <format>
@@ -6,7 +6,6 @@
 
 #include "PixelariumImageFactory.hpp"
 #include "app_resources_default.h"
-#include "app_resources_local.h"
 #include "imgui.h"
 #include "portable-file-dialogs.h"
 #include "rendering/RenderImageManager.hpp"
@@ -15,26 +14,26 @@
 
 using namespace pixelarium::imaging;
 
-void pixelarium::ui::MyApp::MenuBarOptionsColumn1()
+void pixelarium::ui::DefaultApp::MenuBarOptionsColumn1()
 {
     ImGui::MenuItem(SHOWIMGUIDEMOS, NULL, &this->demop_);
     ImGui::MenuItem(SHOWIMAGEGALLERY, NULL, &this->image_listp_);
 }
 
-void pixelarium::ui::MyApp::MenuBarOptionsColumn2()
+void pixelarium::ui::DefaultApp::MenuBarOptionsColumn2()
 {
     if (ImGui::BeginMenu(FILEMENUNAME))
     {
         if (ImGui::MenuItem("Load File"))
         {
-            this->LoadImageProt();
+            this->LoadImage();
         }
 
         ImGui::EndMenu();
     }
 }
 
-void pixelarium::ui::MyApp::Run()
+void pixelarium::ui::DefaultApp::Run()
 {
     if (demop_) ImGui::ShowDemoWindow(&this->demop_);
     if (image_listp_) this->ImageGalleryRender();
@@ -42,7 +41,7 @@ void pixelarium::ui::MyApp::Run()
     this->RenderImages();
 }
 
-void pixelarium::ui::MyApp::RenderImages()
+void pixelarium::ui::DefaultApp::RenderImages()
 {
     this->render_manager_->Enumerate(
         [&](resources::ResourceKey key, render::RenderImageStateWrapper& render_state)
@@ -56,7 +55,7 @@ void pixelarium::ui::MyApp::RenderImages()
         });
 }
 
-void pixelarium::ui::MyApp::ImageGalleryRender()
+void pixelarium::ui::DefaultApp::ImageGalleryRender()
 {
     ImGui::SetNextWindowSize(ImVec2(300, 500));
     ImGui::Begin(SHOWIMAGEGALLERY);
@@ -115,7 +114,7 @@ void pixelarium::ui::MyApp::ImageGalleryRender()
     ImGui::End();  // end gallery window
 }
 
-void pixelarium::ui::MyApp::LoadImageProt()
+void pixelarium::ui::DefaultApp::LoadImage()
 {
     size_t last_id{};
     auto res{pfd::open_file("Load Inputs", pfd::path::home(), {"All Files", "*"}, pfd::opt::multiselect).result()};
@@ -127,8 +126,9 @@ void pixelarium::ui::MyApp::LoadImageProt()
         {
             pool_.SetResource(PixelariumImageFactory::CreateImage(p));
         }
-        catch (const pixelarium::resources::empty_resource_exception& e)
+        catch (pixelarium::resources::empty_resource_exception& e)
         {
+            logger_.Error(std::format("{}: Failed to load file '{}' with '{}'", __PRETTY_FUNCTION__, p, e.what()));
         }
     }
 }

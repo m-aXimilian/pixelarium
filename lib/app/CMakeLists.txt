@@ -4,6 +4,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/app_resources_default.h.in
 
 set(APPLIBSRC
   AppGLFW.cpp
+  DefaultApp.cpp
   ${imgui_DIR}/imgui.cpp
   ${imgui_DIR}/imgui_demo.cpp
   ${imgui_DIR}/imgui_draw.cpp
@@ -18,7 +19,8 @@ add_library(${APPLIBNAME}
   STATIC ${APPLIBSRC})
 
 target_link_libraries(${APPLIBNAME}
-  PRIVATE pixelariumutilslib)
+  PRIVATE pixelariumutilslib
+  PRIVATE pixelariumimagelib)
 
 # This needs to be public to let the consumer know about it.
 if(WIN32)
@@ -40,5 +42,7 @@ endif()
 target_include_directories(${APPLIBNAME}
   PRIVATE ${CMAKE_BINARY_DIR}
   PRIVATE ${PROJECT_SOURCE_DIR}/lib
+  PRIVATE ${PROJECT_SOURCE_DIR}/lib/imaging
+  PUBLIC ${pfd_DIR}
   PUBLIC ${imgui_DIR}
   PUBLIC ${imgui_DIR}/backends)
