@@ -98,9 +98,9 @@ GLuint pixelarium::render::CvMatRender::Render() { return this->uploadTexture();
 GLuint pixelarium::render::CvMatRender::Render(float factor)
 {
     auto res_val {this->base_->TryGetImage()};
-    if (res_val.has_value())
+    if (res_val)
     {
-        cv::resize(*res_val.value(), this->img_, cv::Size(0, 0), factor, factor, cv::INTER_LINEAR_EXACT);
+        cv::resize(*res_val, this->img_, cv::Size(0, 0), factor, factor, cv::INTER_LINEAR_EXACT);
     }
 
     return this->uploadTexture();
@@ -114,12 +114,12 @@ GLuint pixelarium::render::CvMatRender::Render(size_t width, size_t height)
 {
     auto res_val {this->base_->TryGetImage()};
 
-    if (!res_val.has_value())
+    if (!res_val)
     {
         return this->Render(1.0f);
     }
 
-    const auto sz{res_val.value()->size()};
+    const auto sz{res_val->size()};
 
     const auto get_factor = [](auto opt1, auto opt2) -> float { return opt1 < opt2 ? opt1 : opt2; };
 
@@ -137,16 +137,11 @@ void pixelarium::render::CvMatRender::ResetRenderImage()
 
     auto root_res = this->base_->TryGetImage();
 
-    if (!root_res.has_value())
-    {
-        return;
-    }
-
-    if (root_res.value() == nullptr)
+    if (!root_res)
     {
         return;
     }
 
     // we copy here
-    this->img_ = (*root_res.value()).clone();
+    this->img_ = root_res->clone();
 }

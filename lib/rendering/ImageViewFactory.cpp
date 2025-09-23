@@ -11,12 +11,12 @@ std::unique_ptr<pixelarium::render::PixelariumImageView> pixelarium::render::Ima
 {
     auto res{this->image_pool_.GetResource(image_id)};
 
-    if (!res.has_value())
+    auto img{res.lock()};
+
+    if (img == nullptr)
     {
         return {};
     }
-
-    auto img {res.value().lock()};
 
     if (img->Empty())
     {

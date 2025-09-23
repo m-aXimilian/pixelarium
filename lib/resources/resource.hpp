@@ -36,7 +36,7 @@ class IResourcePool
 {
    public:
     virtual ~IResourcePool() = default;
-    virtual std::optional<std::weak_ptr<ResT>> GetResource(size_t id) const = 0;
+    virtual std::weak_ptr<ResT> GetResource(size_t id) const = 0;
     virtual ResourceKey SetResource(std::unique_ptr<ResT> res) = 0;
     virtual bool ModifyResource(ResourceKey id, std::unique_ptr<ResT> res) = 0;
     virtual bool DeleteResource(ResourceKey id) = 0;
@@ -61,7 +61,7 @@ class ImageResourcePool : public IResourcePool<imaging::IPixelariumImage>
     ImageResourcePool& operator=(ImageResourcePool&) = delete;
     ImageResourcePool& operator=(ImageResourcePool&&) = delete;
 
-    std::optional<std::weak_ptr<imaging::IPixelariumImage>> GetResource(ResourceKey id) const override;
+    std::weak_ptr<imaging::IPixelariumImage> GetResource(ResourceKey id) const override;
     ResourceKey SetResource(std::unique_ptr<imaging::IPixelariumImage> res) override;
     bool ModifyResource(ResourceKey id, std::unique_ptr<imaging::IPixelariumImage> res) override;
     bool DeleteResource(ResourceKey id) override;

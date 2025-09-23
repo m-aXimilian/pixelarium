@@ -3,7 +3,9 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/app_resources_default.h.in
   ${CMAKE_BINARY_DIR}/app_resources_default.h @ONLY)
 
 set(APPLIBSRC
+  AppGLFW.hpp
   AppGLFW.cpp
+  DefaultApp.hpp
   DefaultApp.cpp
   ${imgui_DIR}/imgui.cpp
   ${imgui_DIR}/imgui_demo.cpp

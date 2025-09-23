@@ -92,7 +92,7 @@ pixelarium::imaging::PixelariumCzi::PixelariumCzi(const std::string& uri)
     this->uri_ = std::filesystem::path(uri);
 }
 
-std::optional<std::unique_ptr<cv::Mat>> pixelarium::imaging::PixelariumCzi::TryGetImage()
+std::unique_ptr<cv::Mat> pixelarium::imaging::PixelariumCzi::TryGetImage()
 {
     auto stream = libCZI::CreateStreamFromFile(this->uri_.wstring().c_str());
     auto cziReader = libCZI::CreateCZIReader();

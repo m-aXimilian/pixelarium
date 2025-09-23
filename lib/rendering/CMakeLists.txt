@@ -1,9 +1,13 @@
 set(RENDERLIBNAME pixelariumrenderlib)
 
 set(RENDERLIBSRC
+  CvMatRender.hpp
   CvMatRender.cpp
+  RenderImageManager.hpp
   RenderImageManager.cpp
+  PixelariumImageView.hpp
   PixelariumImageView.cpp
+  ImageViewFactory.hpp
   ImageViewFactory.cpp)
 
 add_library(${RENDERLIBNAME} STATIC

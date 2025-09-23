@@ -57,7 +57,7 @@ void pixelarium::ui::DefaultApp::RenderImages()
 
 void pixelarium::ui::DefaultApp::ImageGalleryRender()
 {
-    ImGui::SetNextWindowSize(ImVec2(300, 500));
+    ImGui::SetNextWindowSize(ImVec2(300, 550));
     ImGui::Begin(SHOWIMAGEGALLERY, &this->image_listp_);
 
     // this updates the render collection
@@ -121,7 +121,6 @@ void pixelarium::ui::DefaultApp::ImageGalleryRender()
 
 void pixelarium::ui::DefaultApp::LoadImage()
 {
-    size_t last_id{};
     auto res{pfd::open_file("Load Inputs", pfd::path::home(), {"All Files", "*"}, pfd::opt::multiselect).result()};
     for (auto& p : res)
     {

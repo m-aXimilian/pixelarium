@@ -11,9 +11,9 @@ namespace
 class DummyImage : public pixelarium::imaging::IPixelariumImage
 {
    public:
-    std::optional<std::unique_ptr<cv::Mat>> TryGetImage() override { return {}; }
+    std::unique_ptr<cv::Mat> TryGetImage() override { return {}; }
 
-    std::optional<std::unique_ptr<cv::Mat>> TryGetImage(const pixelarium::imaging::IImageQuery&) override { return {}; }
+    std::unique_ptr<cv::Mat> TryGetImage(const pixelarium::imaging::IImageQuery&) override { return {}; }
 
     std::string Name() const noexcept override { return {}; }
 
@@ -32,8 +32,8 @@ TEST(ImageResourcePoolTest, SetAndGetResource)
     auto img = std::make_unique<DummyImage>();
     auto id = pool.SetResource(std::move(img));
     auto res = pool.GetResource(id);
-    auto res_img = res.value().lock();
-    EXPECT_TRUE(res.has_value());
+    auto res_img = res.lock();
+
     EXPECT_NE(res_img, nullptr);
 }
 
@@ -43,15 +43,14 @@ TEST(ImageResourcePoolTest, SetWrappedRawPointerGet)
     auto img = new DummyImage();
     auto id = pool.SetResource(std::unique_ptr<pixelarium::imaging::IPixelariumImage>(img));
     auto res = pool.GetResource(id);
-    auto res_img = res.value().lock();
-    EXPECT_TRUE(res.has_value());
+    auto res_img = res.lock();
     EXPECT_NE(res_img, nullptr);
 }
 
 TEST(ImageResourcePoolTest, GetNonExistentResourceReturnsEmptyOptional)
 {
     ImageResourcePool pool;
-    EXPECT_FALSE(pool.GetResource(12345));
+    EXPECT_EQ(pool.GetResource(12345).lock(), nullptr);
 }
 
 TEST(ImageResourcePoolTest, ModifyResourceSuccess)
@@ -61,8 +60,8 @@ TEST(ImageResourcePoolTest, ModifyResourceSuccess)
     auto new_img = std::make_unique<DummyImage>();
     EXPECT_TRUE(pool.ModifyResource(id, std::move(new_img)));
     auto res = pool.GetResource(id);
-    auto res_img = res.value().lock();
-    EXPECT_TRUE(res.has_value());
+    auto res_img = res.lock();
+
     EXPECT_NE(res_img, nullptr);
 }
 
@@ -78,7 +77,7 @@ TEST(ImageResourcePoolTest, DeleteResourceSuccess)
     ImageResourcePool pool;
     auto id = pool.SetResource(std::make_unique<DummyImage>());
     EXPECT_TRUE(pool.DeleteResource(id));
-    EXPECT_FALSE(pool.GetResource(id).has_value());
+    EXPECT_EQ(pool.GetResource(id).lock(), nullptr);
 }
 
 TEST(ImageResourcePoolTest, DeleteResourceFail)

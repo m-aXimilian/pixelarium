@@ -4,7 +4,6 @@
 #include <functional>
 #include <memory>
 #include <opencv2/core/mat.hpp>
-#include <optional>
 #include <string>
 
 namespace pixelarium::imaging
@@ -35,9 +34,9 @@ class IPixelariumImage
     virtual ~IPixelariumImage() = default;
 
     // this will have to throw or something for multidimensional images
-    virtual std::optional<std::unique_ptr<cv::Mat>> TryGetImage() = 0;
+    virtual std::unique_ptr<cv::Mat> TryGetImage() = 0;
 
-    virtual std::optional<std::unique_ptr<cv::Mat>> TryGetImage(const IImageQuery&) = 0;
+    virtual std::unique_ptr<cv::Mat> TryGetImage(const IImageQuery&) = 0;
 
     virtual std::string Name() const noexcept = 0;
 
