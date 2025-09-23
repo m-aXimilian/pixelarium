@@ -4,7 +4,6 @@
 #include <cstddef>
 #include <functional>
 #include <mutex>
-#include <optional>
 
 using pixelarium::imaging::IPixelariumImage;
 using namespace std;
@@ -22,10 +21,10 @@ size_t GenerateId() { return id_.fetch_add(1, memory_order_relaxed); }
 /// @brief Retrieves a resource from the pool.
 /// @param id The ID of the resource to retrieve.
 /// @return A pointer to the resource if found, otherwise an empty optional.
-std::optional<std::weak_ptr<IPixelariumImage>> pixelarium::resources::ImageResourcePool::GetResource(ResourceKey id) const
+std::weak_ptr<IPixelariumImage> pixelarium::resources::ImageResourcePool::GetResource(ResourceKey id) const
 {
     auto search{this->resources_.find(id)};
-    if (search == this->resources_.end()) return std::nullopt;
+    if (search == this->resources_.end()) return {};
 
     return search->second;
 }
@@ -81,7 +80,7 @@ bool pixelarium::resources::ImageResourcePool::DeleteResource(ResourceKey id)
 /// @param func A function to call for each resource.  The function should accept the resource ID and a const reference
 /// to a PixelariumImage.
 void pixelarium::resources::ImageResourcePool::EnumerateResources(
-    const std::function<void(ResourceKey, size_t, const imaging::       IPixelariumImage&)>& func)
+    const std::function<void(ResourceKey, size_t, const imaging::IPixelariumImage&)>& func)
 {
     size_t idx{0};
     for (const auto& e : this->resources_)

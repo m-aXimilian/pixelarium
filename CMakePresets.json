@@ -15,7 +15,8 @@
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
         "FETCHCONTENT_FULLY_DISCONNECTED": "OFF",
         "CMAKE_VERBOSE_MAKEFILE": "ON",
-        "PIXELARIUM_BUILD_UNITTESTS": "ON"
+        "PIXELARIUM_BUILD_UNITTESTS": "ON",
+        "PIXELARIUM_BUILD_DOCS": "OFF"
       }
     },
     {
@@ -51,7 +52,8 @@
       "cacheVariables": {
         "CMAKE_C_COMPILER": "gcc",
         "CMAKE_CXX_COMPILER": "g++",
-        "CMAKE_BUILD_TYPE": "Debug"
+        "CMAKE_BUILD_TYPE": "Debug",
+        "PIXELARIUM_BUILD_DOCS": "ON"
       }
     }
   ],

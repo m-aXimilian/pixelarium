@@ -16,7 +16,7 @@ pixelarium::imaging::PixelariumJpg::PixelariumJpg(const std::string& uri)
     this->uri_ = std::filesystem::path(uri);
 }
 
-std::optional<std::unique_ptr<cv::Mat>> pixelarium::imaging::PixelariumJpg::TryGetImage()
+std::unique_ptr<cv::Mat> pixelarium::imaging::PixelariumJpg::TryGetImage()
 {
     try
     {

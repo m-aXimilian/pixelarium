@@ -1,6 +1,8 @@
 set(UTILSLIBNAME pixelariumutilslib)
 
 set(UTILSLIBSRC
+  ILog.hpp
+  SpdLogger.hpp
   SpdLogger.cpp)
 
 add_library(${UTILSLIBNAME} STATIC ${UTILSLIBSRC})

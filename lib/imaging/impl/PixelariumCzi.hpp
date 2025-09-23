@@ -6,6 +6,11 @@
 
 namespace pixelarium::imaging
 {
+struct CziParams : public IImageQuery
+{
+    
+};
+
 class PixelariumCzi : public IPixelariumImage
 {
    public:
@@ -13,25 +18,19 @@ class PixelariumCzi : public IPixelariumImage
 
     // IPixelariumImage member implementations
    public:
-    std::optional<std::unique_ptr<cv::Mat>> TryGetImage() override;
+    std::unique_ptr<cv::Mat> TryGetImage() override;
 
-    std::optional<std::unique_ptr<cv::Mat>> TryGetImage(const IImageQuery&) override
+    std::unique_ptr<cv::Mat> TryGetImage(const IImageQuery&) override
     {
         // ToDo: proper error
         throw std::runtime_error("Not implemented.");
     }
 
-    std::string Name() const noexcept override
+    std::vector<std::unique_ptr<cv::Mat>> TryGetImages(const IImageQuery&) override
     {
-        if (!this->uri_.empty())
-        {
-            return this->uri_.filename().string();
-        }
-
-        return {};
+        // ToDo: proper error
+        throw std::runtime_error("Not implemented.");
     }
-
-    std::filesystem::path Uri() const noexcept override { return this->uri_.string(); }
 
     bool Empty() const noexcept override { return this->is_empty_; }
 
