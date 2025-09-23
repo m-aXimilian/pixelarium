@@ -14,27 +14,18 @@ class PixelariumPng : public IPixelariumImage
 
     // IPixelariumImage member implementations
    public:
-    std::optional<std::unique_ptr<cv::Mat>> TryGetImage() override;
+    std::unique_ptr<cv::Mat> TryGetImage() override;
 
-    std::optional<std::unique_ptr<cv::Mat>> TryGetImage(const IImageQuery&) override
+    std::unique_ptr<cv::Mat> TryGetImage(const IImageQuery&) override
     {
         // ToDo: proper error
         throw std::runtime_error("Not possible with png.");
     }
 
-    std::string Name() const noexcept override
+    std::vector<std::unique_ptr<cv::Mat>> TryGetImages(const IImageQuery&) override
     {
-        if (!this->uri_.empty())
-        {
-            return this->uri_.filename().string();
-        }
-
-        return {};
-    }
-
-    std::filesystem::path Uri() const noexcept override
-    {
-        return this->uri_.string();
+        // ToDo: proper error
+        throw std::runtime_error("Not possible with png.");
     }
 
     bool Empty() const noexcept override { return this->is_empty_; }

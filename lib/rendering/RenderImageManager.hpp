@@ -5,7 +5,8 @@
 #include <unordered_set>
 
 #include "ImageViewFactory.hpp"
-#include "PixelariumImageView.hpp"
+#include "PixelariumImageViewDefault.hpp"
+#include "rendering/IPixelariumImageView.hpp"
 #include "resources/resource.hpp"
 #include "utilities/ILog.hpp"
 
@@ -13,9 +14,12 @@
 // aggregating views that should be rendered (or not)
 namespace pixelarium::render
 {
+/// @brief Instead of directly using the view, we
+/// proxy it through a wrapper. This allows for arbitrary additional data
+/// to be added in future
 struct RenderImageStateWrapper
 {
-    std::unique_ptr<PixelariumImageView> view;
+    std::unique_ptr<IPixelariumImageView> view;
     const bool* show_state;
 };
 
@@ -25,7 +29,7 @@ class RenderImageManager
 
    public:
     explicit RenderImageManager(Pool& pool, const utils::log::ILog& log)
-        : view_factory_(std::make_unique<ImageViewFactory>(pool)), log_(log)
+        : view_factory_(std::make_unique<ImageViewFactory>(pool, log)), log_(log)
     {
     }
 

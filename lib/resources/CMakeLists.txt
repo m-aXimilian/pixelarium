@@ -1,6 +1,7 @@
 set(RESOURCELIBNAME pixelariumresourcelib)
 
 set(RESOURCELIBSRC
+  resource.hpp
   resource.cpp)
 
 add_library(${RESOURCELIBNAME} STATIC

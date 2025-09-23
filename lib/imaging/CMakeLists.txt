@@ -7,9 +7,13 @@ message(STATUS "OpenCV_LIBs from: " ${OpenCV_LIBS})
 
 set(IMAGELIBSRC
   IPixelariumImage.hpp
+  PixelariumImageFactory.hpp
   PixelariumImageFactory.cpp
+  impl/PixelariumJpg.hpp
   impl/PixelariumJpg.cpp
+  impl/PixelariumPng.hpp
   impl/PixelariumPng.cpp
+  impl/PixelariumCzi.hpp
   impl/PixelariumCzi.cpp
 )
 

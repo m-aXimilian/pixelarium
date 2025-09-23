@@ -4,7 +4,6 @@
 #include <functional>
 #include <memory>
 #include <mutex>
-#include <optional>
 #include <unordered_map>
 
 #include "imaging/IPixelariumImage.hpp"
@@ -16,12 +15,13 @@ using ResourceKey = size_t;
 struct empty_resource_exception : public std::exception
 {
     empty_resource_exception() {};
-    empty_resource_exception(const char* msg) : message_(msg) {};
-    const char* what() { return message_; }
+    empty_resource_exception(std::string& msg) : message_(msg) {};
+    const std::string& what() { return message_; }
 
    private:
-    const char* message_ = "Empty Resource";
+    std::string message_ = "Empty Resource";
 };
+
 
 struct IResource
 {
@@ -36,7 +36,7 @@ class IResourcePool
 {
    public:
     virtual ~IResourcePool() = default;
-    virtual std::optional<std::weak_ptr<ResT>> GetResource(size_t id) const = 0;
+    virtual std::weak_ptr<ResT> GetResource(size_t id) const = 0;
     virtual ResourceKey SetResource(std::unique_ptr<ResT> res) = 0;
     virtual bool ModifyResource(ResourceKey id, std::unique_ptr<ResT> res) = 0;
     virtual bool DeleteResource(ResourceKey id) = 0;
@@ -61,7 +61,7 @@ class ImageResourcePool : public IResourcePool<imaging::IPixelariumImage>
     ImageResourcePool& operator=(ImageResourcePool&) = delete;
     ImageResourcePool& operator=(ImageResourcePool&&) = delete;
 
-    std::optional<std::weak_ptr<imaging::IPixelariumImage>> GetResource(ResourceKey id) const override;
+    std::weak_ptr<imaging::IPixelariumImage> GetResource(ResourceKey id) const override;
     ResourceKey SetResource(std::unique_ptr<imaging::IPixelariumImage> res) override;
     bool ModifyResource(ResourceKey id, std::unique_ptr<imaging::IPixelariumImage> res) override;
     bool DeleteResource(ResourceKey id) override;
