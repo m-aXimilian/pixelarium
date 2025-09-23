@@ -15,12 +15,13 @@ using ResourceKey = size_t;
 struct empty_resource_exception : public std::exception
 {
     empty_resource_exception() {};
-    empty_resource_exception(const char* msg) : message_(msg) {};
-    const char* what() { return message_; }
+    empty_resource_exception(std::string& msg) : message_(msg) {};
+    const std::string& what() { return message_; }
 
    private:
-    const char* message_ = "Empty Resource";
+    std::string message_ = "Empty Resource";
 };
+
 
 struct IResource
 {
