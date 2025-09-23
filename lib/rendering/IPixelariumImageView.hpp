@@ -11,7 +11,7 @@ class IPixelariumImageView
 {
    public:
     virtual ~IPixelariumImageView() = default;
-    virtual void ShowImage();
+    virtual void ShowImage() = 0;
 
     // default implemented
    public:
