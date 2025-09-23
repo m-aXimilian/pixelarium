@@ -34,11 +34,11 @@ std::unique_ptr<pixelarium::render::IPixelariumImageView> pixelarium::render::Im
             return {};
         case imaging::ImageFileType::PNG:
         case imaging::ImageFileType::JPG:
-            log_.Info(std::format("{}: Creating a Default View", __PRETTY_FUNCTION__));
+            log_.Info("Creating a Default View");
             // beware: here we copy the actual image resource over to the new image
             return std::make_unique<PixelariumImageViewDefault>(img);
         case imaging::ImageFileType::CZI:
-            log_.Info(std::format("{}: Creating a CZI View", __PRETTY_FUNCTION__));
+            log_.Info("{}: Creating a CZI View");
             // beware: here we copy the actual image resource over to the new image
             return std::make_unique<PixelariumImageViewDefault>(img);
             // return std::make_unique<PixelariumImageViewCzi>(img);
