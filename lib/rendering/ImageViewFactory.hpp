@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PixelariumImageView.hpp"
+#include "PixelariumImageViewDefault.hpp"
 #include "resources/resource.hpp"
 namespace pixelarium::render
 {
@@ -12,7 +12,7 @@ class ImageViewFactory
    public:
     explicit ImageViewFactory(Pool& pool) : image_pool_(pool) {}
 
-    std::unique_ptr<PixelariumImageView> RenderImage(size_t id);
+    std::unique_ptr<PixelariumImageViewDefault> RenderImage(size_t id);
 
    private:
     Pool& image_pool_;

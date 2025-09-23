@@ -22,19 +22,10 @@ class PixelariumPng : public IPixelariumImage
         throw std::runtime_error("Not possible with png.");
     }
 
-    std::string Name() const noexcept override
+    std::vector<std::unique_ptr<cv::Mat>> TryGetImages(const IImageQuery&) override
     {
-        if (!this->uri_.empty())
-        {
-            return this->uri_.filename().string();
-        }
-
-        return {};
-    }
-
-    std::filesystem::path Uri() const noexcept override
-    {
-        return this->uri_.string();
+        // ToDo: proper error
+        throw std::runtime_error("Not possible with png.");
     }
 
     bool Empty() const noexcept override { return this->is_empty_; }

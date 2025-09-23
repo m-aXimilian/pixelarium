@@ -1,4 +1,4 @@
-#include "PixelariumImageView.hpp"
+#include "PixelariumImageViewDefault.hpp"
 
 #include <format>
 
@@ -39,7 +39,7 @@ ImVec2 aspect_const_dimensions(const ImVec2& raw_dim, const ImVec2& curr_dim)
 /// If the image is null, empty, or has an empty name, the function returns immediately.  Otherwise, it creates an ImGui
 /// window with a horizontal scrollbar and menu bar. The image is rendered using the CvMatRender object, resizing it to
 /// fit the available window space.  The raw and rendered dimensions are displayed below the image.
-void pixelarium::render::PixelariumImageView::ShowImage()
+void pixelarium::render::PixelariumImageViewDefault::ShowImage()
 {
     if (!this->cached_image_)
     {

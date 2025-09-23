@@ -38,11 +38,23 @@ class IPixelariumImage
 
     virtual std::unique_ptr<cv::Mat> TryGetImage(const IImageQuery&) = 0;
 
-    virtual std::string Name() const noexcept = 0;
+    virtual std::vector<std::unique_ptr<cv::Mat>> TryGetImages(const IImageQuery&) = 0;
 
     virtual bool Empty() const noexcept = 0;
 
-    virtual std::filesystem::path Uri() const noexcept = 0;
+    // default implemented
+   public:
+    virtual std::filesystem::path Uri() const noexcept { return this->uri_; }
+
+    virtual std::string Name() const noexcept
+    {
+        if (!this->uri_.empty())
+        {
+            return this->uri_.filename().string();
+        }
+
+        return {};
+    }
 
    public:
     const static ImageFileType type_{ImageFileType::ABSTRACT};

@@ -15,6 +15,8 @@ class DummyImage : public pixelarium::imaging::IPixelariumImage
 
     std::unique_ptr<cv::Mat> TryGetImage(const pixelarium::imaging::IImageQuery&) override { return {}; }
 
+    std::vector<std::unique_ptr<cv::Mat>> TryGetImages(const pixelarium::imaging::IImageQuery&) override { return {}; }
+
     std::string Name() const noexcept override { return {}; }
 
     bool Empty() const noexcept override { return true; }

@@ -5,8 +5,9 @@ set(RENDERLIBSRC
   CvMatRender.cpp
   RenderImageManager.hpp
   RenderImageManager.cpp
-  PixelariumImageView.hpp
-  PixelariumImageView.cpp
+  IPixelariumImageView.hpp
+  PixelariumImageViewDefault.hpp
+  PixelariumImageViewDefault.cpp
   ImageViewFactory.hpp
   ImageViewFactory.cpp)
 

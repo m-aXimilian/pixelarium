@@ -5,7 +5,7 @@
 #include <unordered_set>
 
 #include "ImageViewFactory.hpp"
-#include "PixelariumImageView.hpp"
+#include "PixelariumImageViewDefault.hpp"
 #include "resources/resource.hpp"
 #include "utilities/ILog.hpp"
 
@@ -15,7 +15,7 @@ namespace pixelarium::render
 {
 struct RenderImageStateWrapper
 {
-    std::unique_ptr<PixelariumImageView> view;
+    std::unique_ptr<PixelariumImageViewDefault> view;
     const bool* show_state;
 };
 

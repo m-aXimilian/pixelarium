@@ -64,7 +64,7 @@ void pixelarium::render::RenderImageManager::Add(resources::ResourceKey key) noe
                 RenderImageStateWrapper
                 {
                     .view{ std::move(current_view) },
-                    .show_state = current_view->GetStatus(),
+                    .show_state = &current_view->GetStatus(),
                 }
             }
             );
