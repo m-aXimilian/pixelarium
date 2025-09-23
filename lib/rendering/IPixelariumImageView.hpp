@@ -15,7 +15,7 @@ class IPixelariumImageView
 
     // default implemented
    public:
-    virtual const bool& GetStatus() const noexcept { return this->open_p; }
+    virtual const bool* GetStatus() const noexcept { return &this->open_p; }
     virtual void ForceUpdate() noexcept { this->is_dirty_ = true; }
 
    protected:

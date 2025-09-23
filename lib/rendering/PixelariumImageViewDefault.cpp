@@ -41,9 +41,10 @@ ImVec2 aspect_const_dimensions(const ImVec2& raw_dim, const ImVec2& curr_dim)
 /// fit the available window space.  The raw and rendered dimensions are displayed below the image.
 void pixelarium::render::PixelariumImageViewDefault::ShowImage()
 {
-    if (!this->cached_image_)
+    if (!this->cached_image_ || this->is_dirty_)
     {
         this->cached_image_ = this->img_->TryGetImage();
+        this->is_dirty_ = false;
     }
 
     if (this->img_->Empty() || this->img_->type_ == imaging::ImageFileType::UNKNOWN || !cached_image_ || this->img_->Name().empty())

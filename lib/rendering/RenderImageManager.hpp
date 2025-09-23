@@ -13,6 +13,9 @@
 // aggregating views that should be rendered (or not)
 namespace pixelarium::render
 {
+/// @brief Instead of directly using the view, we
+/// proxy it through a wrapper. This allows for arbitrary additional data
+/// to be added in future
 struct RenderImageStateWrapper
 {
     std::unique_ptr<PixelariumImageViewDefault> view;
