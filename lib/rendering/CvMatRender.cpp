@@ -61,23 +61,29 @@ GLuint pixelarium::render::CvMatRender::uploadTexture()
 
     glBindTexture(GL_TEXTURE_2D, this->texture_);
 
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     const int width = img_.cols;
     const int height = img_.rows;
 
-    GLenum format = (img_.type() == CV_32FC3 || img_.type() == CV_32FC1) ? GL_RGB : GL_RGBA;
-    GLenum type = (img_.type() == CV_16U || img_.type() == CV_16UC3) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_BYTE;
-    GLenum internalFormat = GL_RGBA;
-    if (img_.type() == CV_32FC3 || img_.type() == CV_32FC1)
-    {
-        internalFormat = GL_RGB;
+    switch (img_.type()) {
+        case CV_16U:
+        case CV_16UC3:
+        case 26:
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_SHORT, img_.data);
+            break;
+        case 5:
+        case 29:
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_FLOAT, img_.data);
+            break;
+        default:
+            glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img_.cols, img_.rows, 0, GL_RGBA, GL_UNSIGNED_BYTE, img_.data);
+            break;
     }
-
-    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, img_.data);
 
     GLenum error = glGetError();
     if (error != GL_NO_ERROR)
