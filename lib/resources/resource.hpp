@@ -4,7 +4,6 @@
 #include <functional>
 #include <memory>
 #include <mutex>
-#include <optional>
 #include <unordered_map>
 
 #include "imaging/IPixelariumImage.hpp"

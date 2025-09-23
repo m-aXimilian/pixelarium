@@ -1,7 +1,6 @@
 #include "ImageViewFactory.hpp"
 
 #include <memory>
-#include <optional>
 
 /// @brief Creates a PixelariumImageView from a resource image.
 /// @param image_id The ID of the image resource to render.
