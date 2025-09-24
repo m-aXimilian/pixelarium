@@ -1,4 +1,3 @@
-set(PIXELARIUM_TITLE ${CMAKE_PROJECT_NAME})
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/app_resources_default.h.in
   ${CMAKE_BINARY_DIR}/app_resources_default.h @ONLY)
 

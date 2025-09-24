@@ -19,6 +19,12 @@ message(STATUS "GLFW:\t" ${glfw3_module_DIR})
 message(STATUS "PFD:\t\t" ${pfd_DIR})
 message(STATUS "SPDLOG:\t" ${spdlog_DIR})
 
+#====================
+# Options
+option(PIXELARIUM_BUILD_UNITTESTS "Generate Unittests" ON)
+option(PIXELARIUM_BUILD_DOCS      "Generate Documentation" ON)
+#====================
+
 if(WIN32)
   set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
   if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
@@ -30,6 +36,8 @@ endif()
 if(UNIX)
   set(CMAKE_CXX_FLAGS "-Wall -Wextra -g --std=c++20")
 endif()
+
+string(TOUPPER "${CMAKE_PROJECT_NAME}" PIXELARIUM_TITLE)
 
 add_subdirectory(${pfd_DIR})
 add_subdirectory(${spdlog_DIR})
@@ -64,11 +72,30 @@ target_include_directories(${PROJECT_NAME}
   PUBLIC ${LIBCZI_INCLUDE_DIR}
   PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
-option(PIXELARIUM_BUILD_UNITTESTS "Generate Unittests" ON)
-
 
 if(PIXELARIUM_BUILD_UNITTESTS)
   include(CTest)
   enable_testing()
   add_subdirectory(tests)
+endif()
+
+if(PIXELARIUM_BUILD_DOCS)
+  set(MAINPAGE_FILE "doc/index.md")
+  find_package(Doxygen)
+  if (DOXYGEN_FOUND)
+
+    set(DOXYGEN_IN ${PROJECT_SOURCE_DIR}/doc/Doxyfile.in)
+    set(DOXYGEN_OUT ${CMAKE_BINARY_DIR}/Doxyfile)
+
+    configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+    message(STATUS "Building Docs")
+
+    add_custom_target(doxygen ALL
+      COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+      COMMENT "Generating Docs")
+
+  else (DOXYGEN_FOUND)
+    message(FATAL_ERROR "Doxygen need to be installed to generate the doxygen documentation")
+  endif (DOXYGEN_FOUND)
 endif()

@@ -1,0 +1,14 @@
+PROJECT_NAME           = @PIXELARIUM_TITLE@
+
+OUTPUT_DIRECTORY       = @PROJECT_BINARY_DIR@/doc
+INPUT                  = @PROJECT_SOURCE_DIR@/lib/app \
+                         @PROJECT_SOURCE_DIR@/doc \
+                         @PROJECT_SOURCE_DIR@/lib/imaging \
+                         @PROJECT_SOURCE_DIR@/lib/utilities \
+                         @PROJECT_SOURCE_DIR@/lib/rendering \
+                         @PROJECT_SOURCE_DIR@/lib/resources
+
+DOXYFILE_ENCODING      = UTF-8
+GENERATE_LATEX         = NO
+FULL_PATH_NAMES        = NO
+USE_MDFILE_AS_MAINPAGE = @PROJECT_SOURCE_DIR@/doc/index.md
