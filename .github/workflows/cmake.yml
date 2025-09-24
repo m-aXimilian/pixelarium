@@ -29,6 +29,7 @@ jobs:
         ctest -C Debug
 
     - name: Upload static files as artifact
+      id: deployment
       uses: actions/upload-pages-artifact@v3
       with:
         path: ${{github.workspace}}/build/gcc-debug/doc/html
@@ -39,6 +40,8 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write 
     needs: build
     steps:
       - name: Deploy to GitHub Pages
