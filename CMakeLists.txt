@@ -80,6 +80,7 @@ if(PIXELARIUM_BUILD_UNITTESTS)
 endif()
 
 if(PIXELARIUM_BUILD_DOCS)
+  include(${PROJECT_SOURCE_DIR}/cmake/awesomeDoxygen.cmake)
   set(MAINPAGE_FILE "doc/index.md")
   find_package(Doxygen)
   if (DOXYGEN_FOUND)
