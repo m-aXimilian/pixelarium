@@ -25,7 +25,7 @@ std::unique_ptr<pixelarium::render::IPixelariumImageView> pixelarium::render::Im
         return {};
     }
 
-    auto type = imaging::ExtensionToType(img->Uri().extension());
+    auto type = imaging::ExtensionToType(img->Uri().extension().string());
 
     switch (type)
     {

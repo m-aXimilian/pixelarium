@@ -48,7 +48,7 @@ void pixelarium::ui::DefaultApp::RenderImages()
         {
             render_state.view->ShowImage();
 
-            if (!render_state.view->GetStatus())
+            if (!*render_state.view->GetStatus())
             {
                 this->render_manager_->MarkForDeletion(key);
             }
