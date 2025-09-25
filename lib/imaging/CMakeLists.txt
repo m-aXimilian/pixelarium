@@ -29,4 +29,4 @@ target_link_libraries(${IMAGELIBLIBNAME}
 
 target_include_directories(${IMAGELIBLIBNAME}
   PUBLIC ${OpenCV_INCLUDE_DIRS}
-  PRIVATE ${LIBCZI_INCLUDE_DIR})
+  PUBLIC ${LIBCZI_INCLUDE_DIR})

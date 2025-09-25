@@ -3,6 +3,7 @@
 #include <memory>
 #include "imaging/PixelariumImageFactory.hpp"
 #include "rendering/IPixelariumImageView.hpp"
+#include "rendering/PixelariumImageViewCzi.hpp"
 #include "rendering/PixelariumImageViewDefault.hpp"
 
 /// @brief Creates a PixelariumImageView from a resource image.
@@ -40,8 +41,7 @@ std::unique_ptr<pixelarium::render::IPixelariumImageView> pixelarium::render::Im
         case imaging::ImageFileType::CZI:
             log_.Info("{}: Creating a CZI View");
             // beware: here we copy the actual image resource over to the new image
-            return std::make_unique<PixelariumImageViewDefault>(img);
-            // return std::make_unique<PixelariumImageViewCzi>(img);
+            return std::make_unique<PixelariumImageViewCzi>(img);
         default:
             return {};
     }
