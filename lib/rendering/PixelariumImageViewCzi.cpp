@@ -7,6 +7,24 @@
 #include "imaging/impl/PixelariumCzi.hpp"
 #include "imgui.h"
 
+pixelarium::render::PixelariumImageViewCzi::PixelariumImageViewCzi(std::shared_ptr<Image> img, const Log& log)
+    : log_(log)
+{
+    img_ = img;
+    render_ = Render(img_);
+    auto czi_img = std::static_pointer_cast<imaging::PixelariumCzi>(this->img_);
+
+    auto stats = czi_img->GetStatistics();
+    stats.dimBounds.EnumValidDimensions(
+        [&](libCZI::DimensionIndex dim, int start, int) -> bool
+        {
+            this->dimension_map_[dim] = start;
+            return true;
+        });
+
+    log_.Info(std::format("{}: dimension map size: {}", __PRETTY_FUNCTION__, dimension_map_.size()));
+}
+
 /// @brief Displays the image in an ImGui window.
 ///
 /// If the image is null, empty, or has an empty name, the function returns immediately.  Otherwise, it creates an ImGui
@@ -58,7 +76,8 @@ void pixelarium::render::PixelariumImageViewCzi::ShowImage()
     stats.dimBounds.EnumValidDimensions(
         [&](libCZI::DimensionIndex dim, int start, int size) -> bool
         {
-            ImGui::Text("%c\t Start: %d\t End: %d", libCZI::Utils::DimensionToChar(dim), start, size);
+            auto dim_char = libCZI::Utils::DimensionToChar(dim);
+            ImGui::SliderInt(std::format("{}({}-{})", dim_char, start, size).c_str(), &dimension_map_[dim], start, size - 1);
             return true;
         });
 
