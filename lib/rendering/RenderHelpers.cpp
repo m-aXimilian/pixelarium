@@ -1,5 +1,6 @@
 #include "RenderHelpers.hpp"
 
+#include <cstdlib>
 /// @brief Checks if the dimensions of two ImVec2 vectors have changed significantly.
 /// @param ref_rect The reference ImVec2 vector.
 /// @param new_rect The new ImVec2 vector to compare against.
@@ -7,7 +8,7 @@
 /// different; otherwise, false.
 bool pixelarium::render::dim_changed_p(const ImVec2& ref_rect, const ImVec2& new_rect)
 {
-    if (abs(ref_rect.y - new_rect.y) > 5 || abs(ref_rect.x - new_rect.x))
+    if (std::abs(ref_rect.y - new_rect.y) > 5 || std::abs(ref_rect.x - new_rect.x))
     {
         return true;
     }
