@@ -1,6 +1,8 @@
 #include "ImageViewFactory.hpp"
 
+#include <format>
 #include <memory>
+
 #include "imaging/PixelariumImageFactory.hpp"
 #include "rendering/IPixelariumImageView.hpp"
 #include "rendering/PixelariumImageViewCzi.hpp"
@@ -8,7 +10,8 @@
 
 /// @brief Creates a PixelariumImageView from a resource image.
 /// @param image_id The ID of the image resource to render.
-/// @return A unique pointer to the PixelariumImageView, or nullptr if the image resource is not found or is empty.  The image data is copied.
+/// @return A unique pointer to the PixelariumImageView, or nullptr if the image resource is not found or is empty.  The
+/// image data is copied.
 std::unique_ptr<pixelarium::render::IPixelariumImageView> pixelarium::render::ImageViewFactory::RenderImage(
     resources::ResourceKey image_id)
 {
@@ -46,4 +49,3 @@ std::unique_ptr<pixelarium::render::IPixelariumImageView> pixelarium::render::Im
             return {};
     }
 }
-
