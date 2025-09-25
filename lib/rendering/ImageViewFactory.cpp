@@ -10,7 +10,7 @@
 /// @param image_id The ID of the image resource to render.
 /// @return A unique pointer to the PixelariumImageView, or nullptr if the image resource is not found or is empty.  The image data is copied.
 std::unique_ptr<pixelarium::render::IPixelariumImageView> pixelarium::render::ImageViewFactory::RenderImage(
-    size_t image_id)
+    resources::ResourceKey image_id)
 {
     auto res{this->image_pool_.GetResource(image_id)};
 
