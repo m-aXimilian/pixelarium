@@ -1,8 +1,10 @@
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include "../IPixelariumImage.hpp"
+#include "libCZI.h"
 
 namespace pixelarium::imaging
 {
@@ -15,6 +17,11 @@ class PixelariumCzi : public IPixelariumImage
 {
    public:
     explicit PixelariumCzi(const std::string& uri);
+    ~PixelariumCzi()
+    {
+        if (this->czi_reader_)
+            this->czi_reader_->Close();
+    }
 
     // IPixelariumImage member implementations
    public:
@@ -34,6 +41,8 @@ class PixelariumCzi : public IPixelariumImage
 
     bool Empty() const noexcept override { return this->is_empty_; }
 
+    const libCZI::SubBlockStatistics& GetStatistics() const { return this->image_statistics_; }
+
    public:
     const static ImageFileType type_{ImageFileType::CZI};
 
@@ -41,5 +50,9 @@ class PixelariumCzi : public IPixelariumImage
     // this should be set by each image getter
     // after a new cv::Mat could be instantiated
     bool is_empty_{true};
+
+    libCZI::SubBlockStatistics image_statistics_;
+
+    std::shared_ptr<libCZI::ICZIReader> czi_reader_;
 };
 }  // namespace pixelarium::imaging

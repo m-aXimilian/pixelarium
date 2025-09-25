@@ -5,6 +5,22 @@
 
 #include "libCZI.h"
 
+pixelarium::imaging::PixelariumCzi::PixelariumCzi(const std::string& uri)
+{
+    if (!std::filesystem::exists(uri))
+    {
+        throw std::runtime_error("Render file not found.");
+    }
+
+    this->is_empty_ = false;
+    this->uri_ = std::filesystem::path(uri);
+
+    auto stream = libCZI::CreateStreamFromFile(this->uri_.wstring().c_str());
+    this->czi_reader_ = libCZI::CreateCZIReader();
+    this->czi_reader_->Open(stream);
+    this->image_statistics_ = this->czi_reader_->GetStatistics();
+}
+
 std::unique_ptr<cv::Mat> CZISubBlockToCvMat(std::shared_ptr<libCZI::IBitmapData> bitmap, libCZI::PixelType pixeltype)
 {
     size_t pixel_size{0};
@@ -81,23 +97,9 @@ std::unique_ptr<cv::Mat> CZISubBlockToCvMat(std::shared_ptr<libCZI::IBitmapData>
     return fill_mat;
 }
 
-pixelarium::imaging::PixelariumCzi::PixelariumCzi(const std::string& uri)
-{
-    if (!std::filesystem::exists(uri))
-    {
-        throw std::runtime_error("Render file not found.");
-    }
-
-    this->is_empty_ = false;
-    this->uri_ = std::filesystem::path(uri);
-}
-
 std::unique_ptr<cv::Mat> pixelarium::imaging::PixelariumCzi::TryGetImage()
 {
-    auto stream = libCZI::CreateStreamFromFile(this->uri_.wstring().c_str());
-    auto cziReader = libCZI::CreateCZIReader();
-    cziReader->Open(stream);
-    auto block = cziReader->ReadSubBlock(0);
+    auto block = this->czi_reader_->ReadSubBlock(0);
     auto bitmap = block->CreateBitmap();
     auto res = CZISubBlockToCvMat(bitmap, block->GetSubBlockInfo().pixelType);
 

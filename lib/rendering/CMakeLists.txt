@@ -1,6 +1,8 @@
 set(RENDERLIBNAME pixelariumrenderlib)
 
 set(RENDERLIBSRC
+  RenderHelpers.hpp
+  RenderHelpers.cpp
   CvMatRender.hpp
   CvMatRender.cpp
   RenderImageManager.hpp
@@ -8,6 +10,8 @@ set(RENDERLIBSRC
   IPixelariumImageView.hpp
   PixelariumImageViewDefault.hpp
   PixelariumImageViewDefault.cpp
+  PixelariumImageViewCzi.hpp
+  PixelariumImageViewCzi.cpp
   ImageViewFactory.hpp
   ImageViewFactory.cpp)
 
