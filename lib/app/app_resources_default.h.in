@@ -4,6 +4,7 @@
 #include <string_view>
 
 #cmakedefine PIXELARIUM_TITLE "@PIXELARIUM_TITLE@"
+#cmakedefine PIXELARIUM_VERSION "@CMAKE_PROJECT_VERSION@"
 
 // clang-format off
 #define MAINMENUNAME        "Menu"

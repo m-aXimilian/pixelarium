@@ -1,7 +1,8 @@
+
 # Synopsis
 
-Pixelarium strives to be a batteries-included visualizer application to be used in conjunction with an external algorithm.
-It can be linked e.g. against a library containing arbitrary functionally. Pixelarium can support viewing the results and result files of such a library.
+Pixelarium strives to be a batteries-included visualizer application used in conjunction with an externally implemented and linked arbitrary functionality.
+It can be linked e.g. against a library containing arbitrary functionality. Pixelarium can support viewing the results and result files of such a library.
 It tries to be as flexible as possible.
 
 This is still work in progress and will change significantly.
@@ -50,5 +51,6 @@ If you want to specify compiler settings and options which are not defined in a 
 
     cmake -B build -S .
     cmake --build build
+
 
 
