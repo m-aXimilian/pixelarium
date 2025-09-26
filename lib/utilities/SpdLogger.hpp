@@ -8,6 +8,8 @@
 #include "ILog.hpp"
 namespace pixelarium::utils::log
 {
+/// @brief Implements ILog using the spdlog library
+/// see https://github.com/gabime/spdlog
 class SpdLogger : public ILog
 {
    public:

@@ -27,9 +27,11 @@ constexpr pixelarium::imaging::ImageFileType ExtensionToType(const std::string& 
     return pixelarium::imaging::ImageFileType::UNKNOWN;
 }
 
+/// @brief Factory for instantiating implementations of IPixelariumImage based on the given file type.
 class PixelariumImageFactory
 {
     using Log = utils::log::ILog;
+
    public:
     static std::unique_ptr<IPixelariumImage> CreateImage(const std::string& uri, const Log& log);
 };

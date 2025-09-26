@@ -9,11 +9,15 @@
 
 namespace pixelarium::imaging
 {
+/// @brief An implementation of IImageQuery to work on CZI images.
+/// @note  Check the documentation here https://zeiss.github.io/libczi/pages/mainpage.html#czi-in-a-nutshell
 struct CziParams : public IImageQuery
 {
+    /// @brief A map providing the start coordinate for each dimension in the CZI
     std::unordered_map<libCZI::DimensionIndex, int> dimension_map;
 };
 
+/// @brief Implements support for .czi-images in the realm of IPixelariumImage
 class PixelariumCzi : public IPixelariumImage
 {
     using Log = pixelarium::utils::log::ILog;

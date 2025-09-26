@@ -11,6 +11,7 @@ enum class LogLevel
     Warn = 1 << 3,
     Error = 1 << 4,
 };
+/// @brief Interface for logging implementations.
 class ILog
 {
    public:

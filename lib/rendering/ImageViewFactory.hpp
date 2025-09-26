@@ -6,6 +6,7 @@
 #include "utilities/ILog.hpp"
 namespace pixelarium::render
 {
+/// @brief Factory for instantiating matching views to different implementations of IPixelariumImage.
 class ImageViewFactory
 {
     using Image = imaging::IPixelariumImage;

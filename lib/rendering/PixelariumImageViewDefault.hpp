@@ -9,6 +9,8 @@
 
 namespace pixelarium::render
 {
+/// @brief A default implementation of IPixelariumImageView.
+/// This is sufficient for single dimension images like png or jpg.
 class PixelariumImageViewDefault : public IPixelariumImageView
 {
     using Image = imaging::IPixelariumImage;

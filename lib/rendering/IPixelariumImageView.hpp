@@ -6,6 +6,7 @@
 
 namespace pixelarium::render
 {
+/// @brief An interface defining the contract on views to dedicated implementations of IPixelariumImage
 class IPixelariumImageView
 {
    public:

@@ -19,6 +19,7 @@
 
 namespace pixelarium::render
 {
+/// @brief Renders cv::Mat bitmaps as OpenGL textures.
 class CvMatRender
 {
    public:

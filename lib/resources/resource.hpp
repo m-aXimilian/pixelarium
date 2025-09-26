@@ -12,6 +12,7 @@ namespace pixelarium::resources
 {
 using ResourceKey = size_t;
 
+/// @brief A dedicated exception to be thrown when a resource of an IResourcePool is empty.
 struct empty_resource_exception : public std::exception
 {
     empty_resource_exception() {};
@@ -22,15 +23,21 @@ struct empty_resource_exception : public std::exception
     std::string message_ = "Empty Resource";
 };
 
-
+/// @brief Abstract representation of a Resource.
+/// This is meant to be implemented by arbitrary explicit resource types and thus
+/// gives no contract other than the abstract type.
 struct IResource
 {
     virtual ~IResource() = default;
 };
 
+/// @brief Defines a concept for a resource type
+/// @tparam R  The resource template parameter
 template <typename R>
 concept ResT = requires(R& r) { static_cast<IResource&>(r); };
 
+/// @brief Defines an interface for a resource pool
+/// @tparam ResT  defines the resource type that is accepted by the pool
 template <typename ResT>
 class IResourcePool
 {
