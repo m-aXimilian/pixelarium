@@ -15,10 +15,9 @@ class PixelariumImageViewDefault : public IPixelariumImageView
     using Render = render::CvMatRender;
 
    public:
-    explicit PixelariumImageViewDefault(std::shared_ptr<Image> img)
+    explicit PixelariumImageViewDefault(std::shared_ptr<Image> img) : render_(*img->TryGetImage())
     {
         img_ = img;
-        render_ = Render(img_);
     }
     PixelariumImageViewDefault() = delete;
     PixelariumImageViewDefault(PixelariumImageViewDefault&) = delete;
@@ -31,5 +30,6 @@ class PixelariumImageViewDefault : public IPixelariumImageView
 
    private:
     ImVec2 curr_dim_{};
+    CvMatRender render_;
 };
 }  // namespace pixelarium::render

@@ -3,7 +3,6 @@
 #include <memory>
 
 #include "imaging/IPixelariumImage.hpp"
-#include "rendering/CvMatRender.hpp"
 
 namespace pixelarium::render
 {
@@ -21,7 +20,6 @@ class IPixelariumImageView
    protected:
     std::shared_ptr<imaging::IPixelariumImage> img_{};
     std::unique_ptr<cv::Mat> cached_image_{};
-    render::CvMatRender render_;
     bool open_p{true};
     bool is_dirty_{true};
 };

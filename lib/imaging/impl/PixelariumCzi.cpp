@@ -1,24 +1,49 @@
 #include "PixelariumCzi.hpp"
 
+#include <cstdint>
 #include <filesystem>
+#include <format>
+#include <memory>
 #include <stdexcept>
 
 #include "libCZI.h"
 
-pixelarium::imaging::PixelariumCzi::PixelariumCzi(const std::string& uri)
+bool comp_blockinfo_params(const pixelarium::imaging::CziParams& params, const libCZI::SubBlockInfo& info)
 {
-    if (!std::filesystem::exists(uri))
-    {
-        throw std::runtime_error("Render file not found.");
-    }
+    bool res{true};
 
-    this->is_empty_ = false;
-    this->uri_ = std::filesystem::path(uri);
+    info.coordinate.EnumValidDimensions(
+        [&](libCZI::DimensionIndex dim, int start) -> bool
+        {
+            if (params.dimension_map.at(dim) == start)
+            {
+                return true;
+            }
 
-    auto stream = libCZI::CreateStreamFromFile(this->uri_.wstring().c_str());
-    this->czi_reader_ = libCZI::CreateCZIReader();
-    this->czi_reader_->Open(stream);
-    this->image_statistics_ = this->czi_reader_->GetStatistics();
+            res &= false;
+            return true;
+    });
+
+    return res;
+}
+
+constexpr int try_get_index_match(const pixelarium::imaging::CziParams& params, libCZI::ICZIReader& reader)
+{
+    int index {-1};
+    reader.EnumerateSubBlocks(
+        [&](int idx, const libCZI::SubBlockInfo& info) -> bool
+        {
+            if (comp_blockinfo_params(params, info))
+            {
+                index = idx;
+                // returning false will stop the enumeration
+                return false;
+            }
+
+            return true;
+    });
+
+    return index;
 }
 
 std::unique_ptr<cv::Mat> CZISubBlockToCvMat(std::shared_ptr<libCZI::IBitmapData> bitmap, libCZI::PixelType pixeltype)
@@ -48,11 +73,6 @@ std::unique_ptr<cv::Mat> CZISubBlockToCvMat(std::shared_ptr<libCZI::IBitmapData>
             target_type = CV_32F;
             pixel_size = 4;
             break;
-        // case libCZI::PixelType::Gray64ComplexFloat:
-        // case libCZI::PixelType::Gray64Float:
-        //    target_type =
-        //    pixel_size = 8;
-        //    break;
         default:
             pixel_size = -1;
             break;
@@ -86,6 +106,9 @@ std::unique_ptr<cv::Mat> CZISubBlockToCvMat(std::shared_ptr<libCZI::IBitmapData>
                     target_row[3 * w + 1] = source_row[3 * w + 1];
                     target_row[3 * w + 2] = source_row[3 * w + 2];
                     break;
+                case 4:
+                    reinterpret_cast<std::int32_t*>(target_row)[w] = reinterpret_cast<std::int32_t*>(source_row)[w];
+                    break;
                 default:
                     throw std::runtime_error("Unknown pixel type requested!");
                     break;
@@ -97,11 +120,51 @@ std::unique_ptr<cv::Mat> CZISubBlockToCvMat(std::shared_ptr<libCZI::IBitmapData>
     return fill_mat;
 }
 
+std::unique_ptr<cv::Mat> pixelarium::imaging::PixelariumCzi::SubblockToCvMat(int index)
+{
+    log_.Info(std::format("{}: constructing bitmap with index {}", __PRETTY_FUNCTION__, index));
+    auto block = this->czi_reader_->ReadSubBlock(index);
+    auto bitmap = block->CreateBitmap();
+    return CZISubBlockToCvMat(bitmap, block->GetSubBlockInfo().pixelType);
+}
+
+pixelarium::imaging::PixelariumCzi::PixelariumCzi(const std::string& uri, const Log& log) : log_(log)
+{
+    if (!std::filesystem::exists(uri))
+    {
+        throw std::runtime_error("Render file not found.");
+    }
+
+    this->is_empty_ = false;
+    this->uri_ = std::filesystem::path(uri);
+
+    auto stream = libCZI::CreateStreamFromFile(this->uri_.wstring().c_str());
+    this->czi_reader_ = libCZI::CreateCZIReader();
+    this->czi_reader_->Open(stream);
+    this->image_statistics_ = this->czi_reader_->GetStatistics();
+
+    this->image_statistics_.dimBounds.EnumValidDimensions(
+        [&](libCZI::DimensionIndex dim, int start, int) -> bool
+        {
+            this->dimension_map_[dim] = start;
+            return true;
+        });
+}
+
 std::unique_ptr<cv::Mat> pixelarium::imaging::PixelariumCzi::TryGetImage()
 {
-    auto block = this->czi_reader_->ReadSubBlock(0);
-    auto bitmap = block->CreateBitmap();
-    auto res = CZISubBlockToCvMat(bitmap, block->GetSubBlockInfo().pixelType);
+    return SubblockToCvMat(0);
+}
 
-    return res;
+std::unique_ptr<cv::Mat> pixelarium::imaging::PixelariumCzi::TryGetImage(const IImageQuery& query)
+{
+    const auto czi_query = static_cast<const CziParams&>(query);
+    int index = try_get_index_match(czi_query, *this->czi_reader_);
+
+    if (index < 0)
+    {
+        return SubblockToCvMat(0);
+    }
+
+    return SubblockToCvMat(index);
 }

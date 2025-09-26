@@ -3,6 +3,7 @@
 // clang format would change this, effectively rendering the build broken.
 // clang-format off
 #include <memory>
+#include <opencv2/core/mat.hpp>
 #ifdef _WIN32
 #include <windows.h>
 #include <GL/GL.h>
@@ -26,25 +27,25 @@ class CvMatRender
     // get removed in the future)
     // as the using AppGLFW constructs it empty as a member
     // when coming to life.
-    CvMatRender() = default;
+    // CvMatRender() = default;
     CvMatRender(CvMatRender&) = delete;
     CvMatRender(const CvMatRender&) = delete;
     CvMatRender(CvMatRender&&) = delete;
-    CvMatRender& operator=(CvMatRender&) = default;
-    CvMatRender& operator=(CvMatRender&& other) = default;
+    CvMatRender& operator=(CvMatRender&) = delete;
+    CvMatRender& operator=(CvMatRender&& other) = delete;
     ~CvMatRender();
-    explicit CvMatRender(std::shared_ptr<pixelarium::imaging::IPixelariumImage>& img);
+    explicit CvMatRender(cv::Mat& img);
 
    public:
     GLuint Render();
     GLuint Render(float factor);
     GLuint Render(size_t width, size_t height);
     void ResetRenderImage();
-    void ResetRenderImage(std::shared_ptr<pixelarium::imaging::IPixelariumImage>& img);
+    void ResetRenderImage(const cv::Mat& img);
 
    private:
     cv::Mat img_;
-    std::shared_ptr<pixelarium::imaging::IPixelariumImage> base_;
+    cv::Mat& base_;
     GLuint texture_;
 
     GLuint uploadTexture();
