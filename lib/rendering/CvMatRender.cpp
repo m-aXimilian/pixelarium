@@ -11,7 +11,7 @@ using namespace pixelarium::imaging;
 
 /// @brief Constructor for the CvMatRender class.
 /// @param img A shared pointer to the PixelariumImage to be rendered.
-pixelarium::render::CvMatRender::CvMatRender(cv::Mat& img) : base_(img), texture_(0)
+pixelarium::render::CvMatRender::CvMatRender(const cv::Mat& img) : base_(img), texture_(0)
 {
     // storing a copy of the to-be-rendered image
     // because it will be resized and filtered eventually which we absolutely
@@ -29,15 +29,6 @@ pixelarium::render::CvMatRender::~CvMatRender()
         glDeleteTextures(1, &texture_);
         texture_ = 0;
     }
-}
-
-/// @brief Resets the render image with a new PixelariumImage.
-/// @param img A shared pointer to the new PixelariumImage.
-void pixelarium::render::CvMatRender::ResetRenderImage(const cv::Mat& img)
-{
-    this->base_ = img;
-    this->ResetRenderImage();
-    cv::cvtColor(this->img_, this->img_, cv::COLOR_BGR2RGBA);
 }
 
 /// @brief Uploads the current image data to an OpenGL texture.

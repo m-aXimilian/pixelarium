@@ -34,18 +34,17 @@ class CvMatRender
     CvMatRender& operator=(CvMatRender&) = delete;
     CvMatRender& operator=(CvMatRender&& other) = delete;
     ~CvMatRender();
-    explicit CvMatRender(cv::Mat& img);
+    explicit CvMatRender(const cv::Mat& img);
 
    public:
     GLuint Render();
     GLuint Render(float factor);
     GLuint Render(size_t width, size_t height);
     void ResetRenderImage();
-    void ResetRenderImage(const cv::Mat& img);
 
    private:
     cv::Mat img_;
-    cv::Mat& base_;
+    const cv::Mat& base_;
     GLuint texture_;
 
     GLuint uploadTexture();
