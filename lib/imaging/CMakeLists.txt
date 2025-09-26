@@ -24,9 +24,11 @@ add_library(${IMAGELIBLIBNAME}
 
 target_link_libraries(${IMAGELIBLIBNAME}
   PUBLIC ${OpenCV_LIBS}
+  PUBLIC pixelariumutilslib
   PRIVATE libCZIStatic)
 
 
 target_include_directories(${IMAGELIBLIBNAME}
+  PRIVATE ${CMAKE_SOURCE_DIR}/lib
   PUBLIC ${OpenCV_INCLUDE_DIRS}
   PUBLIC ${LIBCZI_INCLUDE_DIR})

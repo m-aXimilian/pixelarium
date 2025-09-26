@@ -1,6 +1,11 @@
 #pragma once
 #include <string>
 
+#ifdef WIN32
+#define __PRETTY_FUNCTION__ __FUNCTION__
+#endif
+
+
 namespace pixelarium::utils::log
 {
 enum class LogLevel
@@ -11,6 +16,7 @@ enum class LogLevel
     Warn = 1 << 3,
     Error = 1 << 4,
 };
+/// @brief Interface for logging implementations.
 class ILog
 {
    public:

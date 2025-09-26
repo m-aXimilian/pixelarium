@@ -3,10 +3,11 @@
 #include <memory>
 
 #include "imaging/IPixelariumImage.hpp"
-#include "rendering/CvMatRender.hpp"
+#include "imgui.h"
 
 namespace pixelarium::render
 {
+/// @brief An interface defining the contract on views to dedicated implementations of IPixelariumImage
 class IPixelariumImageView
 {
    public:
@@ -17,11 +18,14 @@ class IPixelariumImageView
    public:
     virtual const bool* GetStatus() const noexcept { return &this->open_p; }
     virtual void ForceUpdate() noexcept { this->is_dirty_ = true; }
+    virtual void SetInitialSize(float width = 700.0f, float height = 700.0f)
+    {
+        ImGui::SetNextWindowSize({width, height});
+    }
 
    protected:
     std::shared_ptr<imaging::IPixelariumImage> img_{};
     std::unique_ptr<cv::Mat> cached_image_{};
-    render::CvMatRender render_;
     bool open_p{true};
     bool is_dirty_{true};
 };

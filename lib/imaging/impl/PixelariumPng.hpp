@@ -7,6 +7,7 @@
 
 namespace pixelarium::imaging
 {
+/// @brief Implements support for .png-images in the realm of IPixelariumImage
 class PixelariumPng : public IPixelariumImage
 {
    public:

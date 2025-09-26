@@ -23,6 +23,14 @@ struct RenderImageStateWrapper
     const bool* show_state;
 };
 
+
+/// @brief Manage instances of IPixelariumImageView.
+///
+/// This class is used to keep track of what must be rendered.
+/// It manages a set of IPixelariumImageView instances that can be traversed
+/// via its Enumerate() function.
+/// Views that shall not be rendered anymore should be marked for deletion
+/// with MarkForDeletion()
 class RenderImageManager
 {
     using Pool = resources::ImageResourcePool;

@@ -2,7 +2,6 @@
 // windows.h must come before GL/GL.h here.
 // clang format would change this, effectively rendering the build broken.
 // clang-format off
-#include <memory>
 #ifdef _WIN32
 #include <windows.h>
 #include <GL/GL.h>
@@ -13,11 +12,12 @@
 #endif
 #include <GLFW/glfw3.h>  // Will drag system OpenGL headers
 #endif
-#include "imaging/IPixelariumImage.hpp"
+#include <opencv2/core/mat.hpp>
 // clang-format on
 
 namespace pixelarium::render
 {
+/// @brief Renders cv::Mat bitmaps as OpenGL textures.
 class CvMatRender
 {
    public:
@@ -26,25 +26,24 @@ class CvMatRender
     // get removed in the future)
     // as the using AppGLFW constructs it empty as a member
     // when coming to life.
-    CvMatRender() = default;
+    // CvMatRender() = default;
     CvMatRender(CvMatRender&) = delete;
     CvMatRender(const CvMatRender&) = delete;
     CvMatRender(CvMatRender&&) = delete;
-    CvMatRender& operator=(CvMatRender&) = default;
-    CvMatRender& operator=(CvMatRender&& other) = default;
+    CvMatRender& operator=(CvMatRender&) = delete;
+    CvMatRender& operator=(CvMatRender&& other) = delete;
     ~CvMatRender();
-    explicit CvMatRender(std::shared_ptr<pixelarium::imaging::IPixelariumImage>& img);
+    explicit CvMatRender(const cv::Mat& img);
 
    public:
     GLuint Render();
     GLuint Render(float factor);
     GLuint Render(size_t width, size_t height);
     void ResetRenderImage();
-    void ResetRenderImage(std::shared_ptr<pixelarium::imaging::IPixelariumImage>& img);
 
    private:
     cv::Mat img_;
-    std::shared_ptr<pixelarium::imaging::IPixelariumImage> base_;
+    const cv::Mat& base_;
     GLuint texture_;
 
     GLuint uploadTexture();

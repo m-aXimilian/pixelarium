@@ -1,6 +1,5 @@
 #include "PixelariumImageFactory.hpp"
 
-#include <algorithm>
 #include <cctype>
 #include <memory>
 
@@ -10,7 +9,7 @@
 
 
 /*static*/ std::unique_ptr<pixelarium::imaging::IPixelariumImage>
-pixelarium::imaging::PixelariumImageFactory::CreateImage(const std::string& uri)
+pixelarium::imaging::PixelariumImageFactory::CreateImage(const std::string& uri, const Log& log)
 {
     const auto res{std::filesystem::path(uri)};
     const auto target_type{ExtensionToType(res.extension().string())};
@@ -30,7 +29,7 @@ pixelarium::imaging::PixelariumImageFactory::CreateImage(const std::string& uri)
             return std::make_unique<PixelariumJpg>(uri);
             break;
         case ImageFileType::CZI:
-            return std::make_unique<PixelariumCzi>(uri);
+            return std::make_unique<PixelariumCzi>(uri, log);
             break;
     }
 }

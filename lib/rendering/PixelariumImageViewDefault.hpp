@@ -9,16 +9,18 @@
 
 namespace pixelarium::render
 {
+/// @brief A default implementation of IPixelariumImageView.
+/// This is sufficient for single dimension images like png or jpg.
 class PixelariumImageViewDefault : public IPixelariumImageView
 {
     using Image = imaging::IPixelariumImage;
     using Render = render::CvMatRender;
 
    public:
-    explicit PixelariumImageViewDefault(std::shared_ptr<Image> img)
+    explicit PixelariumImageViewDefault(std::shared_ptr<Image> img) : render_(*img->TryGetImage())
     {
         img_ = img;
-        render_ = Render(img_);
+        this->SetInitialSize();
     }
     PixelariumImageViewDefault() = delete;
     PixelariumImageViewDefault(PixelariumImageViewDefault&) = delete;
@@ -31,5 +33,6 @@ class PixelariumImageViewDefault : public IPixelariumImageView
 
    private:
     ImVec2 curr_dim_{};
+    CvMatRender render_;
 };
 }  // namespace pixelarium::render

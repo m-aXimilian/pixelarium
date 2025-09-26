@@ -48,8 +48,13 @@ void pixelarium::render::RenderImageManager::Add(resources::ResourceKey key) noe
 {
     // we don't want to add what's already there
     // or empty render images
+    if (this->render_image_map_.contains(key))
+    {
+        return;
+    }
+
     auto current_view = this->view_factory_->RenderImage(key);
-    if (this->render_image_map_.contains(key) || current_view == nullptr)
+    if (current_view == nullptr)
     {
         return;
     }

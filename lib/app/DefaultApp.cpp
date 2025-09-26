@@ -128,7 +128,7 @@ void pixelarium::ui::DefaultApp::LoadImage()
 
         try
         {
-            pool_.SetResource(PixelariumImageFactory::CreateImage(p));
+            pool_.SetResource(PixelariumImageFactory::CreateImage(p, logger_));
         }
         catch (pixelarium::resources::empty_resource_exception& e)
         {

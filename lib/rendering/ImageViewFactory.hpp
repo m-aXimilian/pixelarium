@@ -6,6 +6,7 @@
 #include "utilities/ILog.hpp"
 namespace pixelarium::render
 {
+/// @brief Factory for instantiating matching views to different implementations of IPixelariumImage.
 class ImageViewFactory
 {
     using Image = imaging::IPixelariumImage;
@@ -15,7 +16,7 @@ class ImageViewFactory
    public:
     explicit ImageViewFactory(Pool& pool, const Log& log) : image_pool_(pool), log_(log) {}
 
-    std::unique_ptr<IPixelariumImageView> RenderImage(size_t id);
+    std::unique_ptr<IPixelariumImageView> RenderImage(resources::ResourceKey id);
 
    private:
     Pool& image_pool_;

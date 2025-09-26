@@ -11,6 +11,9 @@
 
 namespace pixelarium::ui
 {
+/// @brief Default implementation of AppGLFW.
+/// This can either be used as is, as an example or as a base class
+/// providing some defaults for a more custom implementation.
 class DefaultApp : public application::AppGLFW
 {
    public:
