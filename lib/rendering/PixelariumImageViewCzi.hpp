@@ -1,7 +1,13 @@
 #pragma once
 
+#include <memory>
+#include <unordered_map>
+
 #include "imgui.h"
+#include "libCZI_DimCoordinate.h"
+#include "rendering/CvMatRender.hpp"
 #include "rendering/IPixelariumImageView.hpp"
+#include "utilities/ILog.hpp"
 
 namespace pixelarium::render
 {
@@ -9,13 +15,10 @@ class PixelariumImageViewCzi : public IPixelariumImageView
 {
     using Image = imaging::IPixelariumImage;
     using Render = render::CvMatRender;
+    using Log = utils::log::ILog;
 
    public:
-    explicit PixelariumImageViewCzi(std::shared_ptr<Image> img)
-    {
-        img_ = img;
-        render_ = Render(img_);
-    }
+    explicit PixelariumImageViewCzi(std::shared_ptr<Image> img, const Log& log);
     PixelariumImageViewCzi() = delete;
     PixelariumImageViewCzi(PixelariumImageViewCzi&) = delete;
     PixelariumImageViewCzi(const PixelariumImageViewCzi&) = delete;
@@ -27,5 +30,8 @@ class PixelariumImageViewCzi : public IPixelariumImageView
 
    private:
     ImVec2 curr_dim_{};
+    const Log& log_;
+    std::unordered_map<libCZI::DimensionIndex, int> dimension_map_;
+    std::unique_ptr<CvMatRender> render_;
 };
 }  // namespace pixelarium::render

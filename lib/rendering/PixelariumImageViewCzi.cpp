@@ -1,11 +1,30 @@
 #include "PixelariumImageViewCzi.hpp"
 
 #include <format>
+#include <memory>
 
 #include "RenderHelpers.hpp"
 #include "imaging/IPixelariumImage.hpp"
 #include "imaging/impl/PixelariumCzi.hpp"
 #include "imgui.h"
+#include "rendering/CvMatRender.hpp"
+
+pixelarium::render::PixelariumImageViewCzi::PixelariumImageViewCzi(std::shared_ptr<Image> img, const Log& log)
+    : log_(log), render_(std::make_unique<CvMatRender>(*img->TryGetImage()))
+{
+    img_ = img;
+    auto czi_img = std::static_pointer_cast<imaging::PixelariumCzi>(this->img_);
+
+    auto stats = czi_img->GetStatistics();
+    stats.dimBounds.EnumValidDimensions(
+        [&](libCZI::DimensionIndex dim, int start, int) -> bool
+        {
+            this->dimension_map_[dim] = start;
+            return true;
+        });
+
+    log_.Info(std::format("{}: dimension map size: {}", __PRETTY_FUNCTION__, dimension_map_.size()));
+}
 
 /// @brief Displays the image in an ImGui window.
 ///
@@ -20,7 +39,14 @@ void pixelarium::render::PixelariumImageViewCzi::ShowImage()
 
     if (!this->cached_image_ || this->is_dirty_)
     {
-        this->cached_image_ = this->img_->TryGetImage();
+        log_.Info(std::format("{}: refreshing image.", __PRETTY_FUNCTION__));
+        imaging::CziParams params;
+        params.dimension_map = this->dimension_map_;
+        this->cached_image_ = this->img_->TryGetImage(params);
+        // Resetting the image while the renderer is possibly accessing the
+        // image at the same time is not a good idea. Therefore, we simply create
+        // a new renderer here.
+        this->render_ = std::make_unique<CvMatRender>(*this->cached_image_);
         this->is_dirty_ = false;
     }
 
@@ -38,8 +64,8 @@ void pixelarium::render::PixelariumImageViewCzi::ShowImage()
     auto new_dim = ImGui::GetContentRegionAvail();
     auto texture =
         dim_changed_p(this->curr_dim_, new_dim)
-            ? this->render_.Render(static_cast<size_t>(this->curr_dim_.x), static_cast<size_t>(this->curr_dim_.y))
-            : this->render_.Render();
+            ? this->render_->Render(static_cast<size_t>(this->curr_dim_.x), static_cast<size_t>(this->curr_dim_.y))
+            : this->render_->Render();
 
     this->curr_dim_ = new_dim;
 
@@ -53,12 +79,17 @@ void pixelarium::render::PixelariumImageViewCzi::ShowImage()
     ImGui::Text("%s", std::format("Render Dimensions W : {}, H: {}", curr_dim_.x, curr_dim_.y).c_str());
     ImGui::Text("Dimensions");
     ImGui::Separator();
+    if (ImGui::Button("Update"))
+    {
+        this->is_dirty_ = true;
+    }
 
     auto stats = czi_img->GetStatistics();
     stats.dimBounds.EnumValidDimensions(
         [&](libCZI::DimensionIndex dim, int start, int size) -> bool
         {
-            ImGui::Text("%c\t Start: %d\t End: %d", libCZI::Utils::DimensionToChar(dim), start, size);
+            auto dim_char = libCZI::Utils::DimensionToChar(dim);
+            ImGui::SliderInt(std::format("{}({}-{})", dim_char, start, size).c_str(), &dimension_map_[dim], start, size - 1);
             return true;
         });
 

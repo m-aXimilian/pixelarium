@@ -11,7 +11,7 @@ using namespace pixelarium::imaging;
 
 /// @brief Constructor for the CvMatRender class.
 /// @param img A shared pointer to the PixelariumImage to be rendered.
-pixelarium::render::CvMatRender::CvMatRender(std::shared_ptr<pixelarium::imaging::IPixelariumImage>& img) : base_(img), texture_(0)
+pixelarium::render::CvMatRender::CvMatRender(const cv::Mat& img) : base_(img), texture_(0)
 {
     // storing a copy of the to-be-rendered image
     // because it will be resized and filtered eventually which we absolutely
@@ -29,15 +29,6 @@ pixelarium::render::CvMatRender::~CvMatRender()
         glDeleteTextures(1, &texture_);
         texture_ = 0;
     }
-}
-
-/// @brief Resets the render image with a new PixelariumImage.
-/// @param img A shared pointer to the new PixelariumImage.
-void pixelarium::render::CvMatRender::ResetRenderImage(std::shared_ptr<pixelarium::imaging::IPixelariumImage>& img)
-{
-    this->base_ = img;
-    this->ResetRenderImage();
-    cv::cvtColor(this->img_, this->img_, cv::COLOR_BGR2RGBA);
 }
 
 /// @brief Uploads the current image data to an OpenGL texture.
@@ -103,11 +94,7 @@ GLuint pixelarium::render::CvMatRender::Render() { return this->uploadTexture();
 /// @return The ID of the OpenGL texture.
 GLuint pixelarium::render::CvMatRender::Render(float factor)
 {
-    auto res_val {this->base_->TryGetImage()};
-    if (res_val)
-    {
-        cv::resize(*res_val, this->img_, cv::Size(0, 0), factor, factor, cv::INTER_LINEAR_EXACT);
-    }
+    cv::resize(this->base_, this->img_, cv::Size(0, 0), factor, factor, cv::INTER_LINEAR_EXACT);
 
     return this->uploadTexture();
 }
@@ -118,14 +105,7 @@ GLuint pixelarium::render::CvMatRender::Render(float factor)
 /// @return The ID of the OpenGL texture.
 GLuint pixelarium::render::CvMatRender::Render(size_t width, size_t height)
 {
-    auto res_val {this->base_->TryGetImage()};
-
-    if (!res_val)
-    {
-        return this->Render(1.0f);
-    }
-
-    const auto sz{res_val->size()};
+    const auto sz{this->base_.size()};
 
     const auto get_factor = [](auto opt1, auto opt2) -> float { return opt1 < opt2 ? opt1 : opt2; };
 
@@ -136,18 +116,6 @@ GLuint pixelarium::render::CvMatRender::Render(size_t width, size_t height)
 
 void pixelarium::render::CvMatRender::ResetRenderImage()
 {
-    if (this->base_ == nullptr)
-    {
-        return;
-    }
-
-    auto root_res = this->base_->TryGetImage();
-
-    if (!root_res)
-    {
-        return;
-    }
-
     // we copy here
-    this->img_ = root_res->clone();
+    this->img_ = this->base_.clone();
 }

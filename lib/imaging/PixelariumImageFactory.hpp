@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "IPixelariumImage.hpp"
+#include "utilities/ILog.hpp"
 namespace pixelarium::imaging
 {
 constexpr pixelarium::imaging::ImageFileType ExtensionToType(const std::string& extension)
@@ -28,7 +29,8 @@ constexpr pixelarium::imaging::ImageFileType ExtensionToType(const std::string& 
 
 class PixelariumImageFactory
 {
+    using Log = utils::log::ILog;
    public:
-    static std::unique_ptr<IPixelariumImage> CreateImage(const std::string& uri);
+    static std::unique_ptr<IPixelariumImage> CreateImage(const std::string& uri, const Log& log);
 };
 }  // namespace pixelarium::imaging
