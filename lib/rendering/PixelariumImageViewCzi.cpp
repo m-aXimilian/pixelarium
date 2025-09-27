@@ -89,7 +89,12 @@ void pixelarium::render::PixelariumImageViewCzi::ShowImage()
         [&](libCZI::DimensionIndex dim, int start, int size) -> bool
         {
             auto dim_char = libCZI::Utils::DimensionToChar(dim);
-            ImGui::SliderInt(std::format("{}({}-{})", dim_char, start, size).c_str(), &dimension_map_[dim], start, size - 1);
+            if (ImGui::SliderInt(std::format("{}({}-{})", dim_char, start, size).c_str(), &dimension_map_[dim], start,
+                                 size - 1))
+            {
+                this->is_dirty_ = true;
+            }
+
             return true;
         });
 
