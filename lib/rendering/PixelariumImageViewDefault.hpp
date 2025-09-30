@@ -20,6 +20,7 @@ class PixelariumImageViewDefault : public IPixelariumImageView
     explicit PixelariumImageViewDefault(std::shared_ptr<Image> img) : render_(*img->TryGetImage())
     {
         img_ = img;
+        this->SetInitialSize();
     }
     PixelariumImageViewDefault() = delete;
     PixelariumImageViewDefault(PixelariumImageViewDefault&) = delete;

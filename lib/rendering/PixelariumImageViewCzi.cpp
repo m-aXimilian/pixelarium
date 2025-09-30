@@ -23,6 +23,7 @@ pixelarium::render::PixelariumImageViewCzi::PixelariumImageViewCzi(std::shared_p
             return true;
         });
 
+    this->SetInitialSize();
     log_.Info(std::format("{}: dimension map size: {}", __PRETTY_FUNCTION__, dimension_map_.size()));
 }
 
@@ -81,7 +82,7 @@ void pixelarium::render::PixelariumImageViewCzi::ShowImage()
     ImGui::Separator();
     if (ImGui::Button("Update"))
     {
-        this->is_dirty_ = true;
+        this->ForceUpdate();
     }
 
     auto stats = czi_img->GetStatistics();
@@ -92,7 +93,7 @@ void pixelarium::render::PixelariumImageViewCzi::ShowImage()
             if (ImGui::SliderInt(std::format("{}({}-{})", dim_char, start, size).c_str(), &dimension_map_[dim], start,
                                  size - 1))
             {
-                this->is_dirty_ = true;
+                this->ForceUpdate();
             }
 
             return true;
