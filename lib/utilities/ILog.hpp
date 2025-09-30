@@ -1,6 +1,11 @@
 #pragma once
 #include <string>
 
+#ifdef WIN32
+#define __PRETTY_FUNCTION__ __FUNCTION__
+#endif
+
+
 namespace pixelarium::utils::log
 {
 enum class LogLevel

@@ -1,9 +1,7 @@
 #include "CvMatRender.hpp"
 
-#include <memory>
 #include <opencv2/core/mat.hpp>
 #include <opencv2/imgproc.hpp>
-#include <stdexcept>
 
 #include "imaging/IPixelariumImage.hpp"
 

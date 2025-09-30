@@ -2,8 +2,6 @@
 // windows.h must come before GL/GL.h here.
 // clang format would change this, effectively rendering the build broken.
 // clang-format off
-#include <memory>
-#include <opencv2/core/mat.hpp>
 #ifdef _WIN32
 #include <windows.h>
 #include <GL/GL.h>
@@ -14,7 +12,7 @@
 #endif
 #include <GLFW/glfw3.h>  // Will drag system OpenGL headers
 #endif
-#include "imaging/IPixelariumImage.hpp"
+#include <opencv2/core/mat.hpp>
 // clang-format on
 
 namespace pixelarium::render
