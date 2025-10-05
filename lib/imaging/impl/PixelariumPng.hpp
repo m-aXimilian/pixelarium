@@ -32,7 +32,7 @@ class PixelariumPng : public IPixelariumImage
     bool Empty() const noexcept override { return this->is_empty_; }
 
    public:
-    const static ImageFileType type_{ImageFileType::PNG};
+    const static ImageFileType type_{ImageFileType::kPng};
 
    private:
     // this should be set by each image getter

@@ -16,19 +16,19 @@ pixelarium::imaging::PixelariumImageFactory::CreateImage(const std::string& uri,
 
     switch (target_type)
     {
-        case ImageFileType::UNKNOWN:
+        case ImageFileType::kUnknown:
             return {};
             break;
-        case ImageFileType::ABSTRACT:
+        case ImageFileType::kAbstract:
             return {};
             break;
-        case ImageFileType::PNG:
+        case ImageFileType::kPng:
             return std::make_unique<PixelariumPng>(uri);
             break;
-        case ImageFileType::JPG:
+        case ImageFileType::kJpg:
             return std::make_unique<PixelariumJpg>(uri);
             break;
-        case ImageFileType::CZI:
+        case ImageFileType::kCzi:
             return std::make_unique<PixelariumCzi>(uri, log);
             break;
     }

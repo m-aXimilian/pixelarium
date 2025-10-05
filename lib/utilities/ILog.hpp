@@ -10,11 +10,11 @@ namespace pixelarium::utils::log
 {
 enum class LogLevel
 {
-    Trace = 1 << 0,
-    Debug = 1 << 1,
-    Info = 1 << 2,
-    Warn = 1 << 3,
-    Error = 1 << 4,
+    kTrace = 1 << 0,
+    kDebug = 1 << 1,
+    kInfo = 1 << 2,
+    kWarn = 1 << 3,
+    kError = 1 << 4,
 };
 /// @brief Interface for logging implementations.
 class ILog
