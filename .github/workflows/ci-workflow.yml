@@ -11,5 +11,8 @@ jobs:
     uses: ./.github/workflows/build-gcc.yml
 
   generate-docs:
+    permissions:
+      id-token: write
+      pages: write
     uses: ./.github/workflows/generate-docs.yml
     if: github.ref == 'refs/heads/main'
