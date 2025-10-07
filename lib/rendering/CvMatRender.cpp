@@ -1,5 +1,11 @@
 #include "CvMatRender.hpp"
 
+#include <OpenGL/gl.h>
+#include <OpenGL/gl3.h>
+
+#include <array>
+#include <opencv2/core.hpp>
+#include <opencv2/core/base.hpp>
 #include <opencv2/core/mat.hpp>
 #include <opencv2/imgproc.hpp>
 
@@ -15,7 +21,19 @@ pixelarium::render::CvMatRender::CvMatRender(const cv::Mat& img) : base_(img), t
     // because it will be resized and filtered eventually which we absolutely
     // must not do on the original image
     this->ResetRenderImage();
-    cv::cvtColor(this->img_, this->img_, cv::COLOR_BGR2RGBA);
+    if (img_.type() == CV_32F || img_.type() == CV_32FC4)
+    {
+        std::println("{}: normalizing Mat", __PRETTY_FUNCTION__);
+        cv::normalize(this->img_, this->img_, 1.0, 0.0, cv::NORM_INF);
+        cv::Mat hist;
+        const std::array<float, 2> range { 0, 255 };
+        int h_size {256};
+        cv::calcHist( this->img_, 1, 0, cv::Mat(), hist, 1, &h_size, range, true, false );
+    }
+    else
+    {
+        cv::cvtColor(this->img_, this->img_, cv::COLOR_BGR2RGBA);
+    }
 }
 
 /// @brief Destructor for the CvMatRender class.
@@ -71,7 +89,9 @@ GLuint pixelarium::render::CvMatRender::uploadTexture()
         case CV_32F:
         case CV_32FC4:
             glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT,
-                         img_.data);
+            img_.data);
+            // glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, width, height, 0, GL_RED, GL_FLOAT,
+            //                          img_.data);
             break;
         default:
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img_.cols, img_.rows, 0, GL_RGBA, GL_UNSIGNED_BYTE, img_.data);
