@@ -1,40 +1,33 @@
-name: C/C++ CI
+name: generate-docs
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
   workflow_dispatch:
+  workflow_call:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
       with:
         submodules: recursive
+
     - name: setup
       run: |
         sudo apt update
-        sudo apt -y install libopencv-dev libglfw3 libglfw3-dev libxkbcommon-dev libxinerama-dev libxcursor-dev libxi-dev doxygen graphviz
-    - name: configure
-      run: cmake --preset gcc-debug
-    - name: build
-      run: cmake --build build --preset gcc-debug
-    - name: test
-      run: |
-        cd ${{github.workspace}}/build/gcc-debug
-        ctest -C Debug
+        sudo apt -y install doxygen graphviz
 
-    - name: Upload static files as artifact
+    - name: Generate Documentation
+      run: |
+        cmake -S . -B build -DPIXELARIUM_BUILD_DOCS_ONLY=ON
+        cmake --build build
+
+    - name: Upload Documentation Files as Artifacts
       id: deployment
       uses: actions/upload-pages-artifact@v3
       with:
-        path: ${{github.workspace}}/build/gcc-debug/doc/html
+        path: ${{github.workspace}}/build/doc/html
 
-  # Deployment job
   deploy:
     environment:
       name: github-pages
