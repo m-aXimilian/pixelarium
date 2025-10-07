@@ -21,9 +21,42 @@ message(STATUS "SPDLOG:\t" ${spdlog_DIR})
 
 #====================
 # Options
-option(PIXELARIUM_BUILD_UNITTESTS "Generate Unittests" ON)
-option(PIXELARIUM_BUILD_DOCS      "Generate Documentation" ON)
+option(PIXELARIUM_BUILD_UNITTESTS "Generate Unittests"       ON)
+option(PIXELARIUM_BUILD_DOCS      "Generate Documentation"   OFF)
+option(PIXELARIUM_DOCS_ONLY       "Build Documentation Only" OFF)
 #====================
+
+if(PIXELARIUM_BUILD_DOCS OR PIXELARIUM_DOCS_ONLY)
+  include(${PROJECT_SOURCE_DIR}/cmake/awesomeDoxygen.cmake)
+  set(MAINPAGE_FILE "doc/index.md")
+  find_package(Doxygen)
+  if (DOXYGEN_FOUND)
+
+    set(DOXYGEN_IN ${PROJECT_SOURCE_DIR}/doc/Doxyfile.in)
+    set(DOXYGEN_OUT ${CMAKE_BINARY_DIR}/Doxyfile)
+
+    configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+    message(STATUS "Building Docs")
+
+    add_custom_target(doxygen ALL
+      COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+      COMMENT "Generating Docs")
+
+  else (DOXYGEN_FOUND)
+    message(FATAL_ERROR "Doxygen need to be installed to generate the doxygen documentation")
+  endif (DOXYGEN_FOUND)
+
+  if(PIXELARIUM_DOCS_ONLY)
+    message(STATUS "Documentation Generated successful")
+    list(APPEND CMAKE_MESSAGE_INDENT "  ")
+    message(STATUS "PIXELARIUM_DOCS_ONLY was set to ON. Thus, no compilation will follow.")
+    message(STATUS "If compilation shall occur, set '-DPIXELARIUM_DOCS_ONLY=OFF'.")
+    list(POP_BACK CMAKE_MESSAGE_INDENT)
+
+    return()
+  endif()
+endif()
 
 if(WIN32)
   set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
@@ -77,26 +110,4 @@ if(PIXELARIUM_BUILD_UNITTESTS)
   include(CTest)
   enable_testing()
   add_subdirectory(tests)
-endif()
-
-if(PIXELARIUM_BUILD_DOCS)
-  include(${PROJECT_SOURCE_DIR}/cmake/awesomeDoxygen.cmake)
-  set(MAINPAGE_FILE "doc/index.md")
-  find_package(Doxygen)
-  if (DOXYGEN_FOUND)
-
-    set(DOXYGEN_IN ${PROJECT_SOURCE_DIR}/doc/Doxyfile.in)
-    set(DOXYGEN_OUT ${CMAKE_BINARY_DIR}/Doxyfile)
-
-    configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
-    message(STATUS "Building Docs")
-
-    add_custom_target(doxygen ALL
-      COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
-      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-      COMMENT "Generating Docs")
-
-  else (DOXYGEN_FOUND)
-    message(FATAL_ERROR "Doxygen need to be installed to generate the doxygen documentation")
-  endif (DOXYGEN_FOUND)
 endif()

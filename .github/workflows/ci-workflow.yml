@@ -10,6 +10,6 @@ jobs:
   build-gcc:
     uses: ./.github/workflows/build-gcc.yml
 
-  # generate-docs:
-  #   uses: ./.github/workflows/push-nuget.yml
-  #   if: github.ref == 'refs/heads/main'
+  generate-docs:
+    uses: ./.github/workflows/generate-docs.yml
+    if: github.ref == 'refs/heads/main'
