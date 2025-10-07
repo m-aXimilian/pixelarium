@@ -13,8 +13,6 @@ set(imgui_DIR ${PROJECT_SOURCE_DIR}/modules/imgui)
 set(pfd_DIR ${PROJECT_SOURCE_DIR}/modules/portable-file-dialogs)
 set(spdlog_DIR ${PROJECT_SOURCE_DIR}/modules/spdlog)
 
-find_package(OpenGL REQUIRED)
-
 message(STATUS "GLFW:\t" ${glfw3_module_DIR})
 message(STATUS "PFD:\t\t" ${pfd_DIR})
 message(STATUS "SPDLOG:\t" ${spdlog_DIR})
@@ -57,6 +55,8 @@ if(PIXELARIUM_BUILD_DOCS OR PIXELARIUM_BUILD_DOCS_ONLY)
     return()
   endif()
 endif()
+
+find_package(OpenGL REQUIRED)
 
 if(WIN32)
   set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
