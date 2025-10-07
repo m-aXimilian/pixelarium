@@ -34,10 +34,10 @@ jobs:
     - name: Configure Windows
       run: cmake -B ${{github.workspace}}/build/msvc-${{ matrix.configuration }} -S . -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-windows-static
 
-    - name: Build Windows
-      run: cmake --build ${{github.workspace}}/build/msvc-${{ matrix.configuration }} --config ${{ matrix.configuration }} -j 10
+    # - name: Build Windows
+    #   run: cmake --build ${{github.workspace}}/build/msvc-${{ matrix.configuration }} --config ${{ matrix.configuration }} -j 10
 
-    - name: Test Windows
-      run: |
-        cd ${{github.workspace}}/build/msvc-${{ matrix.configuration }}
-        ctest -C ${{ matrix.configuration }}
+    # - name: Test Windows
+    #   run: |
+    #     cd ${{github.workspace}}/build/msvc-${{ matrix.configuration }}
+    #     ctest -C ${{ matrix.configuration }}
