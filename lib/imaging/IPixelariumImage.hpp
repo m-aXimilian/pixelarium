@@ -14,15 +14,15 @@ using ImageQueryFunctor = std::function<void(const std::string&, void*, int*)>;
 enum class ImageFileType
 {
     /// @brief Represents an unknown or unsupported file type.
-    UNKNOWN = -10,
+    kUnknown = -10,
     /// @brief Represents an abstract image type (e.g., a placeholder).
-    ABSTRACT = 0,
+    kAbstract = 0,
     /// @brief Represents a PNG image file.
-    PNG = 1,
+    kPng = 1,
     /// @brief Represents a JPG image file.
-    JPG = 2,
+    kJpg = 2,
     /// @brief Represents a CZI image file.
-    CZI = 3,
+    kCzi = 3,
 };
 
 /// @brief An abstract interface to define a semantic query
@@ -83,7 +83,7 @@ class IPixelariumImage
     }
 
    public:
-    const static ImageFileType type_{ImageFileType::ABSTRACT};
+    const static ImageFileType type_{ImageFileType::kAbstract};
 
    protected:
     std::filesystem::path uri_;

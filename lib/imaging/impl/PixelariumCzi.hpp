@@ -46,7 +46,7 @@ class PixelariumCzi : public IPixelariumImage
     const libCZI::SubBlockStatistics& GetStatistics() const { return this->image_statistics_; }
 
    public:
-    const static ImageFileType type_{ImageFileType::CZI};
+    const static ImageFileType type_{ImageFileType::kCzi};
 
    private:
     std::unique_ptr<cv::Mat> SubblockToCvMat(int index);

@@ -18,7 +18,7 @@ void pixelarium::render::PixelariumImageViewDefault::ShowImage()
         this->is_dirty_ = false;
     }
 
-    if (this->img_->Empty() || this->img_->type_ == imaging::ImageFileType::UNKNOWN || !cached_image_ ||
+    if (this->img_->Empty() || this->img_->type_ == imaging::ImageFileType::kUnknown || !cached_image_ ||
         this->img_->Name().empty())
     {
         // do nothing

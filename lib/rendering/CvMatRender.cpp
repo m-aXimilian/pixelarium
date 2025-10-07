@@ -55,21 +55,25 @@ GLuint pixelarium::render::CvMatRender::uploadTexture()
 
     const int width = img_.cols;
     const int height = img_.rows;
-
-    switch (img_.type()) {
+    // see
+    // https://stackoverflow.com/questions/10167534/how-to-find-out-what-type-of-a-mat-object-is-with-mattype-in-opencv
+    // for pixel a pixel type table
+    switch (img_.type())
+    {
+        case CV_8U:
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_BYTE, img_.data);
+            break;
         case CV_16U:
         case CV_16UC3:
-        case 26:
-            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        case CV_16UC4:
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_SHORT, img_.data);
             break;
-        case 5:
-        case 29:
-            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_FLOAT, img_.data);
+        case CV_32F:
+        case CV_32FC4:
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT,
+                         img_.data);
             break;
         default:
-            glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img_.cols, img_.rows, 0, GL_RGBA, GL_UNSIGNED_BYTE, img_.data);
             break;
     }
