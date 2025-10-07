@@ -1,4 +1,4 @@
-name: build-gcc
+name: build-ubuntu
 
 on:
   workflow_dispatch:
@@ -20,11 +20,11 @@ jobs:
         sudo apt update
         sudo apt -y install libopencv-dev libglfw3 libglfw3-dev libxkbcommon-dev libxinerama-dev libxcursor-dev libxi-dev doxygen graphviz
 
-    - name: Configure GCC
+    - name: Configure Ubuntu
       run: cmake -B ${{github.workspace}}/build/gcc-debug -S . -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
-    - name: Build GCC
+    - name: Build Ubuntu
       run: cmake --build ${{github.workspace}}/build/gcc-debug --config ${{ matrix.configuration }} -- -j 10
-    - name: Test GCC
+    - name: Test Ubuntu
       run: |
         cd ${{github.workspace}}/build/gcc-debug
         ctest -C Debug
