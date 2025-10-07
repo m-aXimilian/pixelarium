@@ -1,0 +1,38 @@
+name: generate-docs
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Generate Documentation
+      run: |
+        cmake -S . -B build -DPIXELARIUM_BUILD_DOCS_ONLY=ON
+        cmake --build build
+
+    - name: Upload Documentation Files as Artifacts
+      id: deployment
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ${{github.workspace}}/build/doc/html
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      pages: write
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
