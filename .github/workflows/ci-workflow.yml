@@ -18,3 +18,6 @@ jobs:
       pages: write
     uses: ./.github/workflows/generate-docs.yml
     if: github.ref == 'refs/heads/main'
+    needs:
+      - build-ubuntu
+      - build-windows
