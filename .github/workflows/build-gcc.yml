@@ -1,0 +1,51 @@
+name: build-gcc
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+    - name: setup
+      run: |
+        sudo apt update
+        sudo apt -y install libopencv-dev libglfw3 libglfw3-dev libxkbcommon-dev libxinerama-dev libxcursor-dev libxi-dev doxygen graphviz
+
+    - name: Configure GCC
+      run: cmake -B ${{github.workspace}}/build/gcc-debug -S . -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
+    - name: Build GCC
+      run: cmake --build build --configuration ${{ matrix.configuration }}
+    - name: Build GCC
+      run: |
+        cd ${{github.workspace}}/build/gcc-debug
+        ctest -C Debug
+
+    # - name: Upload static files as artifact
+    #   id: deployment
+    #   uses: actions/upload-pages-artifact@v3
+    #   with:
+    #     path: ${{github.workspace}}/build/gcc-debug/doc/html
+
+  # Deployment job
+  # deploy:
+  #   environment:
+  #     name: github-pages
+  #     url: ${{ steps.deployment.outputs.page_url }}
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     id-token: write
+  #     pages: write
+  #   needs: build
+  #   steps:
+  #     - name: Deploy to GitHub Pages
+  #       id: deployment
+  #       uses: actions/deploy-pages@v4

@@ -1,0 +1,15 @@
+name: CI Workflow
+
+on:
+  push:
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build-gcc:
+    uses: ./.github/workflows/build-gcc.yml
+
+  # generate-docs:
+  #   uses: ./.github/workflows/push-nuget.yml
+  #   if: github.ref == 'refs/heads/main'
