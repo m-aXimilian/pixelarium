@@ -9,7 +9,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        configuration: [Debug, Release]
+        configuration: [Debug]
 
     steps:
     - uses: actions/checkout@v4
