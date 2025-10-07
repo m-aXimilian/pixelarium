@@ -12,6 +12,11 @@ jobs:
       with:
         submodules: recursive
 
+    - name: setup
+      run: |
+        sudo apt update
+        sudo apt -y install libopencv-dev libglfw3 libglfw3-dev libxkbcommon-dev libxinerama-dev libxcursor-dev libxi-dev doxygen graphviz
+
     - name: Generate Documentation
       run: |
         cmake -S . -B build -DPIXELARIUM_BUILD_DOCS_ONLY=ON
