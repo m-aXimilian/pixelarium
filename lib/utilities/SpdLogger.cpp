@@ -30,15 +30,15 @@ void SpdLogger::ChangeLevel(LogLevel lvl) const
     {
         switch (l)
         {
-            case LogLevel::Trace:
+            case LogLevel::kTrace:
                 return "Trace";
-            case LogLevel::Debug:
+            case LogLevel::kDebug:
                 return "Debug";
-            case LogLevel::Info:
+            case LogLevel::kInfo:
                 return "Info";
-            case LogLevel::Warn:
+            case LogLevel::kWarn:
                 return "Warn";
-            case LogLevel::Error:
+            case LogLevel::kError:
                 return "Error";
             default:
                 return "Not Found";
@@ -47,23 +47,23 @@ void SpdLogger::ChangeLevel(LogLevel lvl) const
 
     switch (lvl)
     {
-        case LogLevel::Trace:
+        case LogLevel::kTrace:
             this->logger_->set_level(spdlog::level::trace);
             spdlog::flush_on(spdlog::level::trace);
             break;
-        case LogLevel::Info:
+        case LogLevel::kInfo:
             this->logger_->set_level(spdlog::level::info);
             spdlog::flush_on(spdlog::level::info);
             break;
-        case LogLevel::Warn:
+        case LogLevel::kWarn:
             this->logger_->set_level(spdlog::level::warn);
             spdlog::flush_on(spdlog::level::warn);
             break;
-        case LogLevel::Error:
+        case LogLevel::kError:
             this->logger_->set_level(spdlog::level::err);
             spdlog::flush_on(spdlog::level::err);
             break;
-        case LogLevel::Debug:
+        case LogLevel::kDebug:
         default:
             this->logger_->set_level(spdlog::level::debug);
             spdlog::flush_on(spdlog::level::debug);

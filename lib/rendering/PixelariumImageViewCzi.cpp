@@ -51,7 +51,7 @@ void pixelarium::render::PixelariumImageViewCzi::ShowImage()
         this->is_dirty_ = false;
     }
 
-    if (czi_img->Empty() || this->img_->type_ == imaging::ImageFileType::UNKNOWN || !cached_image_ ||
+    if (czi_img->Empty() || this->img_->type_ == imaging::ImageFileType::kUnknown || !cached_image_ ||
         czi_img->Name().empty())
     {
         // do nothing

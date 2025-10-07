@@ -13,18 +13,18 @@ constexpr pixelarium::imaging::ImageFileType ExtensionToType(const std::string& 
 
     if (lower_ext == ".jpg" || lower_ext == ".jpeg")
     {
-        return pixelarium::imaging::ImageFileType::JPG;
+        return pixelarium::imaging::ImageFileType::kJpg;
     }
     if (lower_ext == ".png")
     {
-        return pixelarium::imaging::ImageFileType::PNG;
+        return pixelarium::imaging::ImageFileType::kPng;
     }
     if (lower_ext == ".czi")
     {
-        return pixelarium::imaging::ImageFileType::CZI;
+        return pixelarium::imaging::ImageFileType::kCzi;
     }
 
-    return pixelarium::imaging::ImageFileType::UNKNOWN;
+    return pixelarium::imaging::ImageFileType::kUnknown;
 }
 
 /// @brief Factory for instantiating implementations of IPixelariumImage based on the given file type.

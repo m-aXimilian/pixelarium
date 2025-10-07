@@ -17,7 +17,7 @@ int main(int argc, char** argv)
 #endif
     logger->Info(std::format("{}: Starting Application {}", __FUNCTION__, "Pixelarium"));
 
-    logger->ChangeLevel(utils::log::LogLevel::Debug);
+    logger->ChangeLevel(utils::log::LogLevel::kDebug);
     auto image_pool{std::make_unique<resources::ImageResourcePool>()};
 
     pixelarium::ui::DefaultApp app = pixelarium::ui::DefaultApp(*logger, *image_pool);
