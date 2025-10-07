@@ -22,7 +22,7 @@ message(STATUS "SPDLOG:\t" ${spdlog_DIR})
 #====================
 # Options
 option(PIXELARIUM_BUILD_UNITTESTS "Generate Unittests"       ON)
-option(PIXELARIUM_BUILD_DOCS      "Generate Documentation"   OFF)
+option(PIXELARIUM_BUILD_DOCS      "Generate Documentation"   ON)
 option(PIXELARIUM_DOCS_ONLY       "Build Documentation Only" OFF)
 #====================
 
