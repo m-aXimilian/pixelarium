@@ -23,29 +23,9 @@ jobs:
     - name: Configure GCC
       run: cmake -B ${{github.workspace}}/build/gcc-debug -S . -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
     - name: Build GCC
-      run: cmake --build ${{github.workspace}}/build/gcc-debug --config ${{ matrix.configuration }}
-    - name: Build GCC
+      run: cmake --build ${{github.workspace}}/build/gcc-debug --config ${{ matrix.configuration }} -- -j 10
+    - name: Test GCC
       run: |
         cd ${{github.workspace}}/build/gcc-debug
         ctest -C Debug
 
-    # - name: Upload static files as artifact
-    #   id: deployment
-    #   uses: actions/upload-pages-artifact@v3
-    #   with:
-    #     path: ${{github.workspace}}/build/gcc-debug/doc/html
-
-  # Deployment job
-  # deploy:
-  #   environment:
-  #     name: github-pages
-  #     url: ${{ steps.deployment.outputs.page_url }}
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     id-token: write
-  #     pages: write
-  #   needs: build
-  #   steps:
-  #     - name: Deploy to GitHub Pages
-  #       id: deployment
-  #       uses: actions/deploy-pages@v4
