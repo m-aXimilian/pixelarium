@@ -23,7 +23,7 @@ jobs:
     - name: Configure GCC
       run: cmake -B ${{github.workspace}}/build/gcc-debug -S . -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
     - name: Build GCC
-      run: cmake --build build --configuration ${{ matrix.configuration }}
+      run: cmake --build ${{github.workspace}}/build/gcc-debug --configuration ${{ matrix.configuration }}
     - name: Build GCC
       run: |
         cd ${{github.workspace}}/build/gcc-debug
