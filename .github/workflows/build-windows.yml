@@ -1,0 +1,41 @@
+name: build-windows
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Cacke vcpkg
+      uses: actions/cache@v3
+      with:
+        path: 'C:/vcpkg/installed'
+        key: vcpkg-x64-windows-${{ matrix.configuration }}
+        restore-keys: |
+          vcpkg-x64-windows-${{ matrix.configuration }}
+
+    - name: Install OpenCV vcpkg
+      run: |
+        vcpkg install opencv[core]:x64-windows-static
+
+    - name: Set PATH for vcpkg
+      run: echo "PATH=C:/vcpkg/installed/x64-windows/bin:${{ env.PATH }}" >> $GITHUB_ENV
+
+    - name: Configure Windows
+      run: cmake -B ${{github.workspace}}/build/msvc-${{ matrix.configuration }} -S . -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-windows-static
+
+    - name: Build Windows
+      run: cmake --build ${{github.workspace}}/build/msvc-${{ matrix.configuration }} --config ${{ matrix.configuration }} -j 10
+
+    - name: Test Windows
+      run: |
+        cd ${{github.workspace}}/build/msvc-${{ matrix.configuration }}
+        ctest -C ${{ matrix.configuration }}

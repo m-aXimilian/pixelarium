@@ -21,11 +21,13 @@ jobs:
         sudo apt -y install libopencv-dev libglfw3 libglfw3-dev libxkbcommon-dev libxinerama-dev libxcursor-dev libxi-dev doxygen graphviz
 
     - name: Configure Ubuntu
-      run: cmake -B ${{github.workspace}}/build/gcc-debug -S . -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
+      run: cmake -B ${{github.workspace}}/build/gcc-${{ matrix.configuration }} -S . -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
+
     - name: Build Ubuntu
-      run: cmake --build ${{github.workspace}}/build/gcc-debug --config ${{ matrix.configuration }} -- -j 10
+      run: cmake --build ${{github.workspace}}/build/gcc-${{ matrix.configuration }} --config ${{ matrix.configuration }} -- -j 10
+
     - name: Test Ubuntu
       run: |
-        cd ${{github.workspace}}/build/gcc-debug
-        ctest -C Debug
+        cd ${{github.workspace}}/build/gcc-${{ matrix.configuration }}
+        ctest -C ${{ matrix.configuration }}
 
