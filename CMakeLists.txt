@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.23)
 
-project(pixelarium VERSION 0.0.5)
+project(pixelarium VERSION 0.0.6)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CXX_STANDARD 23)
@@ -21,12 +21,12 @@ message(STATUS "SPDLOG:\t" ${spdlog_DIR})
 
 #====================
 # Options
-option(PIXELARIUM_BUILD_UNITTESTS "Generate Unittests"       ON)
-option(PIXELARIUM_BUILD_DOCS      "Generate Documentation"   ON)
-option(PIXELARIUM_DOCS_ONLY       "Build Documentation Only" OFF)
+option(PIXELARIUM_BUILD_UNITTESTS "Generate Unittests"                        ON)
+option(PIXELARIUM_BUILD_DOCS      "Generate Documentation"                    ON)
+option(PIXELARIUM_BUILD_DOCS_ONLY "Build only Documentation (no compilatoin)" OFF)
 #====================
 
-if(PIXELARIUM_BUILD_DOCS OR PIXELARIUM_DOCS_ONLY)
+if(PIXELARIUM_BUILD_DOCS OR PIXELARIUM_BUILD_DOCS_ONLY)
   include(${PROJECT_SOURCE_DIR}/cmake/awesomeDoxygen.cmake)
   set(MAINPAGE_FILE "doc/index.md")
   find_package(Doxygen)
@@ -47,11 +47,11 @@ if(PIXELARIUM_BUILD_DOCS OR PIXELARIUM_DOCS_ONLY)
     message(FATAL_ERROR "Doxygen need to be installed to generate the doxygen documentation")
   endif (DOXYGEN_FOUND)
 
-  if(PIXELARIUM_DOCS_ONLY)
+  if(PIXELARIUM_BUILD_DOCS_ONLY)
     message(STATUS "Documentation Generated successful")
     list(APPEND CMAKE_MESSAGE_INDENT "  ")
-    message(STATUS "PIXELARIUM_DOCS_ONLY was set to ON. Thus, no compilation will follow.")
-    message(STATUS "If compilation shall occur, set '-DPIXELARIUM_DOCS_ONLY=OFF'.")
+    message(STATUS "PIXELARIUM_BUILD_DOCS_ONLY was set to ON. Thus, no compilation will follow.")
+    message(STATUS "If compilation shall occur, set '-DPIXELARIUM_BUILD_DOCS_ONLY=OFF'.")
     list(POP_BACK CMAKE_MESSAGE_INDENT)
 
     return()

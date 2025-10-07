@@ -17,7 +17,7 @@
         "CMAKE_VERBOSE_MAKEFILE": "ON",
         "PIXELARIUM_BUILD_UNITTESTS": "ON",
         "PIXELARIUM_BUILD_DOCS": "OFF",
-        "PIXELARIUM_DOCS_ONLY": "OFF"
+        "PIXELARIUM_BUILD_DOCS_ONLY": "OFF"
       }
     },
     {
