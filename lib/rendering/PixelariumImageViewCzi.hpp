@@ -3,6 +3,7 @@
 #include <memory>
 #include <unordered_map>
 
+#include "imaging/impl/PixelariumCzi.hpp"
 #include "imgui.h"
 #include "libCZI_DimCoordinate.h"
 #include "rendering/CvMatRender.hpp"
@@ -32,7 +33,7 @@ class PixelariumImageViewCzi : public IPixelariumImageView
    private:
     ImVec2 curr_dim_{};
     const Log& log_;
-    std::unordered_map<libCZI::DimensionIndex, int> dimension_map_;
+    std::unordered_map<imaging::LibCziDimensions, int> dimension_map_;
     std::unique_ptr<CvMatRender> render_;
 };
 }  // namespace pixelarium::render

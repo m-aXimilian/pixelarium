@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <utility>
 
+#include "imaging/IPixelariumImage.hpp"
 #include "libCZI.h"
 #include "utilities/ILog.hpp"
 
@@ -17,7 +18,7 @@ bool comp_blockinfo_params(const pixelarium::imaging::CziParams& params, const l
     info.coordinate.EnumValidDimensions(
         [&](libCZI::DimensionIndex dim, int start) -> bool
         {
-            if (params.dimension_map.at(dim) == start)
+            if (params.dimension_map.at(static_cast<uint8_t>(dim)) == start)
             {
                 return true;
             }
@@ -26,16 +27,28 @@ bool comp_blockinfo_params(const pixelarium::imaging::CziParams& params, const l
             return true;
         });
 
+    if (info.IsMindexValid())
+    {
+        res &= params.dimension_map.at(pixelarium::imaging::M) == info.mIndex;
+    }
+
     return res;
 }
 
-
-constexpr int try_get_index_match(const pixelarium::imaging::CziParams& params, libCZI::ICZIReader& reader)
+constexpr int try_get_index_match(const pixelarium::imaging::CziParams& params, libCZI::ICZIReader& reader, const pixelarium::utils::log::ILog& log)
 {
     int index{-1};
     reader.EnumerateSubBlocks(
         [&](int idx, const libCZI::SubBlockInfo& info) -> bool
         {
+            // ignore pyramids
+            if (info.physicalSize.h > static_cast<uint32_t>(info.logicalRect.h) ||
+                info.physicalSize.w > static_cast<uint32_t>(info.logicalRect.w))
+            {
+                log.Debug(std::format("{}: dropping pyramid block", __PRETTY_FUNCTION__));
+                return true;
+            }
+
             if (comp_blockinfo_params(params, info))
             {
                 index = idx;
@@ -54,6 +67,8 @@ std::unique_ptr<cv::Mat> CZISubBlockToCvMat(std::shared_ptr<libCZI::IBitmapData>
 {
     size_t pixel_size{0};
     int target_type;
+
+    // for logging purpose only
     std::pair<std::string, std::string> pixel_pair;
 
     switch (pixeltype)
@@ -163,20 +178,29 @@ pixelarium::imaging::PixelariumCzi::PixelariumCzi(const std::string& uri, const 
     this->czi_reader_->Open(stream);
     this->image_statistics_ = this->czi_reader_->GetStatistics();
 
+    log_.Debug(std::format("{}: image {} with M min: {} M max: {}", __PRETTY_FUNCTION__,
+                           this->Uri().string(), image_statistics_.minMindex, image_statistics_.maxMindex));
+    if (this->image_statistics_.IsMIndexValid() &&
+        this->image_statistics_.maxMindex != std::numeric_limits<int>::min() &&
+        this->image_statistics_.minMindex != std::numeric_limits<int>::max())
+    {
+        log_.Info(std::format("{}: image {} has valid M.", __PRETTY_FUNCTION__, this->Uri().string()));
+        this->dimension_map_[M] = this->image_statistics_.minMindex;
+    }
+
     this->image_statistics_.dimBounds.EnumValidDimensions(
         [&](libCZI::DimensionIndex dim, int start, int) -> bool
         {
-            this->dimension_map_[dim] = start;
+            this->dimension_map_[static_cast<LibCziDimensions>(dim)] = start;
             return true;
         });
 }
 
 std::unique_ptr<cv::Mat> pixelarium::imaging::PixelariumCzi::TryGetImage() { return SubblockToCvMat(0); }
 
-std::unique_ptr<cv::Mat> pixelarium::imaging::PixelariumCzi::TryGetImage(const IImageQuery& query)
+std::unique_ptr<cv::Mat> pixelarium::imaging::PixelariumCzi::GetSubblockImage(const CziParams& query)
 {
-    const auto czi_query = static_cast<const CziParams&>(query);
-    int index = try_get_index_match(czi_query, *this->czi_reader_);
+    int index = try_get_index_match(query, *this->czi_reader_, log_);
 
     if (index < 0)
     {
@@ -184,4 +208,18 @@ std::unique_ptr<cv::Mat> pixelarium::imaging::PixelariumCzi::TryGetImage(const I
     }
 
     return SubblockToCvMat(index);
+}
+
+std::unique_ptr<cv::Mat> pixelarium::imaging::PixelariumCzi::TryGetImage(const IImageQuery& query)
+{
+    const auto czi_query = static_cast<const CziParams&>(query);
+    switch (czi_query.query_type)
+    {
+        case CziParams::QueryType::kSubBlock:
+            return this->GetSubblockImage(czi_query);
+        case CziParams::QueryType::kComposite:
+            return {};
+        default:
+            return {};
+    }
 }

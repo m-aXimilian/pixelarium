@@ -19,7 +19,7 @@ pixelarium::render::PixelariumImageViewCzi::PixelariumImageViewCzi(std::shared_p
     stats.dimBounds.EnumValidDimensions(
         [&](libCZI::DimensionIndex dim, int start, int) -> bool
         {
-            this->dimension_map_[dim] = start;
+            this->dimension_map_[static_cast<uint8_t>(dim)] = start;
             return true;
         });
 
@@ -86,12 +86,21 @@ void pixelarium::render::PixelariumImageViewCzi::ShowImage()
     }
 
     auto stats = czi_img->GetStatistics();
+    if (stats.IsMIndexValid() && stats.maxMindex != std::numeric_limits<int>::min() &&
+        stats.minMindex != std::numeric_limits<int>::max())
+    {
+        if (ImGui::SliderInt(std::format("{}({}-{})", "M", stats.minMindex, stats.maxMindex).c_str(),
+                             &dimension_map_[pixelarium::imaging::M], stats.minMindex, stats.maxMindex))
+        {
+            this->ForceUpdate();
+        }
+    }
     stats.dimBounds.EnumValidDimensions(
         [&](libCZI::DimensionIndex dim, int start, int size) -> bool
         {
             auto dim_char = libCZI::Utils::DimensionToChar(dim);
-            if (ImGui::SliderInt(std::format("{}({}-{})", dim_char, start, size).c_str(), &dimension_map_[dim], start,
-                                 size - 1))
+            if (ImGui::SliderInt(std::format("{}({}-{})", dim_char, start, size).c_str(),
+                                 &dimension_map_.at(static_cast<std::uint8_t>(dim)), start, size - 1))
             {
                 this->ForceUpdate();
             }

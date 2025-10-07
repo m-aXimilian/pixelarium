@@ -4,29 +4,39 @@
 #include <string>
 
 #include "../IPixelariumImage.hpp"
-#include "utilities/ILog.hpp"
 #include "libCZI.h"
+#include "utilities/ILog.hpp"
 
 namespace pixelarium::imaging
 {
+
+using LibCziDimensions = std::uint8_t;
+constexpr LibCziDimensions M = 30;
 /// @brief An implementation of IImageQuery to work on CZI images.
 /// @note  Check the documentation here https://zeiss.github.io/libczi/pages/mainpage.html#czi-in-a-nutshell
 struct CziParams : public IImageQuery
 {
+    enum class QueryType
+    {
+        kSubBlock = 0,
+        kComposite = 1,
+    };
     /// @brief A map providing the start coordinate for each dimension in the CZI
-    std::unordered_map<libCZI::DimensionIndex, int> dimension_map;
+    std::unordered_map<LibCziDimensions, int> dimension_map;
+
+    QueryType query_type = QueryType::kSubBlock;
 };
 
 /// @brief Implements support for .czi-images in the realm of IPixelariumImage
 class PixelariumCzi : public IPixelariumImage
 {
     using Log = pixelarium::utils::log::ILog;
+
    public:
     explicit PixelariumCzi(const std::string& uri, const Log& log);
     ~PixelariumCzi()
     {
-        if (this->czi_reader_)
-            this->czi_reader_->Close();
+        if (this->czi_reader_) this->czi_reader_->Close();
     }
 
     // IPixelariumImage member implementations
@@ -50,6 +60,7 @@ class PixelariumCzi : public IPixelariumImage
 
    private:
     std::unique_ptr<cv::Mat> SubblockToCvMat(int index);
+    std::unique_ptr<cv::Mat> GetSubblockImage(const CziParams& query);
 
    private:
     // this should be set by each image getter
@@ -60,7 +71,7 @@ class PixelariumCzi : public IPixelariumImage
 
     std::shared_ptr<libCZI::ICZIReader> czi_reader_;
 
-    std::unordered_map<libCZI::DimensionIndex, int> dimension_map_;
+    std::unordered_map<LibCziDimensions, int> dimension_map_;
 
     const Log& log_;
 };
