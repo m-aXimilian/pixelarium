@@ -29,7 +29,6 @@ bool comp_blockinfo_params(const pixelarium::imaging::CziParams& params, const l
     return res;
 }
 
-
 constexpr int try_get_index_match(const pixelarium::imaging::CziParams& params, libCZI::ICZIReader& reader)
 {
     int index{-1};

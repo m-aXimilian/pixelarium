@@ -5,7 +5,6 @@
 #include <unordered_set>
 
 #include "ImageViewFactory.hpp"
-#include "PixelariumImageViewDefault.hpp"
 #include "rendering/IPixelariumImageView.hpp"
 #include "resources/resource.hpp"
 #include "utilities/ILog.hpp"
@@ -22,7 +21,6 @@ struct RenderImageStateWrapper
     std::unique_ptr<IPixelariumImageView> view;
     const bool* show_state;
 };
-
 
 /// @brief Manage instances of IPixelariumImageView.
 ///
