@@ -4,8 +4,8 @@
 #include <string>
 
 #include "../IPixelariumImage.hpp"
-#include "utilities/ILog.hpp"
 #include "libCZI.h"
+#include "utilities/ILog.hpp"
 
 namespace pixelarium::imaging
 {
@@ -21,12 +21,12 @@ struct CziParams : public IImageQuery
 class PixelariumCzi : public IPixelariumImage
 {
     using Log = pixelarium::utils::log::ILog;
+
    public:
     explicit PixelariumCzi(const std::string& uri, const Log& log);
     ~PixelariumCzi()
     {
-        if (this->czi_reader_)
-            this->czi_reader_->Close();
+        if (this->czi_reader_) this->czi_reader_->Close();
     }
 
     // IPixelariumImage member implementations

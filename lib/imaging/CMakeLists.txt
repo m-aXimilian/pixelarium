@@ -22,6 +22,8 @@ set(IMAGELIBLIBNAME pixelariumimagelib)
 add_library(${IMAGELIBLIBNAME}
   STATIC ${IMAGELIBSRC})
 
+target_compile_definitions(${IMAGELIBLIBNAME} PUBLIC _LIBCZISTATICLIB)
+
 target_link_libraries(${IMAGELIBLIBNAME}
   PUBLIC ${OpenCV_LIBS}
   PUBLIC pixelariumutilslib

@@ -7,7 +7,6 @@
 #include "impl/PixelariumJpg.hpp"
 #include "impl/PixelariumPng.hpp"
 
-
 /*static*/ std::unique_ptr<pixelarium::imaging::IPixelariumImage>
 pixelarium::imaging::PixelariumImageFactory::CreateImage(const std::string& uri, const Log& log)
 {

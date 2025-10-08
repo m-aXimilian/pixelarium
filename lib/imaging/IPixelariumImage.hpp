@@ -46,7 +46,7 @@ class IPixelariumImage
     virtual std::unique_ptr<cv::Mat> TryGetImage() = 0;
 
     /// @brief Attempts to retrieve the image.
-    /// @param query The query object defining the images to retrieve./// 
+    /// @param query The query object defining the images to retrieve.
     /// @return A unique pointer to a Mat object containing the image data,
     /// or nullptr if the image is not found or cannot be retrieved.
     virtual std::unique_ptr<cv::Mat> TryGetImage(const IImageQuery& query) = 0;
