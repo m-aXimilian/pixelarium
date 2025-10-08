@@ -7,7 +7,7 @@
 #+exclude_tags: noexport
 
 [[https://github.com/m-aXimilian/pixelarium/actions/workflows/ci-workflow.yml][file:https://github.com/m-aXimilian/pixelarium/actions/workflows/ci-workflow.yml/badge.svg]]
-
+[[https://github.com/m-aXimilian/pixelarium/actions/workflows/mega-linter.yml][file:https://github.com/m-aXimilian/pixelarium/actions/workflows/mega-linter.yml/badge.svg]]
 
 * Synopsis
 
