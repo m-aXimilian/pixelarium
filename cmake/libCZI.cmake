@@ -8,7 +8,6 @@ FetchContent_Declare(
 
 if(NOT libCZI_POPULATED)
   message(STATUS "Fetching libCZI")
-  FetchContent_MakeAvailable(libCZI)
 
   set(LIBCZI_BUILD_CZICMD                           OFF CACHE BOOL "Don't build commandline libCZI." FORCE)
   set(LIBCZI_BUILD_DYNLIB                           OFF CACHE BOOL "Don't build libCZI as a shared library." FORCE)
@@ -16,6 +15,8 @@ if(NOT libCZI_POPULATED)
   set(LIBCZI_BUILD_PREFER_EXTERNALPACKAGE_RAPIDJSON OFF CACHE BOOL "Use internal rapidjson." FORCE)
   set(LIBCZI_DO_NOT_SET_MSVC_RUNTIME_LIBRARY        ON  CACHE BOOL "Consumer sets the runtime." FORCE)
   set(ADDITIONAL_LIBS_REQUIRED_FOR_ATOMIC           ""  CACHE STRING "Additional atomic libs included." FORCE)
+
+  FetchContent_MakeAvailable(libCZI)
 endif()
 
 FetchContent_GetProperties(libCZI)
