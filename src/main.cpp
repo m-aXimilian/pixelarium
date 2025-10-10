@@ -20,7 +20,7 @@ int main(int argc, char** argv)
     logger->ChangeLevel(utils::log::LogLevel::kDebug);
     auto image_pool{std::make_unique<resources::ImageResourcePool>()};
 
-    pixelarium::ui::DefaultApp app = pixelarium::ui::DefaultApp(*logger, *image_pool);
+    application::DefaultApp app = application::DefaultApp(*logger, *image_pool);
 
     app.Start();
 }
