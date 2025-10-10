@@ -6,6 +6,8 @@ set(APPLIBSRC
   AppGLFW.cpp
   DefaultApp.hpp
   DefaultApp.cpp
+  PixelariumGallery.hpp
+  PixelariumGallery.cpp
   ${imgui_DIR}/imgui.cpp
   ${imgui_DIR}/imgui_demo.cpp
   ${imgui_DIR}/imgui_draw.cpp

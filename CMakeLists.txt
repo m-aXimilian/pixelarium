@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.23)
 
-project(pixelarium VERSION 0.0.6)
+project(pixelarium VERSION 0.0.7)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_STANDARD 23)
