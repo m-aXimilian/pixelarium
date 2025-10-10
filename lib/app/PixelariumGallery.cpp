@@ -1,5 +1,7 @@
 #include "PixelariumGallery.hpp"
+
 #include <format>
+
 #include "app_resources_default.h"
 #include "imgui.h"
 

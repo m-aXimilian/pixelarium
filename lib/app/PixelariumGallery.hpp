@@ -21,21 +21,23 @@ class PixelariumImageGallery : IPixelariumGallery<resources::ImageResourcePool>
 {
     using Pool = resources::ImageResourcePool;
     using Log = utils::log::ILog;
+
    public:
-    PixelariumImageGallery(const Log& log, resources::ImageResourcePool& pool) : pool_{pool}, log_{log}, render_manager_(std::make_unique<render::RenderImageManager>(pool, log)) {}
+    PixelariumImageGallery(const Log& log, resources::ImageResourcePool& pool)
+        : pool_{pool}, log_{log}, render_manager_(std::make_unique<render::RenderImageManager>(pool, log))
+    {
+    }
 
     void RenderGallery() override;
 
     void RenderImages();
 
-    void Add(resources::ResourceKey key)
-    {
-        this->render_manager_->Add(key);
-    }
-    
-    void SetLoadFunction(const std::function<void()>& fun) {this->load_image_ = fun; };
+    void Add(resources::ResourceKey key) { this->render_manager_->Add(key); }
+
+    void SetLoadFunction(const std::function<void()>& fun) { this->load_image_ = fun; };
+
    private:
-    std::function<void()> load_image_ {};
+    std::function<void()> load_image_{};
     Pool& pool_;
     const Log& log_;
     std::unique_ptr<render::RenderImageManager> render_manager_;
