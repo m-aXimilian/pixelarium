@@ -5,7 +5,7 @@
 
 using namespace pixelarium::application;
 
-void PixelrariumImageGallery::RenderGallery()
+void PixelariumImageGallery::RenderGallery()
 {
     ImGui::SetNextWindowSize(ImVec2(300, 550));
     ImGui::Begin(SHOWIMAGEGALLERY, &this->image_listp_);
@@ -69,7 +69,7 @@ void PixelrariumImageGallery::RenderGallery()
     ImGui::End();  // end gallery window
 }
 
-void PixelrariumImageGallery::RenderImages()
+void PixelariumImageGallery::RenderImages()
 {
     this->render_manager_->Enumerate(
         [&](resources::ResourceKey key, render::RenderImageStateWrapper& render_state)

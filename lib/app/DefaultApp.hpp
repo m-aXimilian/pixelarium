@@ -35,6 +35,6 @@ class DefaultApp : public AppGLFW
     bool image_listp_{true};
     bool demop_{false};
     ImVec2 curr_dim_;
-    application::PixelrariumImageGallery gallery;
+    application::PixelariumImageGallery gallery;
 };
 }  // namespace pixelarium::application

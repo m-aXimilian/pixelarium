@@ -17,12 +17,12 @@ class IPixelariumGallery
     virtual void RenderGallery() = 0;
 };
 
-class PixelrariumImageGallery : IPixelariumGallery<resources::ImageResourcePool>
+class PixelariumImageGallery : IPixelariumGallery<resources::ImageResourcePool>
 {
     using Pool = resources::ImageResourcePool;
     using Log = utils::log::ILog;
    public:
-    PixelrariumImageGallery(const Log& log, resources::ImageResourcePool& pool) : pool_{pool}, log_{log}, render_manager_(std::make_unique<render::RenderImageManager>(pool, log)) {}
+    PixelariumImageGallery(const Log& log, resources::ImageResourcePool& pool) : pool_{pool}, log_{log}, render_manager_(std::make_unique<render::RenderImageManager>(pool, log)) {}
 
     void RenderGallery() override;
 
