@@ -56,6 +56,20 @@ If you want to specify compiler settings and options which are not defined in a 
 
 The [examples](https://github.com/m-aXimilian/pixelarium/tree/fd400bf545ade029696c21119a50cf4bb67ffbac/examples) directory aims to showcase a few usage examples of this project.
 
+All there is to do in order to get an initial window on screen is to create an instance of [`AppGLFW`](https://github.com/m-aXimilian/pixelarium/blob/fd400bf545ade029696c21119a50cf4bb67ffbac/lib/app/AppGLFW.hpp) (or one of its child classes) and start it.
+
+```cpp
+  unique_ptr<ILog> logger = make_unique<SpdLogger>("logfile.log", "loggername");
+  auto image_pool{std::make_unique<ImageResourcePool>()};
+
+  auto app {DefaultApp(*logger, *image_pool)};
+  app.Start()
+```
+
+
+![Default App Screenshot](default-app.png)
+
+
 ## simple
 
 This is the most straight-forward usage of Pixelarium. It simply instantiates a [`DefaultApp`](https://github.com/m-aXimilian/pixelarium/blob/fd400bf545ade029696c21119a50cf4bb67ffbac/lib/app/DefaultApp.hpp) and runs it.

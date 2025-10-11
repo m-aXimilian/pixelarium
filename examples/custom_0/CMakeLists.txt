@@ -1,5 +1,5 @@
 set(SRC
-  ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+  ${CMAKE_CURRENT_SOURCE_DIR}/custom_0.cpp)
 
 set(CUSTOM_0_NAME "${PROJECT_NAME}_custom_app")
 
