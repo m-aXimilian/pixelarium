@@ -63,7 +63,7 @@ All there is to do in order to get an initial window on screen is to create an i
   ImageResourcePool image_pool;
 
   auto app {DefaultApp(*logger, image_pool)};
-  app.Start()
+  app.Start();
 ```
 
 
