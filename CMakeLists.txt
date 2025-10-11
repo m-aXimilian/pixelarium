@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.23)
 
-project(pixelarium VERSION 0.0.7)
+project(pixelarium VERSION 0.0.8)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_STANDARD 23)
@@ -22,6 +22,7 @@ message(STATUS "SPDLOG:\t" ${spdlog_DIR})
 option(PIXELARIUM_BUILD_UNITTESTS "Generate Unittests"                        ON)
 option(PIXELARIUM_BUILD_DOCS      "Generate Documentation"                    ON)
 option(PIXELARIUM_BUILD_DOCS_ONLY "Build only Documentation (no compilatoin)" OFF)
+option(PIXELARIUM_BUILD_EXAMPLES  "Build example projects"                    ON)
 #====================
 
 if(PIXELARIUM_BUILD_DOCS OR PIXELARIUM_BUILD_DOCS_ONLY)
@@ -77,9 +78,6 @@ add_subdirectory(${spdlog_DIR})
 add_subdirectory(${glfw3_module_DIR})
 add_subdirectory(lib)
 
-set(SRC
-  src/main.cpp)
-
 #====================
 # needed for the spdlogger implementation
 # this is not nice, but it won't work when, e.g. doing it from lower level cmake files
@@ -87,24 +85,9 @@ add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 #====================
 
-add_executable(${PROJECT_NAME} ${SRC})
-
-target_link_libraries(${PROJECT_NAME}
-  PRIVATE pixelariumimagelib
-  PRIVATE pixelariumrenderlib
-  PRIVATE pixelariumutilslib
-  PRIVATE pixelariumresourcelib
-  PUBLIC pixelariumapplicationlib)
-
-target_include_directories(${PROJECT_NAME}
-  PUBLIC ${PROJECT_SOURCE_DIR}/src
-  PUBLIC ${PROJECT_SOURCE_DIR}/lib
-  PUBLIC ${PROJECT_SOURCE_DIR}/lib/imaging
-  PUBLIC ${PROJECT_SOURCE_DIR}/lib/app
-  PUBLIC ${spdlog_DIR}/include
-  PUBLIC ${LIBCZI_INCLUDE_DIR}
-  PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-
+if(PIXELARIUM_BUILD_EXAMPLES)
+  add_subdirectory(examples)
+endif()
 
 if(PIXELARIUM_BUILD_UNITTESTS)
   include(CTest)
