@@ -69,9 +69,9 @@ All there is to do in order to get an initial window on screen is to create an i
 
 #+begin_src C++
   unique_ptr<ILog> logger = make_unique<SpdLogger>("logfile.log", "loggername");
-  auto image_pool{std::make_unique<ImageResourcePool>()};
+  ImageResourcePool image_pool;
 
-  auto app {DefaultApp(*logger, *image_pool)};
+  auto app {DefaultApp(*logger, image_pool)};
   app.Start()
 #+end_src
 

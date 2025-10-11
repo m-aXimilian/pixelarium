@@ -26,9 +26,9 @@ int main()
     logger->ChangeLevel(utils::log::LogLevel::kDebug);
 
     // instantiate an image pool for the application
-    auto image_pool{make_unique<resources::ImageResourcePool>()};
+    resources::ImageResourcePool image_pool;
 
     // create an application, inject its dependencies and start it
-    auto app{application::DefaultApp(*logger, *image_pool)};
+    auto app{application::DefaultApp(*logger, image_pool)};
     app.Start();
 }

@@ -38,10 +38,10 @@ int main()
     logger->Info(std::format("{}: Starting Application {}", __FUNCTION__, "Pixelarium"));
 
     // instantiate an image pool for the application
-    auto image_pool{std::make_unique<resources::ImageResourcePool>()};
+    resources::ImageResourcePool image_pool;
 
     // create a custom application, inject its dependencies and start it
-    auto app{MyApp(*logger, *image_pool)};
+    auto app{MyApp(*logger, image_pool)};
 
     app.Start();
 }
