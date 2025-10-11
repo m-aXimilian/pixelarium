@@ -72,6 +72,14 @@ endif()
 
 string(TOUPPER "${CMAKE_PROJECT_NAME}" PIXELARIUM_TITLE)
 
+set(PIXELARIUM_UTILS_LIB_NAME    pixelariumutilslib)
+set(PIXELARIUM_IMAGE_LIB_NAME    pixelariumimagelib)
+set(PIXELARIUM_RENDER_LIB_NAME   pixelariumrenderlib)
+set(PIXELARIUM_RESOURCE_LIB_NAME pixelariumresourcelib)
+set(PIXELARIUM_APP_LIB_NAME      pixelariumapplicationlib)
+set(PIXELARIUM_INCLUDE_DIR)
+
+
 add_subdirectory(${pfd_DIR})
 add_subdirectory(${spdlog_DIR})
 add_subdirectory(${glfw3_module_DIR})
@@ -87,14 +95,31 @@ add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 #====================
 
+message(STATUS "Pixel include dir ${PIXELARIUM_INCLUDE_DIR}")
+add_library(pixelariumlib_static STATIC
+  $<TARGET_OBJECTS:${PIXELARIUM_IMAGE_LIB_NAME}>
+  $<TARGET_OBJECTS:${PIXELARIUM_UTILS_LIB_NAME}>
+  $<TARGET_OBJECTS:${PIXELARIUM_RENDER_LIB_NAME}>
+  $<TARGET_OBJECTS:${PIXELARIUM_RESOURCE_LIB_NAME}>
+  $<TARGET_OBJECTS:${PIXELARIUM_APP_LIB_NAME}>)
+
+target_include_directories(pixelariumlib_static
+  PUBLIC ${PROJECT_SOURCE_DIR}/lib
+  PUBLIC ${PROJECT_SOURCE_DIR}/lib/imaging
+  PUBLIC ${PROJECT_SOURCE_DIR}/lib/app
+  PUBLIC ${LIBCZI_INCLUDE_DIR}
+  PUBLIC ${PIXELARIUM_INCLUDE_DIR})
+
 add_executable(${PROJECT_NAME} ${SRC})
 
 target_link_libraries(${PROJECT_NAME}
-  PRIVATE pixelariumimagelib
-  PRIVATE pixelariumrenderlib
-  PRIVATE pixelariumutilslib
-  PRIVATE pixelariumresourcelib
-  PUBLIC pixelariumapplicationlib)
+  pixelariumlib_static)
+# target_link_libraries(${PROJECT_NAME}
+#   PRIVATE ${PIXELARIUM_IMAGE_LIB_NAME}
+#   PRIVATE ${PIXELARIUM_RENDER_LIB_NAME}
+#   PRIVATE ${PIXELARIUM_UTILS_LIB_NAME}
+#   PRIVATE ${PIXELARIUM_RESOURCE_LIB_NAME}
+#   PRIVATE ${PIXELARIUM_APP_LIB_NAME})
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC ${PROJECT_SOURCE_DIR}/src
@@ -103,7 +128,8 @@ target_include_directories(${PROJECT_NAME}
   PUBLIC ${PROJECT_SOURCE_DIR}/lib/app
   PUBLIC ${spdlog_DIR}/include
   PUBLIC ${LIBCZI_INCLUDE_DIR}
-  PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+  PUBLIC ${CMAKE_CURRENT_BINARY_DIR}
+  PUBLIC ${PIXELARIUM_INCLUDE_DIR})
 
 
 if(PIXELARIUM_BUILD_UNITTESTS)
