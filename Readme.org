@@ -76,7 +76,7 @@ All there is to do in order to get an initial window on screen is to create an i
 #+end_src
 
 This will get the default application on screen which looks like
-[[file:doc/figures/image-render-concept.png]]
+[[file:doc/figures/default-app.png]]
 
 
 The [[file:examples/][examples]] directory aims to showcase a few usage examples of this project.
