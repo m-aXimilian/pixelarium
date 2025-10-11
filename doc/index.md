@@ -52,5 +52,16 @@ If you want to specify compiler settings and options which are not defined in a 
     cmake -B build -S .
     cmake --build build
 
+# Usage
 
+The [examples](https://github.com/m-aXimilian/pixelarium/tree/fd400bf545ade029696c21119a50cf4bb67ffbac/examples) directory aims to showcase a few usage examples of this project.
+
+## simple
+
+This is the most straight-forward usage of Pixelarium. It simply instantiates a [`DefaultApp`](https://github.com/m-aXimilian/pixelarium/blob/fd400bf545ade029696c21119a50cf4bb67ffbac/lib/app/DefaultApp.hpp) and runs it.
+
+
+## custom_0
+
+This is meant to showcase that [`DefaultApp`]((https://github.com/m-aXimilian/pixelarium/blob/fd400bf545ade029696c21119a50cf4bb67ffbac/lib/app/DefaultApp.hpp)) ([`AppGLFW`](https://github.com/m-aXimilian/pixelarium/blob/fd400bf545ade029696c21119a50cf4bb67ffbac/lib/app/AppGLFW.hpp) as well) can be customized via inheritance.
 

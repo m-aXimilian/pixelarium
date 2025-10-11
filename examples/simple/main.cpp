@@ -5,22 +5,29 @@
 #include "utilities/ILog.hpp"
 #include "utilities/SpdLogger.hpp"
 
-int main(int argc, char** argv)
-{
-    using namespace pixelarium;
-    using namespace std;
-    unique_ptr<utils::log::ILog> logger;
-#ifdef _WIN32
-    logger = make_unique<utils::log::SpdLogger>(string(getenv("APPDATA")) + "/pixelarium/logfile.log", "default");
-#else
-    logger = make_unique<utils::log::SpdLogger>(std::string(getenv("HOME")) + "/.cache/pixelarium/log.log", "default");
-#endif
-    logger->Info(std::format("{}: Starting Application {}", __FUNCTION__, "Pixelarium"));
+using namespace pixelarium;
+using namespace std;
+using Log = utils::log::ILog;
+using Pool = resources::ImageResourcePool;
 
+// setup a logger
+#ifdef _WIN32
+unique_ptr<utils::log::ILog> logger =
+    make_unique<utils::log::SpdLogger>(string(getenv("APPDATA")) + "/pixelarium/simple_app.log", "default");
+#else
+unique_ptr<utils::log::ILog> logger = make_unique<utils::log::SpdLogger>(std::string(getenv("HOME")) + "/.cache/pixelarium/simple_app.log", "default");
+#endif
+
+int main()
+{
+    // some initial log message and default log level setting
+    logger->Info(std::format("{}: Starting Application {}", __FUNCTION__, "Pixelarium"));
     logger->ChangeLevel(utils::log::LogLevel::kDebug);
+
+    // instantiate an image pool for the application
     auto image_pool{std::make_unique<resources::ImageResourcePool>()};
 
+    // create an application, inject its dependencies and start it
     application::DefaultApp app = application::DefaultApp(*logger, *image_pool);
-
     app.Start();
 }

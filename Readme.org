@@ -63,5 +63,14 @@ If you want to specify compiler settings and options which are not defined in a 
   cmake --build build
 #+end_src
 
-* TODO Example
+* Usage
 
+The [[file:examples/][examples]] directory aims to showcase a few usage examples of this project.
+
+** [[file:examples/simple/][simple]]
+
+This is the most straight-forward usage of Pixelarium. It simply instantiates a [[file:lib/app/DefaultApp.hpp][=DefaultApp=]] and runs it.
+
+** [[file:examples/custom_0/][custom_0]]
+
+This is meant to showcase that [[file:lib/app/DefaultApp.hpp][=DefaultApp=]] ([[file:lib/app/AppGLFW.hpp][=AppGLFW=]] as well) is meant to be customized via inheritance.
