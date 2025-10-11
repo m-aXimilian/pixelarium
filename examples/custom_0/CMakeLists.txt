@@ -1,18 +1,18 @@
 set(SRC
-  ${CMAKE_CURRENT_SOURCE_DIR}/simple.cpp)
+  ${CMAKE_CURRENT_SOURCE_DIR}/custom_0.cpp)
 
-set(SIMPLE_NAME "${PROJECT_NAME}_SIMPLE")
+set(CUSTOM_0_NAME "${PROJECT_NAME}_custom_app")
 
-add_executable(${SIMPLE_NAME} ${SRC})
+add_executable(${CUSTOM_0_NAME} ${SRC})
 
-target_link_libraries(${SIMPLE_NAME}
+target_link_libraries(${CUSTOM_0_NAME}
   PRIVATE pixelariumimagelib
   PRIVATE pixelariumrenderlib
   PRIVATE pixelariumutilslib
   PRIVATE pixelariumresourcelib
   PRIVATE pixelariumapplicationlib)
 
-target_include_directories(${SIMPLE_NAME}
+target_include_directories(${CUSTOM_0_NAME}
   PRIVATE ${PROJECT_SOURCE_DIR}/src
   PRIVATE ${PROJECT_SOURCE_DIR}/lib
   PRIVATE ${PROJECT_SOURCE_DIR}/lib/imaging

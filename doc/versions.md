@@ -2,6 +2,7 @@
 
 | Version | Description                                                                                                 |
 |:-------:|:------------------------------------------------------------------------------------------------------------|
+|   0.0.9 | Improve documentation, add example for `DefaultApp` override semantics                                      |
 |   0.0.8 | Init example projects                                                                                       |
 |   0.0.7 | Refactors image gallery logic from `DefaultApp` into a separate module                                      |
 |   0.0.6 | Added documentation-only option `PIXELARIUM_BUILD_DOCS_ONLY`, libCZI upgrade to main branch CI improvements |

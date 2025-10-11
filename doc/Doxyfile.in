@@ -9,6 +9,7 @@ INPUT                  = @PROJECT_SOURCE_DIR@/lib/app \
                          @PROJECT_SOURCE_DIR@/lib/utilities \
                          @PROJECT_SOURCE_DIR@/lib/rendering \
                          @PROJECT_SOURCE_DIR@/lib/resources
+IMAGE_PATH             = @PROJECT_SOURCE_DIR@/doc/figures
 
 DOXYFILE_ENCODING      = UTF-8
 GENERATE_LATEX         = NO
