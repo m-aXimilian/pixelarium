@@ -63,5 +63,28 @@ If you want to specify compiler settings and options which are not defined in a 
   cmake --build build
 #+end_src
 
-* TODO Example
+* Usage
 
+All there is to do in order to get an initial window on screen is to create an instance of [[file:lib/app/AppGLFW.hpp][=AppGLFW=]] (or one of its child classes) and start it.
+
+#+begin_src C++
+  unique_ptr<ILog> logger = make_unique<SpdLogger>("logfile.log", "loggername");
+  ImageResourcePool image_pool;
+
+  auto app {DefaultApp(*logger, image_pool)};
+  app.Start();
+#+end_src
+
+This will get the default application on screen which looks like
+[[file:doc/figures/image-render-concept.png]]
+
+
+The [[file:examples/][examples]] directory aims to showcase a few usage examples of this project.
+
+** [[file:examples/simple/][simple]]
+
+This is the most straight-forward usage of Pixelarium. It simply instantiates a [[file:lib/app/DefaultApp.hpp][=DefaultApp=]] and runs it.
+
+** [[file:examples/custom_0/][custom_0]]
+
+This is meant to showcase that [[file:lib/app/DefaultApp.hpp][=DefaultApp=]] ([[file:lib/app/AppGLFW.hpp][=AppGLFW=]] as well) is meant to be customized via inheritance.

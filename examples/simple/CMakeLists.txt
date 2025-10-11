@@ -1,5 +1,5 @@
 set(SRC
-  ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+  ${CMAKE_CURRENT_SOURCE_DIR}/simple.cpp)
 
 set(SIMPLE_NAME "${PROJECT_NAME}_SIMPLE")
 

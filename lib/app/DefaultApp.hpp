@@ -17,9 +17,9 @@ class DefaultApp : public AppGLFW
 {
    public:
     DefaultApp(const utils::log::ILog& log, pixelarium::resources::ImageResourcePool& pool)
-        : application::AppGLFW(log), pool_(pool), gallery(log, pool)
+        : application::AppGLFW(log), pool_(pool), gallery_(log, pool)
     {
-        gallery.SetLoadFunction([&]() -> void { this->LoadImage(); });
+        gallery_.SetLoadFunction([&]() -> void { this->LoadImage(); });
     }
 
    protected:
@@ -27,14 +27,16 @@ class DefaultApp : public AppGLFW
     void MenuBarOptionsColumn2() override;
     void Run() override;
 
-   private:
+   protected:
+    resources::ImageResourcePool& pool_;
+    application::PixelariumImageGallery gallery_;
+
+   protected:
     void LoadImage();
 
    private:
-    resources::ImageResourcePool& pool_;
     bool image_listp_{true};
     bool demop_{false};
     ImVec2 curr_dim_;
-    application::PixelariumImageGallery gallery;
 };
 }  // namespace pixelarium::application

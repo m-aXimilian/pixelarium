@@ -35,9 +35,9 @@ void DefaultApp::MenuBarOptionsColumn2()
 void DefaultApp::Run()
 {
     if (demop_) ImGui::ShowDemoWindow(&this->demop_);
-    if (image_listp_) this->gallery.RenderGallery();
+    if (image_listp_) this->gallery_.RenderGallery();
 
-    this->gallery.RenderImages();
+    this->gallery_.RenderImages();
 }
 
 void DefaultApp::LoadImage()
