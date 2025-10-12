@@ -2,6 +2,7 @@
 
 | Version | Description                                                                                                 |
 |:-------:|:------------------------------------------------------------------------------------------------------------|
+|   0.0.10| Adds Tiff-support, in-memory images, and advances usage example "custom_1"                                  |
 |   0.0.9 | Improve documentation, add example for `DefaultApp` override semantics                                      |
 |   0.0.8 | Init example projects                                                                                       |
 |   0.0.7 | Refactors image gallery logic from `DefaultApp` into a separate module                                      |
