@@ -23,6 +23,10 @@ enum class ImageFileType
     kJpg = 2,
     /// @brief Represents a CZI image file.
     kCzi = 3,
+    /// @brief Represents a TIFF image file.
+    kTiff = 4,
+    /// @brief Represents an in-memory image.
+    kMemory = 5,
 };
 
 /// @brief An abstract interface to define a semantic query

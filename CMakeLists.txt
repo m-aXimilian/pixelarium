@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.23)
 
-project(pixelarium VERSION 0.0.9)
+project(pixelarium VERSION 0.0.10)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_STANDARD 23)
@@ -24,6 +24,8 @@ option(PIXELARIUM_BUILD_DOCS      "Generate Documentation"                    ON
 option(PIXELARIUM_BUILD_DOCS_ONLY "Build only Documentation (no compilatoin)" OFF)
 option(PIXELARIUM_BUILD_EXAMPLES  "Build example projects"                    ON)
 #====================
+
+string(TOUPPER "${CMAKE_PROJECT_NAME}" PIXELARIUM_TITLE)
 
 if(PIXELARIUM_BUILD_DOCS OR PIXELARIUM_BUILD_DOCS_ONLY)
   include(${PROJECT_SOURCE_DIR}/cmake/awesomeDoxygen.cmake)
@@ -70,8 +72,6 @@ endif()
 if(UNIX)
   set(CMAKE_CXX_FLAGS "-Wall -Wextra -g")
 endif()
-
-string(TOUPPER "${CMAKE_PROJECT_NAME}" PIXELARIUM_TITLE)
 
 add_subdirectory(${pfd_DIR})
 add_subdirectory(${spdlog_DIR})

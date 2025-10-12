@@ -6,9 +6,17 @@
 namespace pixelarium::application
 {
 
+/// @brief Defines a concept for a gallery type
+/// @tparam P  The resource pool type of the gallery concept
 template <typename P>
-concept GalleryT = requires(P& r) { static_cast<resources::IResourcePool<P>&>(r); };
+concept GalleryT = requires(P& p) { static_cast<resources::IResourcePool<P>&>(p); };
 
+/// @brief Interface for a Pixelarium gallery.
+///
+/// Defines generic functionality for a gallery of a specific
+/// resource type given by the template argument.
+/// @tparam GalleryT  The type of IResourcePool that the given implementation
+///                   provides a gallery for.
 template <typename GalleryT>
 class IPixelariumGallery
 {
@@ -17,6 +25,7 @@ class IPixelariumGallery
     virtual void RenderGallery() = 0;
 };
 
+/// @brief Implements IPixelariumGallery for a ImageResourcePool
 class PixelariumImageGallery : IPixelariumGallery<resources::ImageResourcePool>
 {
     using Pool = resources::ImageResourcePool;
