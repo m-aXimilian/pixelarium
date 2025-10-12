@@ -32,16 +32,20 @@ std::unique_ptr<pixelarium::render::IPixelariumImageView> pixelarium::render::Im
     }
 
     auto type = imaging::ExtensionToType(img->Uri().extension().string());
+    if (img->Uri().empty())
+    {
+        log_.Info(std::format("{}: empty Uri for {}.", __PRETTY_FUNCTION__, img->Name()));
+        type = ImageType::kMemory;
+    }
 
     switch (type)
     {
         case ImageType::kUnknown:
         case ImageType::kAbstract:
-        case ImageType::kMemory:
-            return {};
         case ImageType::kPng:
         case ImageType::kJpg:
         case ImageType::kTiff:
+        case ImageType::kMemory:
             log_.Info(std::format("{}: Creating a Default View", __PRETTY_FUNCTION__));
             // beware: here we copy the actual image resource over to the new image
             return std::make_unique<PixelariumImageViewDefault>(img);

@@ -3,6 +3,7 @@
 #include <cctype>
 #include <memory>
 
+#include "imaging/impl/PixelariumMem.hpp"
 #include "impl/PixelariumCzi.hpp"
 #include "impl/PixelariumJpg.hpp"
 #include "impl/PixelariumPng.hpp"
@@ -28,6 +29,8 @@ pixelarium::imaging::PixelariumImageFactory::CreateImage(const std::string& uri,
             return std::make_unique<PixelariumCzi>(uri, log);
         case ImageFileType::kTiff:
             return std::make_unique<PixelariumTiff>(uri, log);
+        case ImageFileType::kMemory:
+            return std::make_unique<PixelariumMem>(cv::Mat(), uri, log);
         default:
             return {};
     }

@@ -17,6 +17,8 @@ set(IMAGELIBSRC
   impl/PixelariumCzi.cpp
   impl/PixelariumTiff.hpp
   impl/PixelariumTiff.cpp
+  impl/PixelariumMem.hpp
+  impl/PixelariumMem.cpp
 )
 
 set(IMAGELIBLIBNAME pixelariumimagelib)
