@@ -8,7 +8,7 @@
 
 namespace pixelarium::imaging
 {
-/// @brief Implements support for in-images in the realm of IPixelariumImage
+/// @brief Implements support for in-memory images in the realm of IPixelariumImage
 class PixelariumMem : public IPixelariumImage
 {
     using Log = pixelarium::utils::log::ILog;

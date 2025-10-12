@@ -76,7 +76,7 @@ class Selector
             pool_.Enumerate(
                 [&](resources::ResourceKey key, size_t idx, const imaging::IPixelariumImage& img) -> void
                 {
-                    const bool is_selected = static_cast<int>(idx) == selected_idx_0;
+                    const bool is_selected = static_cast<int>(idx) == selected_idx_1;
                     if (ImGui::Selectable(img.Name().c_str(), is_selected))
                     {
                         selected_idx_1 = idx;
