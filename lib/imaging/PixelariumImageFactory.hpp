@@ -23,6 +23,10 @@ constexpr pixelarium::imaging::ImageFileType ExtensionToType(const std::string& 
     {
         return pixelarium::imaging::ImageFileType::kCzi;
     }
+    if (lower_ext == ".tiff" || lower_ext == ".tif")
+    {
+        return pixelarium::imaging::ImageFileType::kTiff;
+    }
 
     return pixelarium::imaging::ImageFileType::kUnknown;
 }

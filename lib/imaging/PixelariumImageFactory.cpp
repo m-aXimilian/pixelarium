@@ -6,6 +6,7 @@
 #include "impl/PixelariumCzi.hpp"
 #include "impl/PixelariumJpg.hpp"
 #include "impl/PixelariumPng.hpp"
+#include "impl/PixelariumTiff.hpp"
 
 /*static*/ std::unique_ptr<pixelarium::imaging::IPixelariumImage>
 pixelarium::imaging::PixelariumImageFactory::CreateImage(const std::string& uri, const Log& log)
@@ -17,18 +18,17 @@ pixelarium::imaging::PixelariumImageFactory::CreateImage(const std::string& uri,
     {
         case ImageFileType::kUnknown:
             return {};
-            break;
         case ImageFileType::kAbstract:
             return {};
-            break;
         case ImageFileType::kPng:
             return std::make_unique<PixelariumPng>(uri);
-            break;
         case ImageFileType::kJpg:
             return std::make_unique<PixelariumJpg>(uri);
-            break;
         case ImageFileType::kCzi:
             return std::make_unique<PixelariumCzi>(uri, log);
-            break;
+        case ImageFileType::kTiff:
+            return std::make_unique<PixelariumTiff>(uri, log);
+        default:
+            return {};
     }
 }

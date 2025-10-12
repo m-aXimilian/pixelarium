@@ -3,6 +3,7 @@
 #include <format>
 #include <memory>
 
+#include "imaging/IPixelariumImage.hpp"
 #include "imaging/PixelariumImageFactory.hpp"
 #include "rendering/IPixelariumImageView.hpp"
 #include "rendering/PixelariumImageViewCzi.hpp"
@@ -15,6 +16,7 @@
 std::unique_ptr<pixelarium::render::IPixelariumImageView> pixelarium::render::ImageViewFactory::RenderImage(
     resources::ResourceKey image_id)
 {
+    using ImageType = imaging::ImageFileType;
     auto res{this->image_pool_.GetResource(image_id)};
 
     auto img{res.lock()};
@@ -33,15 +35,17 @@ std::unique_ptr<pixelarium::render::IPixelariumImageView> pixelarium::render::Im
 
     switch (type)
     {
-        case imaging::ImageFileType::kUnknown:
-        case imaging::ImageFileType::kAbstract:
+        case ImageType::kUnknown:
+        case ImageType::kAbstract:
+        case ImageType::kMemory:
             return {};
-        case imaging::ImageFileType::kPng:
-        case imaging::ImageFileType::kJpg:
+        case ImageType::kPng:
+        case ImageType::kJpg:
+        case ImageType::kTiff:
             log_.Info(std::format("{}: Creating a Default View", __PRETTY_FUNCTION__));
             // beware: here we copy the actual image resource over to the new image
             return std::make_unique<PixelariumImageViewDefault>(img);
-        case imaging::ImageFileType::kCzi:
+        case ImageType::kCzi:
             log_.Info(std::format("{}: Creating a CZI View", __PRETTY_FUNCTION__));
             // beware: here we copy the actual image resource over to the new image
             return std::make_unique<PixelariumImageViewCzi>(img, log_);
