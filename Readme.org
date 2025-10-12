@@ -17,6 +17,17 @@ It tries to be as flexible as possible.
 
 This is still work in progress and will change significantly.
 
+* Supported Types
+
+Currently, Pixelarium supports the following image file formats:
+- jpeg
+- png
+- tiff
+- czi
+
+
+where possible, the [[https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html][OpenCV codecs]] are used to interpret the respective file type. The czi-format is supported via [[https://github.com/ZEISS/libczi][libCZI]].
+
 * Prerequisites
 
 Dependencies are either submodules in the =modules= subdirectory or artifacts of the cmake build process from the =cmake= directory. This repository should therefore be cloned recursively:
