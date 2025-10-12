@@ -12,6 +12,7 @@ namespace pixelarium::imaging
 class PixelariumMem : public IPixelariumImage
 {
     using Log = pixelarium::utils::log::ILog;
+
    public:
     explicit PixelariumMem(const cv::Mat& img, const std::string& name, const Log& log);
 
@@ -19,25 +20,16 @@ class PixelariumMem : public IPixelariumImage
    public:
     std::unique_ptr<cv::Mat> TryGetImage() override;
 
-    std::unique_ptr<cv::Mat> TryGetImage(const IImageQuery&) override
-    {
-        throw std::runtime_error("Not implemented.");
-    }
+    std::unique_ptr<cv::Mat> TryGetImage(const IImageQuery&) override { throw std::runtime_error("Not implemented."); }
 
     std::vector<std::unique_ptr<cv::Mat>> TryGetImages(const IImageQuery&) override
     {
         throw std::runtime_error("Not implemented.");
     }
 
-    void SetImage(const cv::Mat& img)
-    {
-        this->img_ = img;
-    }
+    void SetImage(const cv::Mat& img) { this->img_ = img; }
 
-    std::string Name() const noexcept override
-    {
-        return this->name_;
-    }
+    std::string Name() const noexcept override { return this->name_; }
 
     bool Empty() const noexcept override { return this->is_empty_; }
 

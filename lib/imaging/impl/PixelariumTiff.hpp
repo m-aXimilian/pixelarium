@@ -12,6 +12,7 @@ namespace pixelarium::imaging
 class PixelariumTiff : public IPixelariumImage
 {
     using Log = pixelarium::utils::log::ILog;
+
    public:
     explicit PixelariumTiff(const std::string& uri, const Log& log);
 

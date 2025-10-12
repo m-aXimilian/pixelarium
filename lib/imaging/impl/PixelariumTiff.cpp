@@ -5,7 +5,7 @@
 #include <opencv2/imgcodecs.hpp>
 #include <string>
 
-pixelarium::imaging::PixelariumTiff::PixelariumTiff(const std::string& uri, const Log& log)  : log_(log)
+pixelarium::imaging::PixelariumTiff::PixelariumTiff(const std::string& uri, const Log& log) : log_(log)
 {
     if (!std::filesystem::exists(uri))
     {
