@@ -25,6 +25,8 @@ option(PIXELARIUM_BUILD_DOCS_ONLY "Build only Documentation (no compilatoin)" OF
 option(PIXELARIUM_BUILD_EXAMPLES  "Build example projects"                    ON)
 #====================
 
+string(TOUPPER "${CMAKE_PROJECT_NAME}" PIXELARIUM_TITLE)
+
 if(PIXELARIUM_BUILD_DOCS OR PIXELARIUM_BUILD_DOCS_ONLY)
   include(${PROJECT_SOURCE_DIR}/cmake/awesomeDoxygen.cmake)
   set(MAINPAGE_FILE "doc/index.md")
@@ -70,8 +72,6 @@ endif()
 if(UNIX)
   set(CMAKE_CXX_FLAGS "-Wall -Wextra -g")
 endif()
-
-string(TOUPPER "${CMAKE_PROJECT_NAME}" PIXELARIUM_TITLE)
 
 add_subdirectory(${pfd_DIR})
 add_subdirectory(${spdlog_DIR})
