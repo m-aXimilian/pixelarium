@@ -52,7 +52,7 @@ class Selector
         if (ImGui::BeginCombo("Select first image", preview_0_.c_str()))
         {
             pool_.Enumerate(
-                [&](resources::ResourceKey key, size_t idx, const imaging::IPixelariumImage& img) -> void
+                [&](resources::ResourceKey key, size_t idx, const imaging::IPixelariumImage<cv::Mat>& img) -> void
                 {
                     const bool is_selected = static_cast<int>(idx) == selected_idx_0;
                     if (ImGui::Selectable(img.Name().c_str(), is_selected))
@@ -74,7 +74,7 @@ class Selector
         if (ImGui::BeginCombo("Select second image", preview_1_.c_str()))
         {
             pool_.Enumerate(
-                [&](resources::ResourceKey key, size_t idx, const imaging::IPixelariumImage& img) -> void
+                [&](resources::ResourceKey key, size_t idx, const imaging::IPixelariumImage<cv::Mat>& img) -> void
                 {
                     const bool is_selected = static_cast<int>(idx) == selected_idx_1;
                     if (ImGui::Selectable(img.Name().c_str(), is_selected))

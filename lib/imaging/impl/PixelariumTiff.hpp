@@ -9,7 +9,7 @@
 namespace pixelarium::imaging
 {
 /// @brief Implements support for .tiff-images in the realm of IPixelariumImage
-class PixelariumTiff : public IPixelariumImage
+class PixelariumTiff : public IPixelariumImageCvMat
 {
     using Log = pixelarium::utils::log::ILog;
 

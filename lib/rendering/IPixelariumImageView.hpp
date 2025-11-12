@@ -24,7 +24,7 @@ class IPixelariumImageView
     }
 
    protected:
-    std::shared_ptr<imaging::IPixelariumImage> img_{};
+    std::shared_ptr<imaging::IPixelariumImageCvMat> img_{};
     cv::Mat cached_image_{};
     bool open_p{true};
     bool is_dirty_{true};

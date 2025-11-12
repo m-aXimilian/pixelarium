@@ -38,7 +38,7 @@ concept ResT = requires(R& r) { static_cast<IResource&>(r); };
 
 /// @brief Defines an interface for a resource pool
 /// @tparam ResT  defines the resource type that is accepted by the pool
-template <typename ResT>
+template <typename ResT, class Data>
 class IResourcePool
 {
    public:
@@ -48,7 +48,7 @@ class IResourcePool
     virtual bool ModifyResource(ResourceKey id, std::unique_ptr<ResT> res) = 0;
     virtual bool DeleteResource(ResourceKey id) = 0;
     virtual void EnumerateResources(
-        const std::function<void(ResourceKey, size_t, const imaging::IPixelariumImage&)>& func) = 0;
+        const std::function<void(ResourceKey, size_t, const imaging::IPixelariumImage<Data>&)>& func) = 0;
     virtual size_t GetTotalSize() const = 0;
     virtual void Clear() = 0;
 };
@@ -58,7 +58,7 @@ class IResourcePool
 // reside with the =ResourcePool=!
 // In fact, the intention is, that there is no way back once the =ResourcePool= took ownership of an object.
 // Callers can get references, but no ownership. A caller might delete a resource though.
-class ImageResourcePool : public IResourcePool<imaging::IPixelariumImage>
+class ImageResourcePool : public IResourcePool<imaging::IPixelariumImageCvMat, cv::Mat>
 {
    public:
     ImageResourcePool() = default;
@@ -68,17 +68,17 @@ class ImageResourcePool : public IResourcePool<imaging::IPixelariumImage>
     ImageResourcePool& operator=(ImageResourcePool&) = delete;
     ImageResourcePool& operator=(ImageResourcePool&&) = delete;
 
-    std::weak_ptr<imaging::IPixelariumImage> GetResource(ResourceKey id) const override;
-    ResourceKey SetResource(std::unique_ptr<imaging::IPixelariumImage> res) override;
-    bool ModifyResource(ResourceKey id, std::unique_ptr<imaging::IPixelariumImage> res) override;
+    std::weak_ptr<imaging::IPixelariumImageCvMat> GetResource(ResourceKey id) const override;
+    ResourceKey SetResource(std::unique_ptr<imaging::IPixelariumImageCvMat> res) override;
+    bool ModifyResource(ResourceKey id, std::unique_ptr<imaging::IPixelariumImageCvMat> res) override;
     bool DeleteResource(ResourceKey id) override;
     void Clear() override { this->resources_.clear(); }
 
     void EnumerateResources(
-        const std::function<void(ResourceKey, size_t, const imaging::IPixelariumImage&)>& func) override;
+        const std::function<void(ResourceKey, size_t, const imaging::IPixelariumImage<cv::Mat>&)>& func) override;
 
     template <typename Callable>
-        requires std::invocable<Callable, ResourceKey, size_t, const imaging::IPixelariumImage&>
+    requires std::invocable<Callable, ResourceKey, size_t, const imaging::IPixelariumImageCvMat&>
     void Enumerate(Callable&& func) const
     {
         size_t idx{0};
@@ -91,7 +91,7 @@ class ImageResourcePool : public IResourcePool<imaging::IPixelariumImage>
     size_t GetTotalSize() const override { return resources_.size(); }
 
    private:
-    std::unordered_map<size_t, std::shared_ptr<imaging::IPixelariumImage>> resources_;
+    std::unordered_map<size_t, std::shared_ptr<imaging::IPixelariumImageCvMat>> resources_;
     std::mutex mut_;
 };
 }  // namespace pixelarium::resources

@@ -8,7 +8,7 @@
 namespace pixelarium::imaging
 {
 /// @brief Implements support for .jpg-images in the realm of IPixelariumImage
-class PixelariumJpg : public IPixelariumImage
+class PixelariumJpg : public IPixelariumImageCvMat
 {
    public:
     explicit PixelariumJpg(const std::string& url);

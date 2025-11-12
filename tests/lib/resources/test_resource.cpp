@@ -2,13 +2,14 @@
 
 #include <algorithm>
 
+#include "imaging/IPixelariumImage.hpp"
 #include "resources/resource.hpp"
 
 namespace
 {
 
 // A Mock implementation for tests requiring _any_ instance of a IPixelariumImage
-class DummyImage : public pixelarium::imaging::IPixelariumImage
+class DummyImage : public pixelarium::imaging::IPixelariumImageCvMat
 {
    public:
     std::optional<cv::Mat> TryGetImage() override { return {}; }
@@ -43,7 +44,7 @@ TEST(ImageResourcePoolTest, SetWrappedRawPointerGet)
 {
     ImageResourcePool pool;
     auto img = new DummyImage();
-    auto id = pool.SetResource(std::unique_ptr<pixelarium::imaging::IPixelariumImage>(img));
+    auto id = pool.SetResource(std::unique_ptr<pixelarium::imaging::IPixelariumImageCvMat>(img));
     auto res = pool.GetResource(id);
     auto res_img = res.lock();
     EXPECT_NE(res_img, nullptr);
@@ -95,7 +96,7 @@ TEST(ImageResourcePoolTest, EnumerateResources)
     auto id2 = pool.SetResource(std::make_unique<DummyImage>());
     std::vector<size_t> found_ids{};
 
-    pool.EnumerateResources([&found_ids](size_t id, size_t, const pixelarium::imaging::IPixelariumImage&)
+    pool.EnumerateResources([&found_ids](size_t id, size_t, const pixelarium::imaging::IPixelariumImage<cv::Mat>&)
                             { found_ids.push_back(id); });
 
     EXPECT_EQ(found_ids.size(), 2);
@@ -110,7 +111,7 @@ TEST(ImageResourcePoolTest, TemplatedEnumerate)
     auto id2 = pool.SetResource(std::make_unique<DummyImage>());
     std::vector<size_t> found_ids{};
 
-    pool.Enumerate([&found_ids](size_t id, size_t, const pixelarium::imaging::IPixelariumImage&)
+    pool.Enumerate([&found_ids](size_t id, size_t, const pixelarium::imaging::IPixelariumImage<cv::Mat>&)
                    { found_ids.push_back(id); });
 
     EXPECT_EQ(found_ids.size(), 2);

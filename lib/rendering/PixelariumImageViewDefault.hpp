@@ -13,7 +13,7 @@ namespace pixelarium::render
 /// This is sufficient for single dimension images like png or jpg.
 class PixelariumImageViewDefault : public IPixelariumImageView
 {
-    using Image = imaging::IPixelariumImage;
+    using Image = imaging::IPixelariumImageCvMat;
     using Render = render::CvMatRender;
 
    public:

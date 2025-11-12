@@ -18,7 +18,7 @@ struct CziParams : public IImageQuery
 };
 
 /// @brief Implements support for .czi-images in the realm of IPixelariumImage
-class PixelariumCzi : public IPixelariumImage
+class PixelariumCzi : public IPixelariumImageCvMat
 {
     using Log = pixelarium::utils::log::ILog;
 
