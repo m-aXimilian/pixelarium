@@ -8,8 +8,8 @@ namespace pixelarium::application
 
 /// @brief Defines a concept for a gallery type
 /// @tparam P  The resource pool type of the gallery concept
-template <typename P>
-concept GalleryT = requires(P& p) { static_cast<resources::IResourcePool<P>&>(p); };
+template <typename P, class D>
+concept GalleryT = requires(P& p) { static_cast<resources::IResourcePool<P, D>&>(p); };
 
 /// @brief Interface for a Pixelarium gallery.
 ///

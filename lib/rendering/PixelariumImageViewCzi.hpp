@@ -3,6 +3,7 @@
 #include <memory>
 #include <unordered_map>
 
+#include "imaging/IPixelariumImage.hpp"
 #include "imgui.h"
 #include "libCZI_DimCoordinate.h"
 #include "rendering/CvMatRender.hpp"
@@ -14,7 +15,7 @@ namespace pixelarium::render
 /// @brief A CZI-specific implementation of IPixelariumImageView.
 class PixelariumImageViewCzi : public IPixelariumImageView
 {
-    using Image = imaging::IPixelariumImage;
+    using Image = imaging::IPixelariumImageCvMat;
     using Render = render::CvMatRender;
     using Log = utils::log::ILog;
 

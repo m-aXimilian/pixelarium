@@ -16,11 +16,11 @@ pixelarium::imaging::PixelariumJpg::PixelariumJpg(const std::string& uri)
     this->uri_ = std::filesystem::path(uri);
 }
 
-std::unique_ptr<cv::Mat> pixelarium::imaging::PixelariumJpg::TryGetImage()
+std::optional<cv::Mat> pixelarium::imaging::PixelariumJpg::TryGetImage()
 {
     try
     {
-        auto img = std::make_unique<cv::Mat>(cv::imread(this->uri_.string()));
+        auto img = cv::Mat(cv::imread(this->uri_.string()));
 
         this->is_empty_ = false;
 

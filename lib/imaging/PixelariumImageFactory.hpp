@@ -37,6 +37,6 @@ class PixelariumImageFactory
     using Log = utils::log::ILog;
 
    public:
-    static std::unique_ptr<IPixelariumImage> CreateImage(const std::string& uri, const Log& log);
+    static std::unique_ptr<IPixelariumImageCvMat> CreateImage(const std::string& uri, const Log& log);
 };
 }  // namespace pixelarium::imaging

@@ -4,8 +4,9 @@
 #include <cstddef>
 #include <functional>
 #include <mutex>
+#include "imaging/IPixelariumImage.hpp"
 
-using pixelarium::imaging::IPixelariumImage;
+using Image = pixelarium::imaging::IPixelariumImageCvMat;
 using namespace std;
 
 namespace
@@ -21,7 +22,7 @@ size_t GenerateId() { return id_.fetch_add(1, memory_order_relaxed); }
 /// @brief Retrieves a resource from the pool.
 /// @param id The ID of the resource to retrieve.
 /// @return A pointer to the resource if found, otherwise an empty optional.
-std::weak_ptr<IPixelariumImage> pixelarium::resources::ImageResourcePool::GetResource(ResourceKey id) const
+std::weak_ptr<Image> pixelarium::resources::ImageResourcePool::GetResource(ResourceKey id) const
 {
     auto search{this->resources_.find(id)};
     if (search == this->resources_.end()) return {};
@@ -32,7 +33,7 @@ std::weak_ptr<IPixelariumImage> pixelarium::resources::ImageResourcePool::GetRes
 /// @brief Sets a resource in the pool.
 /// @param res A unique pointer to the resource to set.
 /// @return The ID of the new resource.
-size_t pixelarium::resources::ImageResourcePool::SetResource(unique_ptr<IPixelariumImage> res)
+size_t pixelarium::resources::ImageResourcePool::SetResource(unique_ptr<Image> res)
 {
     if (res == nullptr)
     {
@@ -53,7 +54,7 @@ size_t pixelarium::resources::ImageResourcePool::SetResource(unique_ptr<IPixelar
 /// @param res A unique pointer to the new resource.
 /// @return True if the resource was updated, false otherwise.
 bool pixelarium::resources::ImageResourcePool::ModifyResource(ResourceKey id,
-                                                              std::unique_ptr<imaging::IPixelariumImage> res)
+                                                              std::unique_ptr<Image> res)
 {
     auto search{this->resources_.find(id)};
     if (search == this->resources_.end()) return false;
@@ -80,7 +81,7 @@ bool pixelarium::resources::ImageResourcePool::DeleteResource(ResourceKey id)
 /// @param func A function to call for each resource.  The function should accept the resource ID and a const reference
 /// to a PixelariumImage.
 void pixelarium::resources::ImageResourcePool::EnumerateResources(
-    const std::function<void(ResourceKey, size_t, const imaging::IPixelariumImage&)>& func)
+    const std::function<void(ResourceKey, size_t, const imaging::IPixelariumImage<cv::Mat>&)>& func)
 {
     size_t idx{0};
     for (const auto& e : this->resources_)

@@ -9,7 +9,7 @@
 namespace pixelarium::imaging
 {
 /// @brief Implements support for .tiff-images in the realm of IPixelariumImage
-class PixelariumTiff : public IPixelariumImage
+class PixelariumTiff : public IPixelariumImageCvMat
 {
     using Log = pixelarium::utils::log::ILog;
 
@@ -18,15 +18,15 @@ class PixelariumTiff : public IPixelariumImage
 
     // IPixelariumImage member implementations
    public:
-    std::unique_ptr<cv::Mat> TryGetImage() override;
+    std::optional<cv::Mat> TryGetImage() override;
 
-    std::unique_ptr<cv::Mat> TryGetImage(const IImageQuery&) override
+    std::optional<cv::Mat> TryGetImage(const IImageQuery&) override
     {
         // ToDo: proper error
         throw std::runtime_error("Not possible with tiff.");
     }
 
-    std::vector<std::unique_ptr<cv::Mat>> TryGetImages(const IImageQuery&) override
+    std::vector<std::optional<cv::Mat>> TryGetImages(const IImageQuery&) override
     {
         // ToDo: proper error
         throw std::runtime_error("Not possible with tiff.");

@@ -38,20 +38,20 @@ void pixelarium::render::PixelariumImageViewCzi::ShowImage()
 
     if (!czi_img) return;
 
-    if (!this->cached_image_ || this->is_dirty_)
+    if (this->cached_image_.empty() || this->is_dirty_)
     {
         log_.Info(std::format("{}: refreshing image.", __PRETTY_FUNCTION__));
         imaging::CziParams params;
         params.dimension_map = this->dimension_map_;
-        this->cached_image_ = this->img_->TryGetImage(params);
+        this->cached_image_ = this->img_->TryGetImage(params).value_or(cv::Mat{});
         // Resetting the image while the renderer is possibly accessing the
         // image at the same time is not a good idea. Therefore, we simply create
         // a new renderer here.
-        this->render_ = std::make_unique<CvMatRender>(*this->cached_image_);
+        this->render_ = std::make_unique<CvMatRender>(this->cached_image_);
         this->is_dirty_ = false;
     }
 
-    if (czi_img->Empty() || this->img_->type_ == imaging::ImageFileType::kUnknown || !cached_image_ ||
+    if (czi_img->Empty() || this->img_->type_ == imaging::ImageFileType::kUnknown || cached_image_.empty() ||
         czi_img->Name().empty())
     {
         // do nothing
@@ -70,7 +70,7 @@ void pixelarium::render::PixelariumImageViewCzi::ShowImage()
 
     this->curr_dim_ = new_dim;
 
-    ImVec2 dim(cached_image_->cols, cached_image_->rows);
+    ImVec2 dim(cached_image_.cols, cached_image_.rows);
 
     ImGui::Image(reinterpret_cast<ImTextureID>(reinterpret_cast<void*>(texture)),
                  aspect_const_dimensions(dim, new_dim));
