@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <format>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <utility>
 
@@ -48,7 +49,7 @@ constexpr int try_get_index_match(const pixelarium::imaging::CziParams& params, 
     return index;
 }
 
-std::unique_ptr<cv::Mat> CZISubBlockToCvMat(std::shared_ptr<libCZI::IBitmapData> bitmap, libCZI::PixelType pixeltype,
+std::optional<cv::Mat> CZISubBlockToCvMat(std::shared_ptr<libCZI::IBitmapData> bitmap, libCZI::PixelType pixeltype,
                                             const pixelarium::utils::log::ILog& log)
 {
     size_t pixel_size{0};
@@ -94,21 +95,21 @@ std::unique_ptr<cv::Mat> CZISubBlockToCvMat(std::shared_ptr<libCZI::IBitmapData>
             break;
     }
 
-    if (pixel_size < 0) return nullptr;
+    if (pixel_size < 0) return std::nullopt;
 
     log.Info(std::format("{}: source pixel type {}, target cv pixel type {}, pixel size {}", __PRETTY_FUNCTION__,
                          pixel_pair.first, pixel_pair.second, pixel_size));
 
     size_t height{bitmap->GetHeight()};
     size_t width{bitmap->GetWidth()};
-    auto fill_mat = std::make_unique<cv::Mat>(height, width, target_type);
+    auto fill_mat = cv::Mat(height, width, target_type);
 
     auto bitmap_info = bitmap->Lock();
 
     for (size_t h{0}; h < height; ++h)
     {
         unsigned char* source_row = ((unsigned char*)bitmap_info.ptrDataRoi) + bitmap_info.stride * h;
-        unsigned char* target_row = fill_mat->ptr(h);
+        unsigned char* target_row = fill_mat.ptr(h);
 
         for (size_t w{0}; w < width; ++w)
         {
@@ -139,7 +140,7 @@ std::unique_ptr<cv::Mat> CZISubBlockToCvMat(std::shared_ptr<libCZI::IBitmapData>
     return fill_mat;
 }
 
-std::unique_ptr<cv::Mat> pixelarium::imaging::PixelariumCzi::SubblockToCvMat(int index)
+std::optional<cv::Mat> pixelarium::imaging::PixelariumCzi::SubblockToCvMat(int index)
 {
     log_.Info(std::format("{}: constructing bitmap with index {}", __PRETTY_FUNCTION__, index));
     auto block = this->czi_reader_->ReadSubBlock(index);
@@ -170,9 +171,9 @@ pixelarium::imaging::PixelariumCzi::PixelariumCzi(const std::string& uri, const 
         });
 }
 
-std::unique_ptr<cv::Mat> pixelarium::imaging::PixelariumCzi::TryGetImage() { return SubblockToCvMat(0); }
+std::optional<cv::Mat> pixelarium::imaging::PixelariumCzi::TryGetImage() { return SubblockToCvMat(0); }
 
-std::unique_ptr<cv::Mat> pixelarium::imaging::PixelariumCzi::TryGetImage(const IImageQuery& query)
+std::optional<cv::Mat> pixelarium::imaging::PixelariumCzi::TryGetImage(const IImageQuery& query)
 {
     const auto czi_query = static_cast<const CziParams&>(query);
     int index = try_get_index_match(czi_query, *this->czi_reader_);

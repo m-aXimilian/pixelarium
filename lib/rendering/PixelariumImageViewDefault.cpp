@@ -12,13 +12,13 @@
 /// fit the available window space.  The raw and rendered dimensions are displayed below the image.
 void pixelarium::render::PixelariumImageViewDefault::ShowImage()
 {
-    if (!this->cached_image_ || this->is_dirty_)
+    if (this->cached_image_.empty() || this->is_dirty_)
     {
-        this->cached_image_ = this->img_->TryGetImage();
+        this->cached_image_ = this->img_->TryGetImage().value_or(cv::Mat{});
         this->is_dirty_ = false;
     }
 
-    if (this->img_->Empty() || this->img_->type_ == imaging::ImageFileType::kUnknown || !cached_image_ ||
+    if (this->img_->Empty() || this->img_->type_ == imaging::ImageFileType::kUnknown || this->cached_image_.empty() ||
         this->img_->Name().empty())
     {
         // do nothing
@@ -37,7 +37,7 @@ void pixelarium::render::PixelariumImageViewDefault::ShowImage()
 
     this->curr_dim_ = new_dim;
 
-    ImVec2 dim(cached_image_->cols, cached_image_->rows);
+    ImVec2 dim(cached_image_.cols, cached_image_.rows);
 
     ImGui::Image(reinterpret_cast<ImTextureID>(reinterpret_cast<void*>(texture)),
                  aspect_const_dimensions(dim, new_dim));

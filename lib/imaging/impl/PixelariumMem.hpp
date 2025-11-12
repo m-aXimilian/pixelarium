@@ -18,11 +18,11 @@ class PixelariumMem : public IPixelariumImage
 
     // IPixelariumImage member implementations
    public:
-    std::unique_ptr<cv::Mat> TryGetImage() override;
+    std::optional<cv::Mat> TryGetImage() override;
 
-    std::unique_ptr<cv::Mat> TryGetImage(const IImageQuery&) override { throw std::runtime_error("Not implemented."); }
+    std::optional<cv::Mat> TryGetImage(const IImageQuery&) override { throw std::runtime_error("Not implemented."); }
 
-    std::vector<std::unique_ptr<cv::Mat>> TryGetImages(const IImageQuery&) override
+    std::vector<std::optional<cv::Mat>> TryGetImages(const IImageQuery&) override
     {
         throw std::runtime_error("Not implemented.");
     }

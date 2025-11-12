@@ -100,11 +100,11 @@ class Selector
             auto img1 = pool_.GetResource(selected_key_1);
             auto img_mat1 = img1.lock()->TryGetImage();
 
-            if (img_mat0 == nullptr || img_mat1 == nullptr || img_mat0->empty() || img_mat1->empty()) return;
+            if (!img_mat0.has_value() || !img_mat1.has_value() || img_mat0.value().empty() || img_mat1.value().empty()) return;
 
             if (img_mat0->size != img_mat1->size) return;
 
-            cv::multiply(*img_mat0, *img_mat1, *img_mat0);
+            cv::multiply(img_mat0.value(), img_mat1.value(), img_mat0.value());
 
             std::string name{std::format("Multiply_{}", idx_)};
             pool_.SetResource(std::make_unique<imaging::PixelariumMem>(*img_mat0, name, *logger));
