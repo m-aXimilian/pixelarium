@@ -2,11 +2,13 @@
 
 #include <cstdint>
 #include <filesystem>
+#include <format>
 #include <fstream>
 #include <memory>
 #include <string>
 
 #include "DefaultApp.hpp"
+#include "imgui.h"
 #include "impl/PixelariumMem.hpp"
 #include "portable-file-dialogs.h"
 #include "resources/resource.hpp"
@@ -52,15 +54,20 @@ constexpr auto ToCVPixelType(size_t depth, size_t chans) -> int
     return tp;
 }
 
+struct StatusReport
+{
+    const std::function<void(const std::string&)>& report_status;
+    const std::function<void()>& reset_status;
+};
+
 class BinarayReader
 {
    private:
     filesystem::path bin_file{};
     vector<std::byte> buffer{};
     uintmax_t file_size;
-    int width, height;
 
-    struct ParsedImage
+    struct  __attribute__((packed)) ParsedImage
     {
         uint8_t depth;
         uint8_t channels;
@@ -69,14 +76,21 @@ class BinarayReader
         void* data;
     };
 
-    auto RegisterImage(const ParsedImage& img, string& name) -> void
+    auto RegisterImage(const ParsedImage& img, string& name, const StatusReport& report) -> void
     {
-        if (!img.data) return;
-        auto mat = cv::Mat(img.height, img.width, ToCVPixelType(img.depth, img.channels), img.data);
+        if (img.width <= 0 || img.height <= 0 || img.channels <= 0 || img.depth <= 0 || !img.data)
+        {
+            report.reset_status();
+            report.report_status(format("Parsing {} failed: Dimensions (w: {}, h: {}, d: {}, c: {}) cannot be parsed! The provided bin-file is probably corrupted.", name, img.width, img.height, img.depth, img.channels));
+            return;
+        }
+
+        auto mat = cv::Mat(img.height, img.width, ToCVPixelType(img.depth, img.channels), const_cast<void*>(img.data));
+
         image_pool.SetResource(make_unique<imaging::PixelariumMem>(mat, name.c_str(), *logger));
     }
 
-    auto ReadFile(const filesystem::path& file) -> ParsedImage
+    auto ReadFile(const filesystem::path& file, const StatusReport& report) -> ParsedImage
     {
         uint8_t depth{};
         uint8_t channels{};
@@ -86,6 +100,12 @@ class BinarayReader
         if (!filesystem::exists(file)) return {};
 
         auto sz = filesystem::file_size(file);
+        constexpr auto header_size {sizeof(ParsedImage) - sizeof(void*)};
+        bool can_read = sz >= header_size;
+
+        if (!can_read)
+            return {};
+
         if (!buffer.empty())
         {
             buffer.clear();
@@ -102,20 +122,25 @@ class BinarayReader
             inp_stream.read(reinterpret_cast<char*>(&pixel_count), sizeof(pixel_count));
             logger->Info(format("{}(): Pixel count {}", __FUNCTION__, pixel_count));
 
-            if (pixel_count < sz)
+            if (pixel_count <= sz - header_size)
             {
                 buffer.reserve(pixel_count);
                 inp_stream.read(reinterpret_cast<char*>(buffer.data()), pixel_count);
             }
         }
 
+        logger->Info(format("{}: Parsed image with width: {}, height: {}, depth: {}, channels: {}", __PRETTY_FUNCTION__,
+                            width, height, depth, channels));
+        report.report_status(format("Parsed image with width: {}, height: {}, depth: {}, channels: {}", width, height, depth, channels));
+
         return {.depth = depth, .channels = channels, .width = width, .height = height, .data = buffer.data()};
     }
 
    public:
-    auto Present() -> void
+    auto Present(const StatusReport& report) -> void
     {
         using namespace ImGui;
+        SetNextWindowSize({256, 124});
         Begin("Load Binary File");
         if (Button("Load File"))
         {
@@ -129,9 +154,9 @@ class BinarayReader
             Text("File: %s (%lu)", bin_file.filename().c_str(), file_size);
             if (Button("Parse File"))
             {
-                auto buff = ReadFile(bin_file);
+                auto buff = ReadFile(bin_file, report);
                 auto name = bin_file.filename().string();
-                RegisterImage(buff, name);
+                RegisterImage(buff, name, report);
             }
         }
 
@@ -169,5 +194,8 @@ void MyApp::Run()
 {
     this->gallery_.RenderGallery();
     this->gallery_.RenderImages();
-    bin_read.Present();
+    const auto set_status = [this](const std::string& msg) { this->SetStatus(msg); };
+    const auto reset_status = [this]() { this->ResetStatus(); };
+    const auto reporter = StatusReport { .report_status = set_status, .reset_status = reset_status };
+    bin_read.Present(reporter);
 }
