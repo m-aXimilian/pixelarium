@@ -4,6 +4,51 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "imgui_internal.h"
+
+// see https://github.com/ocornut/imgui/issues/3518
+bool PixelBeginStatusBar()
+{
+    using namespace ImGui;
+    ImGuiContext& g = *GImGui;
+    ImGuiViewportP* viewport = (ImGuiViewportP*)(void*)GetMainViewport();
+
+    SetCurrentViewport(NULL, viewport);
+
+    g.NextWindowData.MenuBarOffsetMinVal = ImVec2(g.Style.DisplaySafeAreaPadding.x, ImMax(g.Style.DisplaySafeAreaPadding.y - g.Style.FramePadding.y, 0.0f));
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar;
+    float height = GetFrameHeight();
+    bool is_open = BeginViewportSideBar("##MainStatusBar", viewport, ImGuiDir_Up, height, window_flags);
+    g.NextWindowData.MenuBarOffsetMinVal = ImVec2(0.0f, 0.0f);
+    if (!is_open)
+    {
+        End();
+        return false;
+    }
+
+    g.CurrentWindow->Flags &= ~ImGuiWindowFlags_NoSavedSettings;
+    BeginMenuBar();
+    return is_open;
+}
+
+void PixelEndStatusBar()
+{
+    using namespace ImGui;
+    ImGuiContext& g = *GImGui;
+    if (!g.CurrentWindow->DC.MenuBarAppending)
+    {
+        IM_ASSERT_USER_ERROR(0, "Calling EndMainMenuBar() not from a menu-bar!");
+        return;
+    }
+
+    EndMenuBar();
+    g.CurrentWindow->Flags |= ImGuiWindowFlags_NoSavedSettings;
+
+    if (g.CurrentWindow == g.NavWindow && g.NavLayer == ImGuiNavLayer_Main && !g.NavAnyRequest && g.ActiveId == 0)
+        FocusTopMostWindowUnderOne(g.NavWindow, NULL, NULL, ImGuiFocusRequestFlags_UnlessBelowModal | ImGuiFocusRequestFlags_RestoreFocusedChild);
+
+    End();
+}
 
 /// @brief GLFW error callback function.
 /// @param error The error code.
@@ -192,6 +237,18 @@ void pixelarium::application::AppGLFW::MenuBar()
         this->MenuBarOptionsColumn5();
 
         ImGui::EndMainMenuBar();
+    }
+
+    if (show_status_ && PixelBeginStatusBar())
+    {
+        if (ImGui::Button("Ok", {20, 20}))
+        {
+            show_status_ = false;
+            status_message_.clear();
+        }
+
+        ImGui::Text("%s", status_message_.c_str());
+        PixelEndStatusBar();
     }
 }
 
