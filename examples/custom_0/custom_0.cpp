@@ -67,7 +67,9 @@ class BinarayReader
     vector<std::byte> buffer{};
     uintmax_t file_size;
 
-    struct __attribute__((packed)) ParsedImage
+    // struct __attribute__((packed)) ParsedImage // gcc and clang only
+#pragma pack(push, 1)
+    struct ParsedImage
     {
         uint8_t depth;
         uint8_t channels;
@@ -75,6 +77,7 @@ class BinarayReader
         uint16_t height;
         void* data;
     };
+#pragma pack(pop)
 
     auto RegisterImage(const ParsedImage& img, string& name, const StatusReport& report) -> void
     {
