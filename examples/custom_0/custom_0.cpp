@@ -69,14 +69,14 @@ class BinarayReader
         void* data;
     };
 
-    constexpr auto RegisterImage(const ParsedImage& img, string& name) -> void
+    auto RegisterImage(const ParsedImage& img, string& name) -> void
     {
         if (!img.data) return;
         auto mat = cv::Mat(img.height, img.width, ToCVPixelType(img.depth, img.channels), img.data);
         image_pool.SetResource(make_unique<imaging::PixelariumMem>(mat, name.c_str(), *logger));
     }
 
-    constexpr auto ReadFile(const filesystem::path& file) -> ParsedImage
+    auto ReadFile(const filesystem::path& file) -> ParsedImage
     {
         uint8_t depth{};
         uint8_t channels{};
@@ -113,7 +113,7 @@ class BinarayReader
     }
 
    public:
-    constexpr auto Present() -> void
+    auto Present() -> void
     {
         using namespace ImGui;
         Begin("Load Binary File");
