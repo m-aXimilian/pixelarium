@@ -1,7 +1,5 @@
 #pragma once
 
-
-
 #include "rendering/IPixelariumImageView.hpp"
 #include "resources/resource.hpp"
 #include "utilities/ILog.hpp"

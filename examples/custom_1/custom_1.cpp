@@ -100,7 +100,8 @@ class Selector
             auto img1 = pool_.GetResource(selected_key_1);
             auto img_mat1 = img1.lock()->TryGetImage();
 
-            if (!img_mat0.has_value() || !img_mat1.has_value() || img_mat0.value().empty() || img_mat1.value().empty()) return;
+            if (!img_mat0.has_value() || !img_mat1.has_value() || img_mat0.value().empty() || img_mat1.value().empty())
+                return;
 
             if (img_mat0->size != img_mat1->size) return;
 

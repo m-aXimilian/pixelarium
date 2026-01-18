@@ -59,7 +59,7 @@ class AppGLFW
     void LogLevelSelect();
     int log_level_{0};
     GLFWwindow* window = nullptr;
-    bool show_status_ {false};
-    std::string status_message_ {};
+    bool show_status_{false};
+    std::string status_message_{};
 };
 }  // namespace pixelarium::application

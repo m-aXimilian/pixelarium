@@ -78,7 +78,7 @@ class ImageResourcePool : public IResourcePool<imaging::IPixelariumImageCvMat, c
         const std::function<void(ResourceKey, size_t, const imaging::IPixelariumImage<cv::Mat>&)>& func) override;
 
     template <typename Callable>
-    requires std::invocable<Callable, ResourceKey, size_t, const imaging::IPixelariumImageCvMat&>
+        requires std::invocable<Callable, ResourceKey, size_t, const imaging::IPixelariumImageCvMat&>
     void Enumerate(Callable&& func) const
     {
         size_t idx{0};

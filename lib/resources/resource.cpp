@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <functional>
 #include <mutex>
+
 #include "imaging/IPixelariumImage.hpp"
 
 using Image = pixelarium::imaging::IPixelariumImageCvMat;
@@ -53,8 +54,7 @@ size_t pixelarium::resources::ImageResourcePool::SetResource(unique_ptr<Image> r
 /// @param id The ID of the resource to update.
 /// @param res A unique pointer to the new resource.
 /// @return True if the resource was updated, false otherwise.
-bool pixelarium::resources::ImageResourcePool::ModifyResource(ResourceKey id,
-                                                              std::unique_ptr<Image> res)
+bool pixelarium::resources::ImageResourcePool::ModifyResource(ResourceKey id, std::unique_ptr<Image> res)
 {
     auto search{this->resources_.find(id)};
     if (search == this->resources_.end()) return false;

@@ -2,7 +2,6 @@
 
 #include <filesystem>
 #include <functional>
-#include <memory>
 #include <opencv2/core/mat.hpp>
 #include <string>
 
@@ -38,7 +37,7 @@ struct IImageQuery
 
 /// @brief This aims to be a generic image abstraction
 /// meant for codec specific implementation.
-template<class Data>
+template <class Data>
 class IPixelariumImage
 {
    public:
@@ -94,7 +93,7 @@ class IPixelariumImage
     std::filesystem::path uri_;
 };
 
-class IPixelariumImageCvMat : public IPixelariumImage<cv::Mat> 
+class IPixelariumImageCvMat : public IPixelariumImage<cv::Mat>
 {
    public:
     virtual ~IPixelariumImageCvMat() = default;

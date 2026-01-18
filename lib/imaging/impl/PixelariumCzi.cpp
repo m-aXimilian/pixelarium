@@ -50,7 +50,7 @@ constexpr int try_get_index_match(const pixelarium::imaging::CziParams& params, 
 }
 
 std::optional<cv::Mat> CZISubBlockToCvMat(std::shared_ptr<libCZI::IBitmapData> bitmap, libCZI::PixelType pixeltype,
-                                            const pixelarium::utils::log::ILog& log)
+                                          const pixelarium::utils::log::ILog& log)
 {
     size_t pixel_size{0};
     int target_type;

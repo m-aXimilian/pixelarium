@@ -67,7 +67,7 @@ class BinarayReader
     vector<std::byte> buffer{};
     uintmax_t file_size;
 
-    struct  __attribute__((packed)) ParsedImage
+    struct __attribute__((packed)) ParsedImage
     {
         uint8_t depth;
         uint8_t channels;
@@ -81,7 +81,10 @@ class BinarayReader
         if (img.width <= 0 || img.height <= 0 || img.channels <= 0 || img.depth <= 0 || !img.data)
         {
             report.reset_status();
-            report.report_status(format("Parsing {} failed: Dimensions (w: {}, h: {}, d: {}, c: {}) cannot be parsed! The provided bin-file is probably corrupted.", name, img.width, img.height, img.depth, img.channels));
+            report.report_status(
+                format("Parsing {} failed: Dimensions (w: {}, h: {}, d: {}, c: {}) cannot be parsed! The provided "
+                       "bin-file is probably corrupted.",
+                       name, img.width, img.height, img.depth, img.channels));
             return;
         }
 
@@ -100,11 +103,10 @@ class BinarayReader
         if (!filesystem::exists(file)) return {};
 
         auto sz = filesystem::file_size(file);
-        constexpr auto header_size {sizeof(ParsedImage) - sizeof(void*)};
+        constexpr auto header_size{sizeof(ParsedImage) - sizeof(void*)};
         bool can_read = sz >= header_size;
 
-        if (!can_read)
-            return {};
+        if (!can_read) return {};
 
         if (!buffer.empty())
         {
@@ -131,7 +133,8 @@ class BinarayReader
 
         logger->Info(format("{}: Parsed image with width: {}, height: {}, depth: {}, channels: {}", __PRETTY_FUNCTION__,
                             width, height, depth, channels));
-        report.report_status(format("Parsed image with width: {}, height: {}, depth: {}, channels: {}", width, height, depth, channels));
+        report.report_status(
+            format("Parsed image with width: {}, height: {}, depth: {}, channels: {}", width, height, depth, channels));
 
         return {.depth = depth, .channels = channels, .width = width, .height = height, .data = buffer.data()};
     }
@@ -196,6 +199,6 @@ void MyApp::Run()
     this->gallery_.RenderImages();
     const auto set_status = [this](const std::string& msg) { this->SetStatus(msg); };
     const auto reset_status = [this]() { this->ResetStatus(); };
-    const auto reporter = StatusReport { .report_status = set_status, .reset_status = reset_status };
+    const auto reporter = StatusReport{.report_status = set_status, .reset_status = reset_status};
     bin_read.Present(reporter);
 }
