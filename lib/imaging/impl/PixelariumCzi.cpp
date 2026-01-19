@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <format>
 #include <memory>
+#include <opencv2/imgcodecs.hpp>
 #include <optional>
 #include <stdexcept>
 #include <utility>

@@ -1,7 +1,5 @@
 #include "PixelariumJpg.hpp"
 
-#include <filesystem>
-#include <memory>
 #include <opencv2/imgcodecs.hpp>
 #include <string>
 

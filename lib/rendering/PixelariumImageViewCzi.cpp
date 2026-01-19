@@ -9,6 +9,22 @@
 #include "imgui.h"
 #include "rendering/CvMatRender.hpp"
 
+void pixelarium::render::PixelariumImageViewCzi::RefreshCachedImage()
+{
+    if (this->cached_image_.empty() || this->is_dirty_)
+    {
+        log_.Info(std::format("{}: refreshing image.", __PRETTY_FUNCTION__));
+        imaging::CziParams params;
+        params.dimension_map = this->dimension_map_;
+        this->cached_image_ = this->img_->TryGetImage(params).value_or(cv::Mat{});
+        // Resetting the image while the renderer is possibly accessing the
+        // image at the same time is not a good idea. Therefore, we simply create
+        // a new renderer here.
+        this->render_ = std::make_unique<CvMatRender>(this->cached_image_);
+        this->is_dirty_ = false;
+    }
+}
+
 pixelarium::render::PixelariumImageViewCzi::PixelariumImageViewCzi(std::shared_ptr<Image> img, const Log& log)
     : log_(log), render_(std::make_unique<CvMatRender>(*img->TryGetImage()))
 {
@@ -23,7 +39,7 @@ pixelarium::render::PixelariumImageViewCzi::PixelariumImageViewCzi(std::shared_p
             return true;
         });
 
-    this->SetInitialSize();
+    // this->SetInitialSize();
     log_.Info(std::format("{}: dimension map size: {}", __PRETTY_FUNCTION__, dimension_map_.size()));
 }
 
@@ -38,18 +54,7 @@ void pixelarium::render::PixelariumImageViewCzi::ShowImage()
 
     if (!czi_img) return;
 
-    if (this->cached_image_.empty() || this->is_dirty_)
-    {
-        log_.Info(std::format("{}: refreshing image.", __PRETTY_FUNCTION__));
-        imaging::CziParams params;
-        params.dimension_map = this->dimension_map_;
-        this->cached_image_ = this->img_->TryGetImage(params).value_or(cv::Mat{});
-        // Resetting the image while the renderer is possibly accessing the
-        // image at the same time is not a good idea. Therefore, we simply create
-        // a new renderer here.
-        this->render_ = std::make_unique<CvMatRender>(this->cached_image_);
-        this->is_dirty_ = false;
-    }
+    RefreshCachedImage();
 
     if (czi_img->Empty() || this->img_->type_ == imaging::ImageFileType::kUnknown || cached_image_.empty() ||
         czi_img->Name().empty())
@@ -58,8 +63,20 @@ void pixelarium::render::PixelariumImageViewCzi::ShowImage()
         return;
     }
 
+    if (first_render_)
+    {
+        first_render_ = false;
+        constexpr auto initial_width {700.0f};
+        const auto cached_width{cached_image_.cols};
+        const auto cached_heigth {cached_image_.rows};
+        const auto ratio{static_cast<float>(cached_heigth) / cached_width};
+        SetInitialSize(initial_width, (initial_width * ratio + 100));
+    }
+
     ImGui::Begin(this->img_->Name().c_str(), &this->open_p,
                  ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar);
+
+    ImageViewMenuBar();
 
     this->curr_dim_ = ImGui::GetContentRegionAvail();
     auto new_dim = ImGui::GetContentRegionAvail();

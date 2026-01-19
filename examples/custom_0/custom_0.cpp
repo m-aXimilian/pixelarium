@@ -56,8 +56,8 @@ constexpr auto ToCVPixelType(size_t depth, size_t chans) -> int
 
 struct StatusReport
 {
-    const std::function<void(const std::string&)>& report_status;
-    const std::function<void()>& reset_status;
+    const std::function<void(const std::string&)> report_status;
+    const std::function<void()> reset_status;
 };
 
 class BinarayReader
@@ -200,8 +200,7 @@ void MyApp::Run()
 {
     this->gallery_.RenderGallery();
     this->gallery_.RenderImages();
-    const auto set_status = [this](const std::string& msg) { this->SetStatus(msg); };
-    const auto reset_status = [this]() { this->ResetStatus(); };
-    const auto reporter = StatusReport{.report_status = set_status, .reset_status = reset_status};
+    const auto reporter = StatusReport{.report_status = [this](const std::string& msg) { this->SetStatus(msg); },
+                                       .reset_status = [this]() { this->ResetStatus(); }};
     bin_read.Present(reporter);
 }

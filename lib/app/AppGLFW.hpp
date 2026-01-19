@@ -2,9 +2,9 @@
 
 #include <GLFW/glfw3.h>
 
+#include <format>
 #include <memory>
 
-#include "imgui.h"
 #include "utilities/ILog.hpp"
 
 namespace pixelarium::application
@@ -21,6 +21,7 @@ class AppGLFW
 
     void SetStatus(const std::string& status)
     {
+        logger_.Info(std::format("{}: {}", __PRETTY_FUNCTION__, status));
         status_message_ = status;
         show_status_ = true;
     }

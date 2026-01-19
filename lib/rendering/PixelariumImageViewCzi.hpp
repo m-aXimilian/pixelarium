@@ -35,5 +35,8 @@ class PixelariumImageViewCzi : public IPixelariumImageView
     const Log& log_;
     std::unordered_map<libCZI::DimensionIndex, int> dimension_map_;
     std::unique_ptr<CvMatRender> render_;
+
+   private:
+        void RefreshCachedImage();
 };
 }  // namespace pixelarium::render

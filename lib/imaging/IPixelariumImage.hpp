@@ -120,6 +120,10 @@ class IPixelariumImageCvMat : public IPixelariumImage<cv::Mat>
     /// @return true if the image is empty, false otherwise.
     virtual bool Empty() const noexcept = 0;
 
+    /// @brief Saves an image to the resource identifier given by uri.
+    /// @return true if saving was successful, false otherwise.
+    virtual bool SaveImage(const std::string& uri);
+
     // default implemented
    public:
     /// @brief  Gets the resource identifier as a file path.

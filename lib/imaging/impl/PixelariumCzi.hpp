@@ -41,6 +41,8 @@ class PixelariumCzi : public IPixelariumImageCvMat
         throw std::runtime_error("Not implemented.");
     }
 
+public:
+
     bool Empty() const noexcept override { return this->is_empty_; }
 
     const libCZI::SubBlockStatistics& GetStatistics() const { return this->image_statistics_; }

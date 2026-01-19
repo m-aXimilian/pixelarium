@@ -8,6 +8,7 @@ set(RENDERLIBSRC
   RenderImageManager.hpp
   RenderImageManager.cpp
   IPixelariumImageView.hpp
+  IPixelariumImageView.cpp
   PixelariumImageViewDefault.hpp
   PixelariumImageViewDefault.cpp
   PixelariumImageViewCzi.hpp
@@ -19,7 +20,8 @@ add_library(${RENDERLIBNAME} STATIC
   ${RENDERLIBSRC})
 
 target_link_libraries(${RENDERLIBNAME}
-  PRIVATE pixelariumimagelib)
+  PRIVATE pixelariumimagelib
+  PRIVATE pixelariumapplicationlib)
 
 target_include_directories(${RENDERLIBNAME}
   PRIVATE ${CMAKE_SOURCE_DIR}/lib

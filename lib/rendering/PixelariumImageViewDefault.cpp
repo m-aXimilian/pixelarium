@@ -5,6 +5,16 @@
 #include "RenderHelpers.hpp"
 #include "imaging/IPixelariumImage.hpp"
 #include "imgui.h"
+
+void pixelarium::render::PixelariumImageViewDefault::RefreshCachedImage()
+{
+    if (this->cached_image_.empty() || this->is_dirty_)
+    {
+        this->cached_image_ = this->img_->TryGetImage().value_or(cv::Mat{});
+        this->is_dirty_ = false;
+    }
+}
+
 /// @brief Displays the image in an ImGui window.
 ///
 /// If the image is null, empty, or has an empty name, the function returns immediately.  Otherwise, it creates an ImGui
@@ -12,11 +22,7 @@
 /// fit the available window space.  The raw and rendered dimensions are displayed below the image.
 void pixelarium::render::PixelariumImageViewDefault::ShowImage()
 {
-    if (this->cached_image_.empty() || this->is_dirty_)
-    {
-        this->cached_image_ = this->img_->TryGetImage().value_or(cv::Mat{});
-        this->is_dirty_ = false;
-    }
+    RefreshCachedImage();
 
     if (this->img_->Empty() || this->img_->type_ == imaging::ImageFileType::kUnknown || this->cached_image_.empty() ||
         this->img_->Name().empty())
@@ -25,8 +31,20 @@ void pixelarium::render::PixelariumImageViewDefault::ShowImage()
         return;
     }
 
+    if (first_render_)
+    {
+        first_render_ = false;
+        constexpr auto initial_width {700.0f};
+        const auto cached_width{cached_image_.cols};
+        const auto cached_heigth {cached_image_.rows};
+        const auto ratio{static_cast<float>(cached_heigth) / cached_width};
+        SetInitialSize(initial_width, (initial_width * ratio + 100));
+    }
+
     ImGui::Begin(this->img_->Name().c_str(), &this->open_p,
                  ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar);
+
+    ImageViewMenuBar();
 
     this->curr_dim_ = ImGui::GetContentRegionAvail();
     auto new_dim = ImGui::GetContentRegionAvail();
