@@ -129,7 +129,7 @@ class BinarayReader
 
             if (pixel_count <= sz - header_size)
             {
-                buffer.reserve(pixel_count);
+                buffer.resize(pixel_count);
                 inp_stream.read(reinterpret_cast<char*>(buffer.data()), pixel_count);
             }
         }
