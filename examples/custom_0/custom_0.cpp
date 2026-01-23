@@ -200,7 +200,8 @@ void MyApp::Run()
 {
     this->gallery_.RenderGallery();
     this->gallery_.RenderImages();
-    const auto reporter = StatusReport{.report_status = [this](const std::string& msg) { this->SetStatusTimed(msg, 5); },
-                                       .reset_status = [this]() { this->ResetStatus(); }};
+    const auto reporter =
+        StatusReport{.report_status = [this](const std::string& msg) { this->SetStatusTimed(msg, 5); },
+                     .reset_status = [this]() { this->ResetStatus(); }};
     bin_read.Present(reporter);
 }

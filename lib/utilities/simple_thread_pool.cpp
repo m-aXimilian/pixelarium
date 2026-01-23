@@ -1,4 +1,5 @@
 #include "simple_thread_pool.hpp"
+
 #include <functional>
 #include <mutex>
 
@@ -6,27 +7,28 @@ using namespace pixelarium::utils;
 
 simple_thread_pool::simple_thread_pool(size_t num_threads)
 {
-    for (size_t i {0}; i < num_threads; ++i)
+    for (size_t i{0}; i < num_threads; ++i)
     {
-        workers_.emplace_back([this]()
-        {
-            while (true)
+        workers_.emplace_back(
+            [this]()
             {
-                std::function<void()> job;
+                while (true)
                 {
-                    std::unique_lock<std::mutex> lck(thread_mutex_);
-                    
-                    cv_.wait(lck, [this]() -> bool { return shutdown_ || !task_queue_.empty();});
+                    std::function<void()> job;
+                    {
+                        std::unique_lock<std::mutex> lck(thread_mutex_);
 
-                    if (shutdown_ && task_queue_.empty()) return;
+                        cv_.wait(lck, [this]() -> bool { return shutdown_ || !task_queue_.empty(); });
 
-                    job = std::move(task_queue_.front());
-                    task_queue_.pop();
+                        if (shutdown_ && task_queue_.empty()) return;
+
+                        job = std::move(task_queue_.front());
+                        task_queue_.pop();
+                    }
+
+                    job();
                 }
-
-                job();
-            }           
-        });
+            });
     }
 }
 

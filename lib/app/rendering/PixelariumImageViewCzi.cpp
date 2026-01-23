@@ -3,11 +3,11 @@
 #include <format>
 #include <memory>
 
+#include "CvMatRender.hpp"
 #include "RenderHelpers.hpp"
 #include "imaging/IPixelariumImage.hpp"
 #include "imaging/impl/PixelariumCzi.hpp"
 #include "imgui.h"
-#include "CvMatRender.hpp"
 
 void pixelarium::application::PixelariumImageViewCzi::RefreshCachedImage()
 {
@@ -66,9 +66,9 @@ void pixelarium::application::PixelariumImageViewCzi::ShowImage()
     if (first_render_)
     {
         first_render_ = false;
-        constexpr auto initial_width {700.0f};
+        constexpr auto initial_width{700.0f};
         const auto cached_width{cached_image_.cols};
-        const auto cached_heigth {cached_image_.rows};
+        const auto cached_heigth{cached_image_.rows};
         const auto ratio{static_cast<float>(cached_heigth) / cached_width};
         SetInitialSize(initial_width, (initial_width * ratio + 100));
     }

@@ -2,10 +2,10 @@
 
 #include <memory>
 
-#include "imaging/IPixelariumImage.hpp"
-#include "imgui.h"
 #include "CvMatRender.hpp"
 #include "IPixelariumImageView.hpp"
+#include "imaging/IPixelariumImage.hpp"
+#include "imgui.h"
 
 namespace pixelarium::application
 {
@@ -37,4 +37,4 @@ class PixelariumImageViewDefault : public IPixelariumImageView
    private:
     void RefreshCachedImage();
 };
-}  // namespace pixelarium::render
+}  // namespace pixelarium::application

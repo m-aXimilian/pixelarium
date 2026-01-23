@@ -1,6 +1,7 @@
 #include "RenderHelpers.hpp"
 
 #include <cstdlib>
+
 /// @brief Checks if the dimensions of two ImVec2 vectors have changed significantly.
 /// @param ref_rect The reference ImVec2 vector.
 /// @param new_rect The new ImVec2 vector to compare against.

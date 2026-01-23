@@ -4,8 +4,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "ImageViewFactory.hpp"
 #include "IPixelariumImageView.hpp"
+#include "ImageViewFactory.hpp"
 #include "resources/resource.hpp"
 #include "utilities/ILog.hpp"
 
@@ -71,4 +71,4 @@ class RenderImageManager
 
     const utils::log::ILog& log_;
 };
-}  // namespace pixelarium::render
+}  // namespace pixelarium::application

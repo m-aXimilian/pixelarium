@@ -29,7 +29,7 @@ class PixelariumJpg : public IPixelariumImageCvMat
         throw std::runtime_error("Not possible with jpg.");
     }
 
-public:
+   public:
     bool Empty() const noexcept override { return this->is_empty_; }
 
    public:

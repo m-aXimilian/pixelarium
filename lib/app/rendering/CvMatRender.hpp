@@ -49,4 +49,4 @@ class CvMatRender
     GLuint uploadTexture();
 };
 
-}  // namespace pixelarium::render
+}  // namespace pixelarium::application

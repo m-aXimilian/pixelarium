@@ -276,12 +276,13 @@ void pixelarium::application::AppGLFW::LogLevelSelect()
     }
 }
 
-
 void pixelarium::application::AppGLFW::SetStatusTimed(const std::string& status, size_t seconds)
 {
     SetStatus(status);
-    utils::simple_thread_pool::run_asynch([this, seconds]() {
-        std::this_thread::sleep_for(std::chrono::seconds(seconds));
-        ResetStatus();
-    });
+    utils::simple_thread_pool::run_asynch(
+        [this, seconds]()
+        {
+            std::this_thread::sleep_for(std::chrono::seconds(seconds));
+            ResetStatus();
+        });
 }

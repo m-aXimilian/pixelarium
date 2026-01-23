@@ -3,11 +3,11 @@
 #include <memory>
 #include <unordered_map>
 
+#include "CvMatRender.hpp"
+#include "IPixelariumImageView.hpp"
 #include "imaging/IPixelariumImage.hpp"
 #include "imgui.h"
 #include "libCZI_DimCoordinate.h"
-#include "CvMatRender.hpp"
-#include "IPixelariumImageView.hpp"
 #include "utilities/ILog.hpp"
 
 namespace pixelarium::application
@@ -36,6 +36,6 @@ class PixelariumImageViewCzi : public IPixelariumImageView
     std::unique_ptr<CvMatRender> render_;
 
    private:
-        void RefreshCachedImage();
+    void RefreshCachedImage();
 };
-}  // namespace pixelarium::render
+}  // namespace pixelarium::application

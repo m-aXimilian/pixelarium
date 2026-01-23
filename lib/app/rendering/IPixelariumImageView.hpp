@@ -37,4 +37,4 @@ class IPixelariumImageView
     bool is_dirty_{true};
     bool first_render_{true};
 };
-}  // namespace pixelarium::render
+}  // namespace pixelarium::application
