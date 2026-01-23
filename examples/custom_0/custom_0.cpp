@@ -42,6 +42,7 @@ constexpr auto ToCVPixelType(size_t depth, size_t chans) -> int
             break;
         case 16:
             tp = CV_16U;
+            break;
         default:
             return -1;
     }
@@ -60,7 +61,7 @@ struct StatusReport
     const std::function<void()> reset_status;
 };
 
-class BinarayReader
+class BinaryReader
 {
    private:
     filesystem::path bin_file{};
@@ -81,7 +82,7 @@ class BinarayReader
 
     auto RegisterImage(const ParsedImage& img, string& name, const StatusReport& report) -> void
     {
-        if (img.width <= 0 || img.height <= 0 || img.channels <= 0 || img.depth <= 0 || !img.data)
+        if (img.width == 0 || img.height == 0 || img.channels == 0 || img.depth == 0 || !img.data)
         {
             report.reset_status();
             report.report_status(
@@ -185,7 +186,7 @@ class BinarayReader
 class MyApp : public application::DefaultApp
 {
    private:
-    BinarayReader bin_read;
+    BinaryReader bin_read;
 
    public:
     MyApp(const Log& log, Pool& pool) : application::DefaultApp(log, pool) {}

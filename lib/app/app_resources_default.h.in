@@ -22,4 +22,4 @@
 
 inline constexpr std::array<std::string_view, 5> LOGLEVELS = {"Trace", "Debug", "Info", "Warning", "Error"};
 
-constexpr auto kInitialWindowWidth {700.0f};
+inline constexpr auto kInitialWindowWidth {700.0f};
