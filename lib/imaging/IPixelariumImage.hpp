@@ -147,8 +147,5 @@ class IPixelariumImageCvMat : public IPixelariumImage<cv::Mat>
 
    public:
     const static ImageFileType type_{ImageFileType::kAbstract};
-
-   protected:
-    std::filesystem::path uri_;
 };
 }  // namespace pixelarium::imaging
