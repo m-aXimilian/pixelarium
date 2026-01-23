@@ -23,7 +23,7 @@ void PixelariumImageGallery::RenderGallery()
     if (ImGui::BeginListBox("Image List", ImVec2(200, 400)))
     {
         pool_.EnumerateResources(
-            [&](size_t id, size_t idx, const imaging::IPixelariumImage& img) -> void
+            [&](size_t id, size_t idx, const imaging::IPixelariumImage<cv::Mat>& img) -> void
             {
                 const bool is_selected = selected_index == idx;
                 if (ImGui::Selectable(std::format("{}", img.Name()).c_str(), is_selected))
@@ -74,7 +74,7 @@ void PixelariumImageGallery::RenderGallery()
 void PixelariumImageGallery::RenderImages()
 {
     this->render_manager_->Enumerate(
-        [&](resources::ResourceKey key, render::RenderImageStateWrapper& render_state)
+        [&](resources::ResourceKey key, application::RenderImageStateWrapper& render_state)
         {
             render_state.view->ShowImage();
 

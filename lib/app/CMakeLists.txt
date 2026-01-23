@@ -16,15 +16,30 @@ set(APPLIBSRC
   ${imgui_DIR}/backends/imgui_impl_opengl3.cpp
   ${imgui_DIR}/backends/imgui_impl_glfw.cpp)
 
+set(RENDERSRC
+  rendering/RenderHelpers.hpp
+  rendering/RenderHelpers.cpp
+  rendering/CvMatRender.hpp
+  rendering/CvMatRender.cpp
+  rendering/RenderImageManager.hpp
+  rendering/RenderImageManager.cpp
+  rendering/IPixelariumImageView.hpp
+  rendering/IPixelariumImageView.cpp
+  rendering/PixelariumImageViewDefault.hpp
+  rendering/PixelariumImageViewDefault.cpp
+  rendering/PixelariumImageViewCzi.hpp
+  rendering/PixelariumImageViewCzi.cpp
+  rendering/ImageViewFactory.hpp
+  rendering/ImageViewFactory.cpp)
+
 set(APPLIBNAME pixelariumapplicationlib)
 
 add_library(${APPLIBNAME}
-  STATIC ${APPLIBSRC})
+  STATIC ${APPLIBSRC} ${RENDERSRC})
 
 target_link_libraries(${APPLIBNAME}
   PRIVATE pixelariumutilslib
-  PRIVATE pixelariumimagelib
-  PRIVATE pixelariumrenderlib)
+  PRIVATE pixelariumimagelib)
 
 # This needs to be public to let the consumer know about it.
 if(WIN32)
@@ -47,6 +62,7 @@ target_include_directories(${APPLIBNAME}
   PRIVATE ${CMAKE_BINARY_DIR}
   PRIVATE ${PROJECT_SOURCE_DIR}/lib
   PRIVATE ${PROJECT_SOURCE_DIR}/lib/imaging
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/rendering
   PUBLIC ${pfd_DIR}
   PUBLIC ${imgui_DIR}
   PUBLIC ${imgui_DIR}/backends)

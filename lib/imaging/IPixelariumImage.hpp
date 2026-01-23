@@ -2,7 +2,6 @@
 
 #include <filesystem>
 #include <functional>
-#include <memory>
 #include <opencv2/core/mat.hpp>
 #include <string>
 
@@ -38,6 +37,7 @@ struct IImageQuery
 
 /// @brief This aims to be a generic image abstraction
 /// meant for codec specific implementation.
+template <class Data>
 class IPixelariumImage
 {
    public:
@@ -47,19 +47,19 @@ class IPixelariumImage
     /// @return A unique pointer to a Mat object containing the image data,
     /// or nullptr if the image is not found or cannot be retrieved.
     /// May throw exceptions for multidimensional images.
-    virtual std::unique_ptr<cv::Mat> TryGetImage() = 0;
+    virtual std::optional<Data> TryGetImage() = 0;
 
     /// @brief Attempts to retrieve the image.
     /// @param query The query object defining the images to retrieve.
     /// @return A unique pointer to a Mat object containing the image data,
     /// or nullptr if the image is not found or cannot be retrieved.
-    virtual std::unique_ptr<cv::Mat> TryGetImage(const IImageQuery& query) = 0;
+    virtual std::optional<Data> TryGetImage(const IImageQuery& query) = 0;
 
     /// @brief Attempts to retrieve a collection of images based on a query.
     /// @param query The query object defining the images to retrieve.
     /// @return A vector of unique pointers to cv::Mat objects. Each element is an image.
     /// Returns an empty vector if no images are found or if an error occurs.
-    virtual std::vector<std::unique_ptr<cv::Mat>> TryGetImages(const IImageQuery& query) = 0;
+    virtual std::vector<std::optional<Data>> TryGetImages(const IImageQuery& query) = 0;
 
     /// @brief Checks if the image is empty.
     /// @return true if the image is empty, false otherwise.
@@ -91,5 +91,61 @@ class IPixelariumImage
 
    protected:
     std::filesystem::path uri_;
+};
+
+class IPixelariumImageCvMat : public IPixelariumImage<cv::Mat>
+{
+   public:
+    virtual ~IPixelariumImageCvMat() = default;
+
+    /// @brief Attempts to retrieve the image.
+    /// @return A unique pointer to a Mat object containing the image data,
+    /// or nullptr if the image is not found or cannot be retrieved.
+    /// May throw exceptions for multidimensional images.
+    virtual std::optional<cv::Mat> TryGetImage() = 0;
+
+    /// @brief Attempts to retrieve the image.
+    /// @param query The query object defining the images to retrieve.
+    /// @return A unique pointer to a Mat object containing the image data,
+    /// or nullptr if the image is not found or cannot be retrieved.
+    virtual std::optional<cv::Mat> TryGetImage(const IImageQuery& query) = 0;
+
+    /// @brief Attempts to retrieve a collection of images based on a query.
+    /// @param query The query object defining the images to retrieve.
+    /// @return A vector of unique pointers to cv::Mat objects. Each element is an image.
+    /// Returns an empty vector if no images are found or if an error occurs.
+    virtual std::vector<std::optional<cv::Mat>> TryGetImages(const IImageQuery& query) = 0;
+
+    /// @brief Checks if the image is empty.
+    /// @return true if the image is empty, false otherwise.
+    virtual bool Empty() const noexcept = 0;
+
+    /// @brief Saves an image to the resource identifier given by uri.
+    /// @return true if saving was successful, false otherwise.
+    virtual bool SaveImage(const std::string& uri);
+
+    // default implemented
+   public:
+    /// @brief  Gets the resource identifier as a file path.
+    /// @return @c std::filesystem::path of the underlying resource.
+    virtual std::filesystem::path Uri() const noexcept { return this->uri_; }
+
+    /// @brief  Gets the resource name.
+    /// @note   Implementations of IPixelariumImage that live in memory
+    ///         should override this to get something meaningful as the name
+    ///         cannot be fetched from the resource uri in that case.
+    /// @return The name of the underlying resource.
+    virtual std::string Name() const noexcept
+    {
+        if (!this->uri_.empty())
+        {
+            return this->uri_.filename().string();
+        }
+
+        return {};
+    }
+
+   public:
+    const static ImageFileType type_{ImageFileType::kAbstract};
 };
 }  // namespace pixelarium::imaging

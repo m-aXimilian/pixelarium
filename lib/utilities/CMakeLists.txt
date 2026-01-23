@@ -3,7 +3,9 @@ set(UTILSLIBNAME pixelariumutilslib)
 set(UTILSLIBSRC
   ILog.hpp
   SpdLogger.hpp
-  SpdLogger.cpp)
+  SpdLogger.cpp
+  simple_thread_pool.hpp
+  simple_thread_pool.cpp)
 
 add_library(${UTILSLIBNAME} STATIC ${UTILSLIBSRC})
 

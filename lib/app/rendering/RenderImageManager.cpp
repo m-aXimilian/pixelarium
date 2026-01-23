@@ -7,7 +7,7 @@ using namespace std;
 /// @brief Updates the collection of rendered images by removing images marked for deletion.
 /// This function iterates through the \c keys_to_delete_ list and removes the corresponding images from the collection.
 /// It does not acquire the mutex to avoid deadlocks with the `Remove` function.
-void pixelarium::render::RenderImageManager::UpdateCollection()
+void pixelarium::application::RenderImageManager::UpdateCollection()
 {
     for (const auto& key : keys_to_delete_)
     {
@@ -19,7 +19,7 @@ void pixelarium::render::RenderImageManager::UpdateCollection()
 
 /// @brief Marks a resource for deletion.
 /// @param key The ID of the resource to mark for deletion.
-void pixelarium::render::RenderImageManager::MarkForDeletion(resources::ResourceKey key)
+void pixelarium::application::RenderImageManager::MarkForDeletion(resources::ResourceKey key)
 {
     this->log_.Debug(std::format("{} marking key: \"{}\" for deletion.", __PRETTY_FUNCTION__, key));
     lock_guard<mutex> guard(this->mut_);
@@ -29,7 +29,7 @@ void pixelarium::render::RenderImageManager::MarkForDeletion(resources::Resource
 /// @brief Removes a render image from the manager.
 /// @param key The key of the render image to remove.
 /// @return True if the render image was removed, false otherwise.
-bool pixelarium::render::RenderImageManager::Remove(resources::ResourceKey key) noexcept
+bool pixelarium::application::RenderImageManager::Remove(resources::ResourceKey key) noexcept
 {
     bool remove_state{false};
     this->log_.Debug(std::format("{} removing key: \"{}\" from renderlist.", __PRETTY_FUNCTION__, key));
@@ -44,7 +44,7 @@ bool pixelarium::render::RenderImageManager::Remove(resources::ResourceKey key) 
 /// @brief Adds a resource to the render image map.
 /// @param key The ID of the resource to add.
 /// @return void.  No exception is thrown.
-void pixelarium::render::RenderImageManager::Add(resources::ResourceKey key) noexcept
+void pixelarium::application::RenderImageManager::Add(resources::ResourceKey key) noexcept
 {
     // we don't want to add what's already there
     // or empty render images
@@ -77,4 +77,4 @@ void pixelarium::render::RenderImageManager::Add(resources::ResourceKey key) noe
 
 /// @brief Clears all render images from the manager.
 /// @note This function is noexcept.
-void pixelarium::render::RenderImageManager::Clear() noexcept { this->render_image_map_.clear(); }
+void pixelarium::application::RenderImageManager::Clear() noexcept { this->render_image_map_.clear(); }

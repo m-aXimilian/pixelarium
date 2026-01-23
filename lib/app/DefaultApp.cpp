@@ -25,7 +25,7 @@ void DefaultApp::MenuBarOptionsColumn2()
     {
         if (ImGui::MenuItem(LOADIMAGE))
         {
-            this->LoadImage();
+            this->LoadImageDialogue();
         }
 
         ImGui::EndMenu();
@@ -40,7 +40,7 @@ void DefaultApp::Run()
     this->gallery_.RenderImages();
 }
 
-void DefaultApp::LoadImage()
+void DefaultApp::LoadImageDialogue()
 {
     auto res{pfd::open_file("Load Inputs", pfd::path::home(), {"All Files", "*"}, pfd::opt::multiselect).result()};
     for (auto& p : res)

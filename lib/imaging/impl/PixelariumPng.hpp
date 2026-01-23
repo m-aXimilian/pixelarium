@@ -8,22 +8,22 @@
 namespace pixelarium::imaging
 {
 /// @brief Implements support for .png-images in the realm of IPixelariumImage
-class PixelariumPng : public IPixelariumImage
+class PixelariumPng : public IPixelariumImageCvMat
 {
    public:
     explicit PixelariumPng(const std::string& url);
 
     // IPixelariumImage member implementations
    public:
-    std::unique_ptr<cv::Mat> TryGetImage() override;
+    std::optional<cv::Mat> TryGetImage() override;
 
-    std::unique_ptr<cv::Mat> TryGetImage(const IImageQuery&) override
+    std::optional<cv::Mat> TryGetImage(const IImageQuery&) override
     {
         // ToDo: proper error
         throw std::runtime_error("Not possible with png.");
     }
 
-    std::vector<std::unique_ptr<cv::Mat>> TryGetImages(const IImageQuery&) override
+    std::vector<std::optional<cv::Mat>> TryGetImages(const IImageQuery&) override
     {
         // ToDo: proper error
         throw std::runtime_error("Not possible with png.");

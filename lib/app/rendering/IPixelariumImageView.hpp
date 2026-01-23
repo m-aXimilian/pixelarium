@@ -5,7 +5,7 @@
 #include "imaging/IPixelariumImage.hpp"
 #include "imgui.h"
 
-namespace pixelarium::render
+namespace pixelarium::application
 {
 /// @brief An interface defining the contract on views to dedicated implementations of IPixelariumImage
 class IPixelariumImageView
@@ -18,15 +18,23 @@ class IPixelariumImageView
    public:
     virtual const bool* GetStatus() const noexcept { return &this->open_p; }
     virtual void ForceUpdate() noexcept { this->is_dirty_ = true; }
+
+    // this must be called immediately before a "ImGui::Begin" context
+    // as it will affect the next window and result in undeterministic effects
+    // when called "out of sync"
     virtual void SetInitialSize(float width = 700.0f, float height = 700.0f)
     {
         ImGui::SetNextWindowSize({width, height});
     }
 
    protected:
-    std::shared_ptr<imaging::IPixelariumImage> img_{};
-    std::unique_ptr<cv::Mat> cached_image_{};
+    virtual void ImageViewMenuBar();
+
+   protected:
+    std::shared_ptr<imaging::IPixelariumImageCvMat> img_{};
+    cv::Mat cached_image_{};
     bool open_p{true};
     bool is_dirty_{true};
+    bool first_render_{true};
 };
-}  // namespace pixelarium::render
+}  // namespace pixelarium::application

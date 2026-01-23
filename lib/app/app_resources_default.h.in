@@ -17,6 +17,9 @@
 #define LOADIMAGE           "Load Image"
 #define REMOVEIMAGE         "Remove Image"
 #define CLEARALL            "Clear All"
+#define SAVEAS              "Save As..."
 // clang-format on
 
 inline constexpr std::array<std::string_view, 5> LOGLEVELS = {"Trace", "Debug", "Info", "Warning", "Error"};
+
+inline constexpr auto kInitialWindowWidth {700.0f};

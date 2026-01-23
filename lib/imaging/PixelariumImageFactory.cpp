@@ -3,13 +3,14 @@
 #include <cctype>
 #include <memory>
 
+#include "imaging/IPixelariumImage.hpp"
 #include "imaging/impl/PixelariumMem.hpp"
 #include "impl/PixelariumCzi.hpp"
 #include "impl/PixelariumJpg.hpp"
 #include "impl/PixelariumPng.hpp"
 #include "impl/PixelariumTiff.hpp"
 
-/*static*/ std::unique_ptr<pixelarium::imaging::IPixelariumImage>
+/*static*/ std::unique_ptr<pixelarium::imaging::IPixelariumImageCvMat>
 pixelarium::imaging::PixelariumImageFactory::CreateImage(const std::string& uri, const Log& log)
 {
     const auto res{std::filesystem::path(uri)};
