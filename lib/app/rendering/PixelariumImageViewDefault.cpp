@@ -3,6 +3,7 @@
 #include <format>
 
 #include "RenderHelpers.hpp"
+#include "app_resources_default.h"
 #include "imaging/IPixelariumImage.hpp"
 #include "imgui.h"
 
@@ -34,11 +35,11 @@ void pixelarium::application::PixelariumImageViewDefault::ShowImage()
     if (first_render_)
     {
         first_render_ = false;
-        constexpr auto initial_width {700.0f};
+
         const auto cached_width{cached_image_.cols};
-        const auto cached_heigth {cached_image_.rows};
+        const auto cached_heigth{cached_image_.rows};
         const auto ratio{static_cast<float>(cached_heigth) / cached_width};
-        SetInitialSize(initial_width, (initial_width * ratio + 100));
+        SetInitialSize(kInitialWindowWidth, (kInitialWindowWidth * ratio + 100));
     }
 
     ImGui::Begin(this->img_->Name().c_str(), &this->open_p,
