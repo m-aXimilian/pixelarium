@@ -91,7 +91,10 @@ class BinarayReader
             return;
         }
 
-        auto mat = cv::Mat(img.height, img.width, ToCVPixelType(img.depth, img.channels), const_cast<void*>(img.data));
+        auto tmp_mat =
+            cv::Mat(img.height, img.width, ToCVPixelType(img.depth, img.channels), const_cast<void*>(img.data));
+        // not cloning is a dangling reference once the externally managed data pointer is freed
+        auto mat{tmp_mat.clone()};
 
         image_pool.SetResource(make_unique<imaging::PixelariumMem>(mat, name.c_str(), *logger));
     }
