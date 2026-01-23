@@ -1,4 +1,5 @@
 #include "IPixelariumImage.hpp"
+
 #include <opencv2/imgcodecs.hpp>
 
 bool pixelarium::imaging::IPixelariumImageCvMat::SaveImage(const std::string& uri)
