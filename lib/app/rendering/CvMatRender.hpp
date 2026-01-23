@@ -15,7 +15,7 @@
 #include <opencv2/core/mat.hpp>
 // clang-format on
 
-namespace pixelarium::render
+namespace pixelarium::application
 {
 /// @brief Renders cv::Mat bitmaps as OpenGL textures.
 class CvMatRender

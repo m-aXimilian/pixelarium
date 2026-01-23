@@ -4,8 +4,7 @@
 
 #include "portable-file-dialogs.h"
 
-using namespace pixelarium::render;
-void IPixelariumImageView::ImageViewMenuBar()
+auto pixelarium::application::IPixelariumImageView::ImageViewMenuBar() -> void
 {
     if (ImGui::BeginMenuBar())
     {

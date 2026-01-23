@@ -6,7 +6,7 @@
 #include "imaging/IPixelariumImage.hpp"
 #include "imgui.h"
 
-void pixelarium::render::PixelariumImageViewDefault::RefreshCachedImage()
+void pixelarium::application::PixelariumImageViewDefault::RefreshCachedImage()
 {
     if (this->cached_image_.empty() || this->is_dirty_)
     {
@@ -20,7 +20,7 @@ void pixelarium::render::PixelariumImageViewDefault::RefreshCachedImage()
 /// If the image is null, empty, or has an empty name, the function returns immediately.  Otherwise, it creates an ImGui
 /// window with a horizontal scrollbar and menu bar. The image is rendered using the CvMatRender object, resizing it to
 /// fit the available window space.  The raw and rendered dimensions are displayed below the image.
-void pixelarium::render::PixelariumImageViewDefault::ShowImage()
+void pixelarium::application::PixelariumImageViewDefault::ShowImage()
 {
     RefreshCachedImage();
 

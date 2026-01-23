@@ -6,17 +6,16 @@
 #include "imaging/IPixelariumImage.hpp"
 #include "imgui.h"
 #include "libCZI_DimCoordinate.h"
-#include "rendering/CvMatRender.hpp"
-#include "rendering/IPixelariumImageView.hpp"
+#include "CvMatRender.hpp"
+#include "IPixelariumImageView.hpp"
 #include "utilities/ILog.hpp"
 
-namespace pixelarium::render
+namespace pixelarium::application
 {
 /// @brief A CZI-specific implementation of IPixelariumImageView.
 class PixelariumImageViewCzi : public IPixelariumImageView
 {
     using Image = imaging::IPixelariumImageCvMat;
-    using Render = render::CvMatRender;
     using Log = utils::log::ILog;
 
    public:

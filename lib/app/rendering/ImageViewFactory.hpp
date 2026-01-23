@@ -1,9 +1,10 @@
 #pragma once
 
-#include "rendering/IPixelariumImageView.hpp"
+#include "IPixelariumImageView.hpp"
 #include "resources/resource.hpp"
 #include "utilities/ILog.hpp"
-namespace pixelarium::render
+
+namespace pixelarium::application
 {
 /// @brief Factory for instantiating matching views to different implementations of IPixelariumImage.
 class ImageViewFactory
@@ -21,4 +22,4 @@ class ImageViewFactory
     Pool& image_pool_;
     const Log& log_;
 };
-}  // namespace pixelarium::render
+}  // namespace pixelarium::application

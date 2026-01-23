@@ -7,9 +7,9 @@
 #include "imaging/IPixelariumImage.hpp"
 #include "imaging/impl/PixelariumCzi.hpp"
 #include "imgui.h"
-#include "rendering/CvMatRender.hpp"
+#include "CvMatRender.hpp"
 
-void pixelarium::render::PixelariumImageViewCzi::RefreshCachedImage()
+void pixelarium::application::PixelariumImageViewCzi::RefreshCachedImage()
 {
     if (this->cached_image_.empty() || this->is_dirty_)
     {
@@ -25,7 +25,7 @@ void pixelarium::render::PixelariumImageViewCzi::RefreshCachedImage()
     }
 }
 
-pixelarium::render::PixelariumImageViewCzi::PixelariumImageViewCzi(std::shared_ptr<Image> img, const Log& log)
+pixelarium::application::PixelariumImageViewCzi::PixelariumImageViewCzi(std::shared_ptr<Image> img, const Log& log)
     : log_(log), render_(std::make_unique<CvMatRender>(*img->TryGetImage()))
 {
     img_ = img;
@@ -48,7 +48,7 @@ pixelarium::render::PixelariumImageViewCzi::PixelariumImageViewCzi(std::shared_p
 /// If the image is null, empty, or has an empty name, the function returns immediately.  Otherwise, it creates an ImGui
 /// window with a horizontal scrollbar and menu bar. The image is rendered using the CvMatRender object, resizing it to
 /// fit the available window space.  The raw and rendered dimensions are displayed below the image.
-void pixelarium::render::PixelariumImageViewCzi::ShowImage()
+void pixelarium::application::PixelariumImageViewCzi::ShowImage()
 {
     auto czi_img = std::static_pointer_cast<imaging::PixelariumCzi>(this->img_);
 

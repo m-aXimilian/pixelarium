@@ -9,7 +9,7 @@ using namespace pixelarium::imaging;
 
 /// @brief Constructor for the CvMatRender class.
 /// @param img A shared pointer to the PixelariumImage to be rendered.
-pixelarium::render::CvMatRender::CvMatRender(const cv::Mat& img) : base_(img), texture_(0)
+pixelarium::application::CvMatRender::CvMatRender(const cv::Mat& img) : base_(img), texture_(0)
 {
     // storing a copy of the to-be-rendered image
     // because it will be resized and filtered eventually which we absolutely
@@ -20,7 +20,7 @@ pixelarium::render::CvMatRender::CvMatRender(const cv::Mat& img) : base_(img), t
 
 /// @brief Destructor for the CvMatRender class.
 /// Deallocates the OpenGL texture if it exists.
-pixelarium::render::CvMatRender::~CvMatRender()
+pixelarium::application::CvMatRender::~CvMatRender()
 {
     if (texture_)
     {
@@ -32,7 +32,7 @@ pixelarium::render::CvMatRender::~CvMatRender()
 /// @brief Uploads the current image data to an OpenGL texture.
 /// @return The ID of the uploaded OpenGL texture.
 /// @throws std::runtime_error if the image data is empty or if there is an OpenGL error.
-GLuint pixelarium::render::CvMatRender::uploadTexture()
+GLuint pixelarium::application::CvMatRender::uploadTexture()
 {
     if (img_.empty())
     {
@@ -89,12 +89,12 @@ GLuint pixelarium::render::CvMatRender::uploadTexture()
 
 /// @brief Renders the image by uploading it as a texture.
 /// @return The ID of the OpenGL texture.
-GLuint pixelarium::render::CvMatRender::Render() { return this->uploadTexture(); }
+GLuint pixelarium::application::CvMatRender::Render() { return this->uploadTexture(); }
 
 /// @brief Renders the image with a specified scaling factor.
 /// @param factor The scaling factor for resizing the image.
 /// @return The ID of the OpenGL texture.
-GLuint pixelarium::render::CvMatRender::Render(float factor)
+GLuint pixelarium::application::CvMatRender::Render(float factor)
 {
     cv::resize(this->base_, this->img_, cv::Size(0, 0), factor, factor, cv::INTER_LINEAR_EXACT);
 
@@ -105,7 +105,7 @@ GLuint pixelarium::render::CvMatRender::Render(float factor)
 /// @param width The maximum width of the rendered image.
 /// @param height The maximum height of the rendered image.
 /// @return The ID of the OpenGL texture.
-GLuint pixelarium::render::CvMatRender::Render(size_t width, size_t height)
+GLuint pixelarium::application::CvMatRender::Render(size_t width, size_t height)
 {
     const auto sz{this->base_.size()};
 
@@ -116,7 +116,7 @@ GLuint pixelarium::render::CvMatRender::Render(size_t width, size_t height)
     return this->Render(factor);
 }
 
-void pixelarium::render::CvMatRender::ResetRenderImage()
+void pixelarium::application::CvMatRender::ResetRenderImage()
 {
     // we copy here
     this->img_ = this->base_.clone();

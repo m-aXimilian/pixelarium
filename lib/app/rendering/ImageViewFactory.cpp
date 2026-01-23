@@ -3,17 +3,17 @@
 #include <format>
 #include <memory>
 
+#include "IPixelariumImageView.hpp"
+#include "PixelariumImageViewCzi.hpp"
+#include "PixelariumImageViewDefault.hpp"
 #include "imaging/IPixelariumImage.hpp"
 #include "imaging/PixelariumImageFactory.hpp"
-#include "rendering/IPixelariumImageView.hpp"
-#include "rendering/PixelariumImageViewCzi.hpp"
-#include "rendering/PixelariumImageViewDefault.hpp"
 
 /// @brief Creates a PixelariumImageView from a resource image.
 /// @param image_id The ID of the image resource to render.
 /// @return A unique pointer to the PixelariumImageView, or nullptr if the image resource is not found or is empty.  The
 /// image data is copied.
-std::unique_ptr<pixelarium::render::IPixelariumImageView> pixelarium::render::ImageViewFactory::RenderImage(
+std::unique_ptr<pixelarium::application::IPixelariumImageView> pixelarium::application::ImageViewFactory::RenderImage(
     resources::ResourceKey image_id)
 {
     using ImageType = imaging::ImageFileType;

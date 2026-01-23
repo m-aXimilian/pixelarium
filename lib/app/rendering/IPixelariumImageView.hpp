@@ -5,7 +5,7 @@
 #include "imaging/IPixelariumImage.hpp"
 #include "imgui.h"
 
-namespace pixelarium::render
+namespace pixelarium::application
 {
 /// @brief An interface defining the contract on views to dedicated implementations of IPixelariumImage
 class IPixelariumImageView

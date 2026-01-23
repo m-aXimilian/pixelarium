@@ -74,7 +74,7 @@ void PixelariumImageGallery::RenderGallery()
 void PixelariumImageGallery::RenderImages()
 {
     this->render_manager_->Enumerate(
-        [&](resources::ResourceKey key, render::RenderImageStateWrapper& render_state)
+        [&](resources::ResourceKey key, application::RenderImageStateWrapper& render_state)
         {
             render_state.view->ShowImage();
 

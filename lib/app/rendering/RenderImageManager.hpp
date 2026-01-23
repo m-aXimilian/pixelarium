@@ -5,13 +5,13 @@
 #include <unordered_set>
 
 #include "ImageViewFactory.hpp"
-#include "rendering/IPixelariumImageView.hpp"
+#include "IPixelariumImageView.hpp"
 #include "resources/resource.hpp"
 #include "utilities/ILog.hpp"
 
 // This is intended as an additional abstraction
 // aggregating views that should be rendered (or not)
-namespace pixelarium::render
+namespace pixelarium::application
 {
 /// @brief Instead of directly using the view, we
 /// proxy it through a wrapper. This allows for arbitrary additional data

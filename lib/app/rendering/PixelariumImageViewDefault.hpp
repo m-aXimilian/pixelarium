@@ -4,17 +4,16 @@
 
 #include "imaging/IPixelariumImage.hpp"
 #include "imgui.h"
-#include "rendering/CvMatRender.hpp"
-#include "rendering/IPixelariumImageView.hpp"
+#include "CvMatRender.hpp"
+#include "IPixelariumImageView.hpp"
 
-namespace pixelarium::render
+namespace pixelarium::application
 {
 /// @brief A default implementation of IPixelariumImageView.
 /// This is sufficient for single dimension images like png or jpg.
 class PixelariumImageViewDefault : public IPixelariumImageView
 {
     using Image = imaging::IPixelariumImageCvMat;
-    using Render = render::CvMatRender;
 
    public:
     explicit PixelariumImageViewDefault(std::shared_ptr<Image> img) : render_(*img->TryGetImage())
