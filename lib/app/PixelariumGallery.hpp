@@ -3,13 +3,14 @@
 #include "rendering/RenderImageManager.hpp"
 #include "resources/resource.hpp"
 #include "utilities/ILog.hpp"
+
 namespace pixelarium::application
 {
 
 /// @brief Defines a concept for a gallery type
 /// @tparam P  The resource pool type of the gallery concept
-template <typename P>
-concept GalleryT = requires(P& p) { static_cast<resources::IResourcePool<P>&>(p); };
+template <typename P, class D>
+concept GalleryT = requires(P& p) { static_cast<resources::IResourcePool<P, D>&>(p); };
 
 /// @brief Interface for a Pixelarium gallery.
 ///
@@ -33,7 +34,7 @@ class PixelariumImageGallery : IPixelariumGallery<resources::ImageResourcePool>
 
    public:
     PixelariumImageGallery(const Log& log, resources::ImageResourcePool& pool)
-        : pool_{pool}, log_{log}, render_manager_(std::make_unique<render::RenderImageManager>(pool, log))
+        : pool_{pool}, log_{log}, render_manager_(std::make_unique<application::RenderImageManager>(pool, log))
     {
     }
 
@@ -49,7 +50,7 @@ class PixelariumImageGallery : IPixelariumGallery<resources::ImageResourcePool>
     std::function<void()> load_image_{};
     Pool& pool_;
     const Log& log_;
-    std::unique_ptr<render::RenderImageManager> render_manager_;
+    std::unique_ptr<application::RenderImageManager> render_manager_;
     bool image_listp_{true};
     bool auto_show_selectd_image_{true};
     size_t selected_image_{0};

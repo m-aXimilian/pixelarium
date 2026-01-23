@@ -2,9 +2,8 @@
 
 #include <GLFW/glfw3.h>
 
-#include <memory>
+#include <format>
 
-#include "imgui.h"
 #include "utilities/ILog.hpp"
 
 namespace pixelarium::application
@@ -18,6 +17,21 @@ class AppGLFW
 
     /// @brief Start the main render loop
     void Start() { this->RunLoop(); }
+
+    void SetStatusTimed(const std::string& status, size_t second);
+
+    void SetStatus(const std::string& status)
+    {
+        logger_.Info(std::format("{}(): {}", __PRETTY_FUNCTION__, status));
+        status_message_ = status;
+        show_status_ = true;
+    }
+
+    void ResetStatus()
+    {
+        status_message_.clear();
+        show_status_ = false;
+    }
 
    protected:
     /// @brief Function implementing the first column of the menu bar (e.g. "Menu")
@@ -47,5 +61,7 @@ class AppGLFW
     void LogLevelSelect();
     int log_level_{0};
     GLFWwindow* window = nullptr;
+    bool show_status_{false};
+    std::string status_message_{};
 };
 }  // namespace pixelarium::application

@@ -19,7 +19,7 @@ class DefaultApp : public AppGLFW
     DefaultApp(const utils::log::ILog& log, pixelarium::resources::ImageResourcePool& pool)
         : application::AppGLFW(log), pool_(pool), gallery_(log, pool)
     {
-        gallery_.SetLoadFunction([&]() -> void { this->LoadImage(); });
+        gallery_.SetLoadFunction([&]() -> void { this->LoadImageDialogue(); });
     }
 
    protected:
@@ -32,7 +32,7 @@ class DefaultApp : public AppGLFW
     application::PixelariumImageGallery gallery_;
 
    protected:
-    void LoadImage();
+    void LoadImageDialogue();
 
    private:
     bool image_listp_{true};

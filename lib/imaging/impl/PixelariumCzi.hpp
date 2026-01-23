@@ -18,7 +18,7 @@ struct CziParams : public IImageQuery
 };
 
 /// @brief Implements support for .czi-images in the realm of IPixelariumImage
-class PixelariumCzi : public IPixelariumImage
+class PixelariumCzi : public IPixelariumImageCvMat
 {
     using Log = pixelarium::utils::log::ILog;
 
@@ -31,16 +31,17 @@ class PixelariumCzi : public IPixelariumImage
 
     // IPixelariumImage member implementations
    public:
-    std::unique_ptr<cv::Mat> TryGetImage() override;
+    std::optional<cv::Mat> TryGetImage() override;
 
-    std::unique_ptr<cv::Mat> TryGetImage(const IImageQuery&) override;
+    std::optional<cv::Mat> TryGetImage(const IImageQuery&) override;
 
-    std::vector<std::unique_ptr<cv::Mat>> TryGetImages(const IImageQuery&) override
+    std::vector<std::optional<cv::Mat>> TryGetImages(const IImageQuery&) override
     {
         // ToDo: proper error
         throw std::runtime_error("Not implemented.");
     }
 
+   public:
     bool Empty() const noexcept override { return this->is_empty_; }
 
     const libCZI::SubBlockStatistics& GetStatistics() const { return this->image_statistics_; }
@@ -49,7 +50,7 @@ class PixelariumCzi : public IPixelariumImage
     const static ImageFileType type_{ImageFileType::kCzi};
 
    private:
-    std::unique_ptr<cv::Mat> SubblockToCvMat(int index);
+    std::optional<cv::Mat> SubblockToCvMat(int index);
 
    private:
     // this should be set by each image getter

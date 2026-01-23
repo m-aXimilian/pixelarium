@@ -12,7 +12,7 @@ pixelarium::imaging::PixelariumMem::PixelariumMem(const cv::Mat& img, const std:
     this->uri_ = std::filesystem::path();
 }
 
-std::unique_ptr<cv::Mat> pixelarium::imaging::PixelariumMem::TryGetImage()
+std::optional<cv::Mat> pixelarium::imaging::PixelariumMem::TryGetImage()
 {
     // ToDo: this craving for a revision of the whole concept:
     // the interface requires a unique_ptr here. This concept was designed to "create an in-memory image on demand" sort
@@ -22,5 +22,5 @@ std::unique_ptr<cv::Mat> pixelarium::imaging::PixelariumMem::TryGetImage()
     // So, returning a unique_ptr from it in the following semantic essentially calls the
     // copy constructor of cv::Mat. This is potentially not "super bad", but at least it requires attention at some
     // point.
-    return std::make_unique<cv::Mat>(this->img_);
+    return this->img_;
 }

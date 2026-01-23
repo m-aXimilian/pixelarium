@@ -7,7 +7,6 @@ add_executable(${SIMPLE_NAME} ${SRC})
 
 target_link_libraries(${SIMPLE_NAME}
   PRIVATE pixelariumimagelib
-  PRIVATE pixelariumrenderlib
   PRIVATE pixelariumutilslib
   PRIVATE pixelariumresourcelib
   PRIVATE pixelariumapplicationlib)

@@ -7,6 +7,7 @@ message(STATUS "OpenCV_LIBs from: " ${OpenCV_LIBS})
 
 set(IMAGELIBSRC
   IPixelariumImage.hpp
+  IPixelariumImage.cpp
   PixelariumImageFactory.hpp
   PixelariumImageFactory.cpp
   impl/PixelariumJpg.hpp

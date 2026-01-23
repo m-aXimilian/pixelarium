@@ -3,19 +3,19 @@
 #include <memory>
 #include <unordered_map>
 
+#include "CvMatRender.hpp"
+#include "IPixelariumImageView.hpp"
+#include "imaging/IPixelariumImage.hpp"
 #include "imgui.h"
 #include "libCZI_DimCoordinate.h"
-#include "rendering/CvMatRender.hpp"
-#include "rendering/IPixelariumImageView.hpp"
 #include "utilities/ILog.hpp"
 
-namespace pixelarium::render
+namespace pixelarium::application
 {
 /// @brief A CZI-specific implementation of IPixelariumImageView.
 class PixelariumImageViewCzi : public IPixelariumImageView
 {
-    using Image = imaging::IPixelariumImage;
-    using Render = render::CvMatRender;
+    using Image = imaging::IPixelariumImageCvMat;
     using Log = utils::log::ILog;
 
    public:
@@ -34,5 +34,8 @@ class PixelariumImageViewCzi : public IPixelariumImageView
     const Log& log_;
     std::unordered_map<libCZI::DimensionIndex, int> dimension_map_;
     std::unique_ptr<CvMatRender> render_;
+
+   private:
+    void RefreshCachedImage();
 };
-}  // namespace pixelarium::render
+}  // namespace pixelarium::application
