@@ -4,8 +4,8 @@ set(UTILSLIBSRC
   ILog.hpp
   SpdLogger.hpp
   SpdLogger.cpp
-  thread_pool.hpp
-  thread_pool.cpp)
+  simple_thread_pool.hpp
+  simple_thread_pool.cpp)
 
 add_library(${UTILSLIBNAME} STATIC ${UTILSLIBSRC})
 

@@ -9,22 +9,22 @@
 
 namespace pixelarium::utils
 {
-class thread_pool
+class simple_thread_pool
 {
    public:
-    explicit thread_pool(size_t);
-    thread_pool(thread_pool&) = delete;
-    thread_pool(const thread_pool&) = delete;
-    thread_pool(thread_pool&&) = delete;
-    thread_pool& operator=(thread_pool&) = delete;
-    thread_pool& operator=(thread_pool&&) = delete;
-    ~thread_pool();
+    explicit simple_thread_pool(size_t);
+    simple_thread_pool(simple_thread_pool&) = delete;
+    simple_thread_pool(const simple_thread_pool&) = delete;
+    simple_thread_pool(simple_thread_pool&&) = delete;
+    simple_thread_pool& operator=(simple_thread_pool&) = delete;
+    simple_thread_pool& operator=(simple_thread_pool&&) = delete;
+    ~simple_thread_pool();
 
     template <typename Callable>
         requires std::invocable<Callable>
     static auto run_asynch(Callable&& fun) -> void
     {
-        thread_pool::Global().enqueue(std::forward<Callable>(fun));
+        simple_thread_pool::Global().enqueue(std::forward<Callable>(fun));
     }
 
    public:
@@ -41,10 +41,10 @@ class thread_pool
     }
 
    private:
-    static auto Global() -> thread_pool&
+    static auto Global() -> simple_thread_pool&
     {
         const auto kThreadCount{std::thread::hardware_concurrency() * 2};
-        static thread_pool global_instance(kThreadCount == 0 ? 5 : kThreadCount);
+        static simple_thread_pool global_instance(kThreadCount == 0 ? 5 : kThreadCount);
         return global_instance;
     }
     std::vector<std::thread> workers_;

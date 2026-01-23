@@ -1,10 +1,10 @@
-#include "thread_pool.hpp"
+#include "simple_thread_pool.hpp"
 #include <functional>
 #include <mutex>
 
 using namespace pixelarium::utils;
 
-thread_pool::thread_pool(size_t num_threads)
+simple_thread_pool::simple_thread_pool(size_t num_threads)
 {
     for (size_t i {0}; i < num_threads; ++i)
     {
@@ -30,7 +30,7 @@ thread_pool::thread_pool(size_t num_threads)
     }
 }
 
-thread_pool::~thread_pool()
+simple_thread_pool::~simple_thread_pool()
 {
     {
         std::unique_lock<std::mutex> lck(thread_mutex_);
