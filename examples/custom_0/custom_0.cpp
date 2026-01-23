@@ -109,7 +109,15 @@ class BinarayReader
         if (!filesystem::exists(file)) return {};
 
         auto sz = filesystem::file_size(file);
-        constexpr auto header_size{sizeof(ParsedImage) - sizeof(void*)};
+        // header layout of binary file
+        // | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 |
+        // | ^ | ^ |     ^ |   ^   |        pixel count in byte        |
+        //   |   |______ |__   |
+        // pixel depth |   |  height in px
+        //             |  width in px
+        //       channel count
+        constexpr auto header_size{14};
+
         bool can_read = sz >= header_size;
 
         if (!can_read) return {};
