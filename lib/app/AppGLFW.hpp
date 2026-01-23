@@ -3,7 +3,6 @@
 #include <GLFW/glfw3.h>
 
 #include <format>
-#include <memory>
 
 #include "utilities/ILog.hpp"
 
@@ -19,9 +18,11 @@ class AppGLFW
     /// @brief Start the main render loop
     void Start() { this->RunLoop(); }
 
+    void SetStatusTimed(const std::string& status, size_t second);
+
     void SetStatus(const std::string& status)
     {
-        logger_.Info(std::format("{}: {}", __PRETTY_FUNCTION__, status));
+        logger_.Info(std::format("{}(): {}", __PRETTY_FUNCTION__, status));
         status_message_ = status;
         show_status_ = true;
     }

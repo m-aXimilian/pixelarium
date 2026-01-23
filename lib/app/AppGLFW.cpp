@@ -5,6 +5,7 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "imgui_internal.h"
+#include "utilities/thread_pool.hpp"
 
 // see https://github.com/ocornut/imgui/issues/3518
 bool PixelBeginStatusBar()
@@ -273,4 +274,14 @@ void pixelarium::application::AppGLFW::LogLevelSelect()
         }
         ImGui::EndCombo();
     }
+}
+
+
+void pixelarium::application::AppGLFW::SetStatusTimed(const std::string& status, size_t seconds)
+{
+    SetStatus(status);
+    utils::thread_pool::run_asynch([this, seconds]() {
+        std::this_thread::sleep_for(std::chrono::seconds(seconds));
+        ResetStatus();
+    });
 }
