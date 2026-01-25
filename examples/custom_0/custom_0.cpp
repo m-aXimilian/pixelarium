@@ -10,6 +10,7 @@
 #include "DefaultApp.hpp"
 #include "imgui.h"
 #include "impl/PixelariumMem.hpp"
+#include "implot.h"
 #include "portable-file-dialogs.h"
 #include "resources/resource.hpp"
 #include "utilities/ILog.hpp"
@@ -187,13 +188,15 @@ class MyApp : public application::DefaultApp
 {
    private:
     BinaryReader bin_read;
+    bool plot_demop_{false};
 
    public:
     MyApp(const Log& log, Pool& pool) : application::DefaultApp(log, pool) {}
+    ~MyApp() {}
 
     // override some of the defaults member functions
     void Run() override;
-    void MenuBarOptionsColumn1() override {};
+    void MenuBarOptionsColumn1() override;
     void MenuBarOptionsColumn2() override {};
 };
 
@@ -216,4 +219,11 @@ void MyApp::Run()
         StatusReport{.report_status = [this](const std::string& msg) { this->SetStatusTimed(msg, 5); },
                      .reset_status = [this]() { this->ResetStatus(); }};
     bin_read.Present(reporter);
+
+    if (plot_demop_)
+    {
+        ImPlot::ShowDemoWindow(&plot_demop_);
+    }
 }
+
+void MyApp::MenuBarOptionsColumn1() { ImGui::MenuItem("Show Plotdemos", NULL, &this->plot_demop_); }

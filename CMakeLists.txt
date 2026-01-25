@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.23)
 
 project(pixelarium VERSION 0.0.11)
 
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
@@ -28,7 +30,7 @@ option(PIXELARIUM_BUILD_EXAMPLES  "Build example projects"                    ON
 string(TOUPPER "${CMAKE_PROJECT_NAME}" PIXELARIUM_TITLE)
 
 if(PIXELARIUM_BUILD_DOCS OR PIXELARIUM_BUILD_DOCS_ONLY)
-  include(${PROJECT_SOURCE_DIR}/cmake/awesomeDoxygen.cmake)
+  include(awesomeDoxygen)
   set(MAINPAGE_FILE "doc/index.md")
   find_package(Doxygen)
   if (DOXYGEN_FOUND)

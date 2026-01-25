@@ -3,22 +3,30 @@
 #include <opencv2/imgcodecs.hpp>
 
 #include "app_resources_default.h"
+#include "imgui.h"
 #include "portable-file-dialogs.h"
 
 auto pixelarium::application::IPixelariumImageView::ImageViewMenuBar() -> void
 {
     if (ImGui::BeginMenuBar())
     {
-        if (ImGui::MenuItem(SAVEAS))
+        if (ImGui::BeginMenu("File"))
         {
-            auto dest = pfd::save_file("Save File", ".", {"Image Files", "*.png *.jpg *.jpeg *.tiff"},
-                                       pfd::opt::force_overwrite)
-                            .result();
-            if (!dest.empty())
+            if (ImGui::MenuItem(SAVEAS))
             {
-                // this->img_->SaveImage(dest);
-                cv::imwrite(dest, cached_image_);
+                auto dest = pfd::save_file("Save File", ".", {"Image Files", "*.png *.jpg *.jpeg *.tiff"},
+                                           pfd::opt::force_overwrite)
+                                .result();
+                if (!dest.empty())
+                {
+                    // this->img_->SaveImage(dest);
+                    cv::imwrite(dest, cached_image_);
+                }
             }
+
+            ImageViewMenuBarAdditions();
+
+            ImGui::EndMenu();
         }
 
         ImGui::EndMenuBar();

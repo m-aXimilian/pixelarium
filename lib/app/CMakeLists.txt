@@ -1,5 +1,26 @@
+# Fetch implot
+include(implot)
+message(STATUS "IMPLOT sources at ${IMPLOT_DIR}")
+
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/app_resources_default.h.in
   ${CMAKE_BINARY_DIR}/app_resources_default.h @ONLY)
+
+set(IMPLOTSRC
+  "${IMPLOT_DIR}/implot.h"
+  "${IMPLOT_DIR}/implot_internal.h"
+  "${IMPLOT_DIR}/implot_items.cpp"
+  "${IMPLOT_DIR}/implot.cpp"
+  "${IMPLOT_DIR}/implot_demo.cpp"
+)
+
+set(IMGUISRC
+  "${imgui_DIR}/imgui.cpp"
+  "${imgui_DIR}/imgui_demo.cpp"
+  "${imgui_DIR}/imgui_draw.cpp"
+  "${imgui_DIR}/imgui_tables.cpp"
+  "${imgui_DIR}/imgui_widgets.cpp"
+  "${imgui_DIR}/backends/imgui_impl_opengl3.cpp"
+  "${imgui_DIR}/backends/imgui_impl_glfw.cpp")
 
 set(APPLIBSRC
   AppGLFW.hpp
@@ -7,14 +28,7 @@ set(APPLIBSRC
   DefaultApp.hpp
   DefaultApp.cpp
   PixelariumGallery.hpp
-  PixelariumGallery.cpp
-  ${imgui_DIR}/imgui.cpp
-  ${imgui_DIR}/imgui_demo.cpp
-  ${imgui_DIR}/imgui_draw.cpp
-  ${imgui_DIR}/imgui_tables.cpp
-  ${imgui_DIR}/imgui_widgets.cpp
-  ${imgui_DIR}/backends/imgui_impl_opengl3.cpp
-  ${imgui_DIR}/backends/imgui_impl_glfw.cpp)
+  PixelariumGallery.cpp)
 
 set(RENDERSRC
   rendering/RenderHelpers.hpp
@@ -35,7 +49,7 @@ set(RENDERSRC
 set(APPLIBNAME pixelariumapplicationlib)
 
 add_library(${APPLIBNAME}
-  STATIC ${APPLIBSRC} ${RENDERSRC})
+  STATIC ${APPLIBSRC} ${IMGUISRC} ${IMPLOTSRC} ${RENDERSRC})
 
 target_link_libraries(${APPLIBNAME}
   PRIVATE pixelariumutilslib
@@ -65,4 +79,5 @@ target_include_directories(${APPLIBNAME}
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/rendering
   PUBLIC ${pfd_DIR}
   PUBLIC ${imgui_DIR}
-  PUBLIC ${imgui_DIR}/backends)
+  PUBLIC ${imgui_DIR}/backends
+  ${IMPLOT_DIR})

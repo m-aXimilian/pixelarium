@@ -214,20 +214,7 @@ void pixelarium::application::AppGLFW::MenuBar()
         // main menu
         if (ImGui::BeginMenu(MAINMENUNAME))
         {
-            if (ImGui::BeginCombo(LOGLEVELSELECT, LOGLEVELS[log_level_].data()))
-            {
-                for (int n = 0; n < static_cast<int>(LOGLEVELS.size()); n++)
-                {
-                    bool is_selected = (LOGLEVELS[log_level_] == LOGLEVELS[n]);
-                    if (ImGui::Selectable(LOGLEVELS[n].data(), is_selected))
-                    {
-                        log_level_ = n;
-                        this->logger_.ChangeLevel(static_cast<utils::log::LogLevel>(1 << log_level_));
-                    }
-                    if (is_selected) ImGui::SetItemDefaultFocus();
-                }
-                ImGui::EndCombo();
-            }
+            LogLevelSelect();
 
             // consumer main menu bar entries
             this->MenuBarOptionsColumn1();

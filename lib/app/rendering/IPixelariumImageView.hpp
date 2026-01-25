@@ -29,6 +29,7 @@ class IPixelariumImageView
 
    protected:
     virtual void ImageViewMenuBar();
+    virtual void ImageViewMenuBarAdditions() {};
 
    protected:
     std::shared_ptr<imaging::IPixelariumImageCvMat> img_{};
