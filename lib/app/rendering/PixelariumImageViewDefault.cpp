@@ -1,9 +1,13 @@
 #include "PixelariumImageViewDefault.hpp"
 
+#include <opencv2/core/hal/interface.h>
+
 #include <cstdio>
 #include <format>
+#include <iostream>
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
+#include <ostream>
 #include <print>
 #include <ranges>
 
@@ -81,15 +85,25 @@ void pixelarium::application::PixelariumImageViewDefault::ShowImage()
         if (ImPlot::BeginPlot("Histogram"))
         {
             ImPlot::SetupAxes(nullptr, nullptr, ImPlotAxisFlags_AutoFit, ImPlotAxisFlags_AutoFit);
+            constexpr std::array<const char*, 3> names = {"Blue", "Green", "Red"};
             std::string name{"ab"};
-            for (auto& e : hist_planes_)
+            // for (auto& e : hist_planes_)
+            // {
+            //     ImPlot::PlotHistogram(name.c_str(), e.data, e.rows * e.cols, 16);
+            //     for (auto& e : name)
+            //     {
+            //         e++;
+            //     }
+            // }
+            for (auto i{0}; i < hist_planes_.size(); ++i)
             {
-                ImPlot::PlotHistogram(name.c_str(), e.data, e.rows * e.cols, 16);
-                for (auto& e : name)
+                if (hist_planes_.at(i).type() == CV_32F)
                 {
-                    e++;
+                    ImPlot::PlotHistogram(names.at(i % 3), reinterpret_cast<float*>(hist_planes_[i].data),
+                                          hist_planes_[i].rows * hist_planes_[i].cols, 16);
                 }
             }
+
             ImPlot::PushStyleVar(ImPlotStyleVar_FillAlpha, 0.25f);
             ImPlot::SetNextMarkerStyle(ImPlotMarker_Square, 6, ImPlot::GetColormapColor(1), IMPLOT_AUTO,
                                        ImPlot::GetColormapColor(1));
@@ -118,7 +132,8 @@ auto pixelarium::application::PixelariumImageViewDefault::GenerateHistogram() ->
         cv::calcHist(&bgr, 1, 0, cv::Mat(), hist, 1, &histSize, histRange, true, false);
     }
 
-    std::print("Planes: {}, Hists: {}", bgr_planes_.size(), hist_planes_.size());
+    std::print("Planes: {}, Hists: {} ({})\n", bgr_planes_.size(), hist_planes_.size(), hist_planes_.at(0).type());
+    std::flush(std::cout);
 
     hist_available_ = true;
 }

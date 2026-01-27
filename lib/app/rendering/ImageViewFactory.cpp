@@ -48,11 +48,26 @@ std::unique_ptr<pixelarium::application::IPixelariumImageView> pixelarium::appli
         case ImageType::kMemory:
             log_.Info(std::format("{}: Creating a Default View", __PRETTY_FUNCTION__));
             // beware: here we copy the actual image resource over to the new image
-            return std::make_unique<PixelariumImageViewDefault>(img);
+            try
+            {
+                auto view{std::make_unique<PixelariumImageViewDefault>(img)};
+                return view;
+            }
+            catch (const std::exception& ex)
+            {
+                log_.Error(std::format("{}: Creating view failed: {}", __PRETTY_FUNCTION__, ex.what()));
+            }
         case ImageType::kCzi:
             log_.Info(std::format("{}: Creating a CZI View", __PRETTY_FUNCTION__));
-            // beware: here we copy the actual image resource over to the new image
-            return std::make_unique<PixelariumImageViewCzi>(img, log_);
+            try
+            {
+                auto view{std::make_unique<PixelariumImageViewCzi>(img, log_)};
+                return view;
+            }
+            catch (const std::exception& ex)
+            {
+                log_.Error(std::format("{}: Creating view failed: {}", __PRETTY_FUNCTION__, ex.what()));
+            }
         default:
             return {};
     }

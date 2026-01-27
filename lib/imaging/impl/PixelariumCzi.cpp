@@ -96,7 +96,8 @@ std::optional<cv::Mat> CZISubBlockToCvMat(std::shared_ptr<libCZI::IBitmapData> b
             break;
     }
 
-    if (pixel_size < 0) return std::nullopt;
+    // ToDo(MAK): fix this makeshift pixel-type-catch
+    if (pixel_size < 0 || pixel_size > 4) return std::nullopt;
 
     log.Info(std::format("{}: source pixel type {}, target cv pixel type {}, pixel size {}", __PRETTY_FUNCTION__,
                          pixel_pair.first, pixel_pair.second, pixel_size));

@@ -68,6 +68,7 @@ class RenderImageManager
     std::unique_ptr<ImageViewFactory> view_factory_;
     std::mutex mut_;
     std::unordered_set<resources::ResourceKey> keys_to_delete_;
+    std::unordered_set<resources::ResourceKey> failed_keys_cache_;
 
     const utils::log::ILog& log_;
 };

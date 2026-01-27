@@ -2,6 +2,7 @@
 
 #include <format>
 #include <memory>
+#include <stdexcept>
 
 #include "CvMatRender.hpp"
 #include "RenderHelpers.hpp"
@@ -26,7 +27,7 @@ void pixelarium::application::PixelariumImageViewCzi::RefreshCachedImage()
 }
 
 pixelarium::application::PixelariumImageViewCzi::PixelariumImageViewCzi(std::shared_ptr<Image> img, const Log& log)
-    : log_(log), render_(std::make_unique<CvMatRender>(*img->TryGetImage()))
+    : log_(log)
 {
     img_ = img;
     auto czi_img = std::static_pointer_cast<imaging::PixelariumCzi>(this->img_);
@@ -38,6 +39,18 @@ pixelarium::application::PixelariumImageViewCzi::PixelariumImageViewCzi(std::sha
             this->dimension_map_[dim] = start;
             return true;
         });
+
+    auto render_mat = img->TryGetImage();
+    if (render_mat.has_value())
+    {
+        this->render_ = std::make_unique<CvMatRender>(render_mat.value());
+    }
+    else
+    {
+        auto msg{std::format("{}: fetching image failed: {}", __PRETTY_FUNCTION__, img->Name())};
+        log_.Error(msg);
+        throw std::runtime_error(msg);
+    }
 
     // this->SetInitialSize();
     log_.Info(std::format("{}: dimension map size: {}", __PRETTY_FUNCTION__, dimension_map_.size()));

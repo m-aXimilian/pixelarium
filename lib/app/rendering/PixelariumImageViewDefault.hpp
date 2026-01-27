@@ -17,10 +17,7 @@ class PixelariumImageViewDefault : public IPixelariumImageView
     using Image = imaging::IPixelariumImageCvMat;
 
    public:
-    explicit PixelariumImageViewDefault(std::shared_ptr<Image> img) : render_(*img->TryGetImage())
-    {
-        img_ = img;
-    }
+    explicit PixelariumImageViewDefault(std::shared_ptr<Image> img) : render_(*img->TryGetImage()) { img_ = img; }
 
     PixelariumImageViewDefault() = delete;
     PixelariumImageViewDefault(PixelariumImageViewDefault&) = delete;

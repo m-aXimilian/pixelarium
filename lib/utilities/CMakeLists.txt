@@ -4,6 +4,8 @@ set(UTILSLIBSRC
   ILog.hpp
   SpdLogger.hpp
   SpdLogger.cpp
+  PixelariumLogger.hpp
+  PixelariumLogger.cpp
   simple_thread_pool.hpp
   simple_thread_pool.cpp)
 
