@@ -1,7 +1,8 @@
 include(FetchContent)
 FetchContent_Declare(
   implot
-  URL https://github.com/epezent/implot/archive/refs/tags/v0.17.zip)
+  URL https://github.com/epezent/implot/archive/refs/tags/v0.17.zip
+  DOWNLOAD_EXTRACT_TIMESTAMP 1)
 
 FetchContent_MakeAvailable(implot)
 

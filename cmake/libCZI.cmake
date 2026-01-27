@@ -4,6 +4,7 @@ FetchContent_Declare(
   libCZI
   GIT_REPOSITORY https://github.com/ZEISS/libczi.git
   GIT_TAG        main
+  DOWNLOAD_EXTRACT_TIMESTAMP 1
 )
 
 if(NOT libCZI_POPULATED)

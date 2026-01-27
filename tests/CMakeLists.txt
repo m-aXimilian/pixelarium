@@ -1,4 +1,5 @@
-include(${PROJECT_SOURCE_DIR}/cmake/googletest.cmake)
+# this will trigger the FetchContent
+include(testgoogle)
 
 add_executable(libpixelarium_UnitTests
   lib/resources/test_resource.cpp)
