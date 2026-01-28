@@ -44,7 +44,11 @@ struct PixelariumLogger::LogStream
         }
     }
 
-    auto Stream() -> std::ofstream& { return this->out_stream_; }
+    LogStream& operator<<(const std::string& str)
+    {
+        this->out_stream_ << str;
+        return *this;
+    }
 
    private:
     std::ofstream out_stream_;
@@ -81,7 +85,6 @@ auto PixelariumLogger::Write(LogLevel lvl, const std::string& msg) const -> void
 
     {
         std::lock_guard<std::mutex> guard(mutex_);
-        std::println(log_stream_->Stream(), "[{}] [{}] [{}] {}", timestamp, name_, LogLevelToString(lvl), msg);
-        std::flush(log_stream_->Stream());
+        *log_stream_ << std::format( "[{}] [{}] [{}] {}\n", timestamp, name_, LogLevelToString(lvl), msg);
     }
 }
