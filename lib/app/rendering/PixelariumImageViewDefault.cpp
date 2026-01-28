@@ -8,7 +8,6 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 #include <ostream>
-#include <print>
 #include <ranges>
 
 #include "RenderHelpers.hpp"
@@ -95,7 +94,7 @@ void pixelarium::application::PixelariumImageViewDefault::ShowImage()
             //         e++;
             //     }
             // }
-            for (auto i{0}; i < hist_planes_.size(); ++i)
+            for (size_t i{0}; i < hist_planes_.size(); ++i)
             {
                 if (hist_planes_.at(i).type() == CV_32F)
                 {
@@ -131,9 +130,6 @@ auto pixelarium::application::PixelariumImageViewDefault::GenerateHistogram() ->
     {
         cv::calcHist(&bgr, 1, 0, cv::Mat(), hist, 1, &histSize, histRange, true, false);
     }
-
-    std::print("Planes: {}, Hists: {} ({})\n", bgr_planes_.size(), hist_planes_.size(), hist_planes_.at(0).type());
-    std::flush(std::cout);
 
     hist_available_ = true;
 }
