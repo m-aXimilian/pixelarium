@@ -44,12 +44,12 @@ class simple_thread_pool
     }
 
     [[nodiscard]]
-    constexpr decltype(auto) RunningTasks() const
+    decltype(auto) RunningTasks() const
     {
         return running_tasks_.load();
     }
 
-    constexpr decltype(auto) Joinable() const
+    decltype(auto) Joinable() const
     {
         std::unique_lock<std::mutex> lck(thread_mutex_);
 
@@ -57,12 +57,12 @@ class simple_thread_pool
     }
 
     [[nodiscard]]
-    static constexpr decltype(auto) GlobalRunningTasks()
+    static decltype(auto) GlobalRunningTasks()
     {
-        return Global().running_tasks_.load();
+        return Global().RunningTasks();
     }
 
-    static constexpr decltype(auto) GlobalJoinable() { return Global().Joinable(); }
+    static decltype(auto) GlobalJoinable() { return Global().Joinable(); }
 
    private:
     static auto Global() -> simple_thread_pool&
