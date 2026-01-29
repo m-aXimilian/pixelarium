@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include <chrono>
-#include <print>
 #include <thread>
 #include <vector>
 
