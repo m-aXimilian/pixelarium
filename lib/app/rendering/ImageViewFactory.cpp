@@ -6,8 +6,8 @@
 #include "IPixelariumImageView.hpp"
 #include "PixelariumImageViewCzi.hpp"
 #include "PixelariumImageViewDefault.hpp"
-#include "imaging/IPixelariumImage.hpp"
-#include "imaging/PixelariumImageFactory.hpp"
+#include "IPixelariumImage.hpp"
+#include "PixelariumImageFactory.hpp"
 
 /// @brief Creates a PixelariumImageView from a resource image.
 /// @param image_id The ID of the image resource to render.

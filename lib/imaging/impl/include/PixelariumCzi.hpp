@@ -3,9 +3,9 @@
 #include <memory>
 #include <string>
 
-#include "../IPixelariumImage.hpp"
+#include "IPixelariumImage.hpp"
 #include "libCZI.h"
-#include "utilities/ILog.hpp"
+#include "ILog.hpp"
 
 namespace pixelarium::imaging
 {

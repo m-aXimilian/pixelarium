@@ -3,7 +3,7 @@
 #include <opencv2/core/mat.hpp>
 #include <opencv2/imgproc.hpp>
 
-#include "imaging/IPixelariumImage.hpp"
+#include "IPixelariumImage.hpp"
 
 using namespace pixelarium::imaging;
 

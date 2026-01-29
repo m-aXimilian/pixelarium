@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "IPixelariumImage.hpp"
-#include "utilities/ILog.hpp"
+#include "ILog.hpp"
 namespace pixelarium::imaging
 {
 constexpr pixelarium::imaging::ImageFileType ExtensionToType(const std::string& extension)

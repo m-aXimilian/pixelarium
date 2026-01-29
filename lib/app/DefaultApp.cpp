@@ -7,8 +7,8 @@
 #include "app_resources_default.h"
 #include "imgui.h"
 #include "portable-file-dialogs.h"
-#include "resources/resource.hpp"
-#include "utilities/ILog.hpp"
+#include "resource.hpp"
+#include "ILog.hpp"
 
 using namespace pixelarium::imaging;
 using namespace pixelarium::application;

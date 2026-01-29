@@ -12,10 +12,10 @@
 
 #include "RenderHelpers.hpp"
 #include "app_resources_default.h"
-#include "imaging/IPixelariumImage.hpp"
+#include "IPixelariumImage.hpp"
 #include "imgui.h"
 #include "implot.h"
-#include "utilities/simple_thread_pool.hpp"
+#include "simple_thread_pool.hpp"
 
 void pixelarium::application::PixelariumImageViewDefault::RefreshCachedImage()
 {

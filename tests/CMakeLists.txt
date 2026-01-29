@@ -2,17 +2,12 @@
 include(testgoogle)
 
 add_executable(libpixelarium_UnitTests
-  lib/resources/test_resource.cpp)
-
-target_include_directories(libpixelarium_UnitTests
-  PUBLIC ${PROJECT_SOURCE_DIR}/lib
-  PUBLIC ${OpenCV_INCLUDE_DIRS}
-)
-
+  lib/resources/test_resource.cpp
+  lib/utilities/test_log.cpp)
 
 target_link_libraries(libpixelarium_UnitTests
-  pixelariumresourcelib
-  pixelariumimagelib
+  pixelarium::lib::resources_static
+  pixelarium::lib::imaging_static
   GTest::gtest_main
   GTest::gmock)
 

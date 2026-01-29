@@ -6,8 +6,8 @@
 
 #include "CvMatRender.hpp"
 #include "RenderHelpers.hpp"
-#include "imaging/IPixelariumImage.hpp"
-#include "imaging/impl/PixelariumCzi.hpp"
+#include "IPixelariumImage.hpp"
+#include "PixelariumCzi.hpp"
 #include "imgui.h"
 
 void pixelarium::application::PixelariumImageViewCzi::RefreshCachedImage()

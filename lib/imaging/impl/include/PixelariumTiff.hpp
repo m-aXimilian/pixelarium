@@ -3,15 +3,18 @@
 #include <stdexcept>
 #include <string>
 
-#include "../IPixelariumImage.hpp"
+#include "IPixelariumImage.hpp"
+#include "ILog.hpp"
 
 namespace pixelarium::imaging
 {
-/// @brief Implements support for .jpg-images in the realm of IPixelariumImage
-class PixelariumJpg : public IPixelariumImageCvMat
+/// @brief Implements support for .tiff-images in the realm of IPixelariumImage
+class PixelariumTiff : public IPixelariumImageCvMat
 {
+    using Log = pixelarium::utils::log::ILog;
+
    public:
-    explicit PixelariumJpg(const std::string& url);
+    explicit PixelariumTiff(const std::string& uri, const Log& log);
 
     // IPixelariumImage member implementations
    public:
@@ -20,24 +23,24 @@ class PixelariumJpg : public IPixelariumImageCvMat
     std::optional<cv::Mat> TryGetImage(const IImageQuery&) override
     {
         // ToDo: proper error
-        throw std::runtime_error("Not possible with jpg.");
+        throw std::runtime_error("Not possible with tiff.");
     }
 
     std::vector<std::optional<cv::Mat>> TryGetImages(const IImageQuery&) override
     {
         // ToDo: proper error
-        throw std::runtime_error("Not possible with jpg.");
+        throw std::runtime_error("Not possible with tiff.");
     }
 
-   public:
     bool Empty() const noexcept override { return this->is_empty_; }
 
    public:
-    const static ImageFileType type_{ImageFileType::kJpg};
+    const static ImageFileType type_{ImageFileType::kTiff};
 
    private:
     // this should be set by each image getter
     // after a new cv::Mat could be instantiated
     bool is_empty_{true};
+    const Log& log_;
 };
 }  // namespace pixelarium::imaging

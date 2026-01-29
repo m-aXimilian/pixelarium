@@ -5,7 +5,7 @@
 
 #include "CvMatRender.hpp"
 #include "IPixelariumImageView.hpp"
-#include "imaging/IPixelariumImage.hpp"
+#include "IPixelariumImage.hpp"
 #include "imgui.h"
 
 namespace pixelarium::application

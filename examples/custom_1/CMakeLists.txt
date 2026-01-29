@@ -10,12 +10,3 @@ target_link_libraries(${CUSTOM_1_NAME}
   PRIVATE pixelariumutilslib
   PRIVATE pixelariumresourcelib
   PRIVATE pixelariumapplicationlib)
-
-target_include_directories(${CUSTOM_1_NAME}
-  PRIVATE ${PROJECT_SOURCE_DIR}/src
-  PRIVATE ${PROJECT_SOURCE_DIR}/lib
-  PRIVATE ${PROJECT_SOURCE_DIR}/lib/imaging
-  PRIVATE ${PROJECT_SOURCE_DIR}/lib/app
-  PRIVATE ${spdlog_DIR}/include
-  PRIVATE ${LIBCZI_INCLUDE_DIR}
-  PRIVATE ${CMAKE_CURRENT_BINARY_DIR})

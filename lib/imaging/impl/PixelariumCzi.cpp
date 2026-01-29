@@ -10,7 +10,7 @@
 #include <utility>
 
 #include "libCZI.h"
-#include "utilities/ILog.hpp"
+#include "ILog.hpp"
 
 bool comp_blockinfo_params(const pixelarium::imaging::CziParams& params, const libCZI::SubBlockInfo& info)
 {

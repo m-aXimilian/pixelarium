@@ -5,7 +5,7 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "imgui_internal.h"
-#include "utilities/simple_thread_pool.hpp"
+#include "simple_thread_pool.hpp"
 
 // see https://github.com/ocornut/imgui/issues/3518
 bool PixelBeginStatusBar()

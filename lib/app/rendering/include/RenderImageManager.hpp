@@ -6,8 +6,8 @@
 
 #include "IPixelariumImageView.hpp"
 #include "ImageViewFactory.hpp"
-#include "resources/resource.hpp"
-#include "utilities/ILog.hpp"
+#include "resource.hpp"
+#include "ILog.hpp"
 
 // This is intended as an additional abstraction
 // aggregating views that should be rendered (or not)

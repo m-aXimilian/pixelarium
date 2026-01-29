@@ -5,10 +5,10 @@
 
 #include "CvMatRender.hpp"
 #include "IPixelariumImageView.hpp"
-#include "imaging/IPixelariumImage.hpp"
+#include "IPixelariumImage.hpp"
 #include "imgui.h"
 #include "libCZI_DimCoordinate.h"
-#include "utilities/ILog.hpp"
+#include "ILog.hpp"
 
 namespace pixelarium::application
 {

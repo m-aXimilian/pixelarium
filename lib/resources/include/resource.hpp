@@ -6,7 +6,7 @@
 #include <mutex>
 #include <unordered_map>
 
-#include "imaging/IPixelariumImage.hpp"
+#include "IPixelariumImage.hpp"
 
 namespace pixelarium::resources
 {

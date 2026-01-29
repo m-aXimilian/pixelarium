@@ -24,9 +24,11 @@ simple_thread_pool::simple_thread_pool(size_t num_threads)
 
                         job = std::move(task_queue_.front());
                         task_queue_.pop();
+                        ++running_tasks_;
                     }
 
                     job();
+                    --running_tasks_;
                 }
             });
     }

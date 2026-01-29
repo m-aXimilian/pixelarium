@@ -8,13 +8,13 @@
 #include <string>
 
 #include "DefaultApp.hpp"
+#include "ILog.hpp"
+#include "PixelariumLogger.hpp"
+#include "PixelariumMem.hpp"
 #include "imgui.h"
-#include "impl/PixelariumMem.hpp"
 #include "implot.h"
 #include "portable-file-dialogs.h"
-#include "resources/resource.hpp"
-#include "utilities/ILog.hpp"
-#include "utilities/PixelariumLogger.hpp"
+#include "resource.hpp"
 
 using namespace pixelarium;
 using namespace std;

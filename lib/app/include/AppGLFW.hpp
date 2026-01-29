@@ -5,7 +5,7 @@
 #include <format>
 
 #include "implot.h"
-#include "utilities/ILog.hpp"
+#include "ILog.hpp"
 
 namespace pixelarium::application
 {

@@ -1,6 +1,9 @@
 #pragma once
 
+#include <algorithm>
+#include <atomic>
 #include <condition_variable>
+#include <cstddef>
 #include <functional>
 #include <mutex>
 #include <queue>
@@ -40,6 +43,27 @@ class simple_thread_pool
         cv_.notify_one();
     }
 
+    [[nodiscard]]
+    constexpr decltype(auto) RunningTasks() const
+    {
+        return running_tasks_.load();
+    }
+
+    constexpr decltype(auto) Joinable() const
+    {
+        std::unique_lock<std::mutex> lck(thread_mutex_);
+
+        return task_queue_.empty() && RunningTasks() == 0;
+    }
+
+    [[nodiscard]]
+    static constexpr decltype(auto) GlobalRunningTasks()
+    {
+        return Global().running_tasks_.load();
+    }
+
+    static constexpr decltype(auto) GlobalJoinable() { return Global().Joinable(); }
+
    private:
     static auto Global() -> simple_thread_pool&
     {
@@ -49,8 +73,9 @@ class simple_thread_pool
     }
     std::vector<std::thread> workers_;
     std::condition_variable cv_;
-    std::mutex thread_mutex_;
+    std::mutex mutable thread_mutex_;
     std::queue<std::function<void()>> task_queue_;
     bool shutdown_{false};
+    std::atomic_size_t running_tasks_{0};
 };
 }  // namespace pixelarium::utils
