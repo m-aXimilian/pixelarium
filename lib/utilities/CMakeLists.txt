@@ -6,8 +6,7 @@ set(UTILSLIBSRC
   include/PixelariumLogger.hpp
   include/simple_thread_pool.hpp
   SpdLogger.cpp
-  PixelariumLogger.cpp
-  simple_thread_pool.cpp)
+  PixelariumLogger.cpp)
 
 add_library(${UTILSLIBNAME} STATIC ${UTILSLIBSRC})
 

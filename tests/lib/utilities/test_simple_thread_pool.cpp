@@ -18,7 +18,7 @@ TEST(SimpleThreadPoolTest, MutatesFromDifferentThread)
 
     for (auto i{0}; i < vecsize; ++i)
     {
-        pixelarium::utils::simple_thread_pool::run_asynch(
+        pixelarium_pool::enqueue(
             [&mutate, i]()
             {
                 const auto wait = std::chrono::milliseconds(i);
@@ -28,7 +28,7 @@ TEST(SimpleThreadPoolTest, MutatesFromDifferentThread)
     }
 
     // wait until each spawned task finished
-    while (!simple_thread_pool::GlobalJoinable()) std::this_thread::sleep_for(5ms);
+    while (!pixelarium_pool::Joinable()) std::this_thread::sleep_for(5ms);
 
     EXPECT_EQ(mutation_vector.size(), vecsize);
     for (auto i{0}; i < vecsize; ++i)
@@ -36,3 +36,20 @@ TEST(SimpleThreadPoolTest, MutatesFromDifferentThread)
         EXPECT_EQ(mutation_vector.at(i), i);
     }
 }
+
+// TEST(SimpleThreadPoolTest, ZeroThreads)
+// {
+//     using namespace pixelarium::utils;
+//     // Creating a thread pool with 0 threads should not throw an exception
+//     // and should be joinable immediately.
+//     simple_thread_pool<0> pool;
+//     EXPECT_TRUE(pool.Joinable());
+
+//     // Enqueuing a task on a 0-thread pool should not crash.
+//     // The task will never run, but the enqueue operation should be valid.
+//     pool.enqueue([]() {});
+//     EXPECT_FALSE(pool.Joinable()); // Now it's not joinable because there's a task
+//     EXPECT_EQ(pool.RunningTasks(), 0); // No tasks are running
+
+//     // Destructor should also handle the 0-thread case gracefully.
+// }

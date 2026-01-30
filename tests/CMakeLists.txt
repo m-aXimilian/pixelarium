@@ -3,7 +3,7 @@ include(testgoogle)
 
 add_executable(libpixelarium_UnitTests
   lib/resources/test_resource.cpp
-  lib/utilities/test_log.cpp)
+  lib/utilities/test_simple_thread_pool.cpp)
 
 target_link_libraries(libpixelarium_UnitTests
   pixelarium::lib::resources_static

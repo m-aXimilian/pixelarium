@@ -9,6 +9,7 @@
 #include <opencv2/imgproc.hpp>
 #include <ostream>
 #include <ranges>
+#include <utility>
 
 #include "RenderHelpers.hpp"
 #include "app_resources_default.h"
@@ -55,7 +56,7 @@ void pixelarium::application::PixelariumImageViewDefault::ShowImage()
         const auto cached_heigth{cached_image_.rows};
         const auto ratio{static_cast<float>(cached_heigth) / cached_width};
         SetInitialSize(kInitialWindowWidth, (kInitialWindowWidth * ratio + 100));
-        utils::simple_thread_pool::run_asynch([this]() { GenerateHistogram(); });
+        utils::pixelarium_pool::enqueue([this]() { GenerateHistogram(); });
     }
 
     ImGui::Begin(this->img_->Name().c_str(), &this->open_p,
@@ -84,8 +85,13 @@ void pixelarium::application::PixelariumImageViewDefault::ShowImage()
         if (ImPlot::BeginPlot("Histogram"))
         {
             ImPlot::SetupAxes(nullptr, nullptr, ImPlotAxisFlags_AutoFit, ImPlotAxisFlags_AutoFit);
-            constexpr std::array<const char*, 3> names = {"Blue", "Green", "Red"};
-            std::string name{"ab"};
+            using style_pair = std::pair<const char*, ImVec4>;
+
+            constexpr std::array<style_pair, 3> names = {
+                {
+                    {"Blue", ImVec4(0, 0, 1, 1)},
+                    {"Green", ImVec4(0, 1, 0, 1)},
+                    {"Red", ImVec4(1, 0, 0, 1)  }}};
             // for (auto& e : hist_planes_)
             // {
             //     ImPlot::PlotHistogram(name.c_str(), e.data, e.rows * e.cols, 16);
@@ -98,8 +104,14 @@ void pixelarium::application::PixelariumImageViewDefault::ShowImage()
             {
                 if (hist_planes_.at(i).type() == CV_32F)
                 {
-                    ImPlot::PlotHistogram(names.at(i % 3), reinterpret_cast<float*>(hist_planes_[i].data),
-                                          hist_planes_[i].rows * hist_planes_[i].cols, 16);
+                    // ImPlot::PlotHistogram(names.at(i % 3), reinterpret_cast<float*>(hist_planes_[i].data),
+                    //                       hist_planes_[i].rows * hist_planes_[i].cols, 16, 1.0, ImPlotRange(),
+                    //                       ImPlotHistogramFlags_Horizontal);
+                    ImPlot::PushStyleColor(ImPlotCol_Line, names.at(i%3).second);
+                    ImPlot::PlotLine(std::format("{}-line", names.at(i % 3).first).c_str(),
+                                     reinterpret_cast<float*>(hist_planes_[i].data),
+                                     hist_planes_[i].rows * hist_planes_[i].cols);
+                    ImPlot::PopStyleColor();
                 }
             }
 
@@ -129,6 +141,7 @@ auto pixelarium::application::PixelariumImageViewDefault::GenerateHistogram() ->
     for (auto [bgr, hist] : std::ranges::views::zip(bgr_planes_, hist_planes_))
     {
         cv::calcHist(&bgr, 1, 0, cv::Mat(), hist, 1, &histSize, histRange, true, false);
+        // cv::normalize(hist, hist);
     }
 
     hist_available_ = true;
