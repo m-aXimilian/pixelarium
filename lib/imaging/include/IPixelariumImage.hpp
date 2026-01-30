@@ -93,6 +93,8 @@ class IPixelariumImage
     std::filesystem::path uri_;
 };
 
+/// @brief Interface template specialization of IPixelariumImage
+///        using cv::Mat as the wrapped data type.
 class IPixelariumImageCvMat : public IPixelariumImage<cv::Mat>
 {
    public:
