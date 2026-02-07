@@ -15,6 +15,7 @@ set(IMPLOTSRC
 
 set(IMGUISRC
   "${imgui_DIR}/imgui.cpp"
+  "${imgui_DIR}/misc/cpp/imgui_stdlib.cpp"
   "${imgui_DIR}/imgui_demo.cpp"
   "${imgui_DIR}/imgui_draw.cpp"
   "${imgui_DIR}/imgui_tables.cpp"
