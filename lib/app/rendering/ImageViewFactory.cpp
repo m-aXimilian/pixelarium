@@ -19,7 +19,7 @@ std::unique_ptr<pixelarium::application::IPixelariumImageView> pixelarium::appli
     using ImageType = imaging::ImageFileType;
     auto res{this->image_pool_.GetResource(image_id)};
 
-    auto img{res.lock()};
+    const auto img{res.lock()};
 
     if (img == nullptr)
     {

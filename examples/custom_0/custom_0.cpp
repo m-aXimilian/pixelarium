@@ -31,7 +31,7 @@ auto logger{utils::log::PixelariumLogger("pixellog", string(getenv("HOME")) + "/
 // instantiate an image pool for the application
 resources::ImageResourcePool image_pool;
 
-constexpr auto ToCVPixelType(size_t depth, size_t chans) -> int
+constexpr auto ToCVPixelType(size_t depth, size_t chans)
 {
     int tp{};
     switch (depth)
@@ -48,7 +48,7 @@ constexpr auto ToCVPixelType(size_t depth, size_t chans) -> int
 
     if (chans > 1)
     {
-        return CV_MAKETYPE(tp, chans);
+        return static_cast<int>(CV_MAKETYPE(tp, chans));
     }
 
     return tp;
