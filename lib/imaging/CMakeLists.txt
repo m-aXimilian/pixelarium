@@ -1,4 +1,4 @@
-include(${CMAKE_SOURCE_DIR}/cmake/libCZI.cmake)
+include(libCZI)
 
 find_package(OpenCV REQUIRED)
 
