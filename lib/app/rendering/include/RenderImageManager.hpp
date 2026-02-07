@@ -4,10 +4,10 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "ILog.hpp"
 #include "IPixelariumImageView.hpp"
 #include "ImageViewFactory.hpp"
 #include "resource.hpp"
-#include "ILog.hpp"
 
 // This is intended as an additional abstraction
 // aggregating views that should be rendered (or not)

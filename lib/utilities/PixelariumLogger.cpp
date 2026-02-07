@@ -85,6 +85,6 @@ auto PixelariumLogger::Write(LogLevel lvl, const std::string& msg) const -> void
 
     {
         std::lock_guard<std::mutex> guard(mutex_);
-        *log_stream_ << std::format( "[{}] [{}] [{}] {}\n", timestamp, name_, LogLevelToString(lvl), msg);
+        *log_stream_ << std::format("[{}] [{}] [{}] {}\n", timestamp, name_, LogLevelToString(lvl), msg);
     }
 }

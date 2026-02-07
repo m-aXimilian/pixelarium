@@ -3,11 +3,11 @@
 #include <format>
 #include <memory>
 
+#include "IPixelariumImage.hpp"
 #include "IPixelariumImageView.hpp"
+#include "PixelariumImageFactory.hpp"
 #include "PixelariumImageViewCzi.hpp"
 #include "PixelariumImageViewDefault.hpp"
-#include "IPixelariumImage.hpp"
-#include "PixelariumImageFactory.hpp"
 
 /// @brief Creates a PixelariumImageView from a resource image.
 /// @param image_id The ID of the image resource to render.

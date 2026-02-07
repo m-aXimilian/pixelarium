@@ -3,10 +3,10 @@
 #include <cstddef>
 
 #include "AppGLFW.hpp"
+#include "ILog.hpp"
 #include "PixelariumGallery.hpp"
 #include "imgui.h"
 #include "resource.hpp"
-#include "ILog.hpp"
 
 namespace pixelarium::application
 {

@@ -1,9 +1,9 @@
 #include <memory>
 
 #include "DefaultApp.hpp"
-#include "resource.hpp"
 #include "ILog.hpp"
 #include "SpdLogger.hpp"
+#include "resource.hpp"
 
 using namespace pixelarium;
 using namespace std;

@@ -4,9 +4,9 @@
 #include <memory>
 
 #include "IPixelariumImage.hpp"
-#include "PixelariumMem.hpp"
 #include "PixelariumCzi.hpp"
 #include "PixelariumJpg.hpp"
+#include "PixelariumMem.hpp"
 #include "PixelariumPng.hpp"
 #include "PixelariumTiff.hpp"
 

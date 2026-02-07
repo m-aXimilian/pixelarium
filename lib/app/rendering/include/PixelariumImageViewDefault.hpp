@@ -4,8 +4,8 @@
 #include <vector>
 
 #include "CvMatRender.hpp"
-#include "IPixelariumImageView.hpp"
 #include "IPixelariumImage.hpp"
+#include "IPixelariumImageView.hpp"
 #include "imgui.h"
 
 namespace pixelarium::application

@@ -5,9 +5,9 @@
 #include <stdexcept>
 
 #include "CvMatRender.hpp"
-#include "RenderHelpers.hpp"
 #include "IPixelariumImage.hpp"
 #include "PixelariumCzi.hpp"
+#include "RenderHelpers.hpp"
 #include "imgui.h"
 
 void pixelarium::application::PixelariumImageViewCzi::RefreshCachedImage()

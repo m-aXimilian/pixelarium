@@ -2,8 +2,9 @@
 
 #include <memory>
 
-#include "IPixelariumImage.hpp"
 #include "ILog.hpp"
+#include "IPixelariumImage.hpp"
+
 namespace pixelarium::imaging
 {
 constexpr pixelarium::imaging::ImageFileType ExtensionToType(const std::string& extension)

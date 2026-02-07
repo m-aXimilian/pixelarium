@@ -4,11 +4,11 @@
 #include <unordered_map>
 
 #include "CvMatRender.hpp"
-#include "IPixelariumImageView.hpp"
+#include "ILog.hpp"
 #include "IPixelariumImage.hpp"
+#include "IPixelariumImageView.hpp"
 #include "imgui.h"
 #include "libCZI_DimCoordinate.h"
-#include "ILog.hpp"
 
 namespace pixelarium::application
 {

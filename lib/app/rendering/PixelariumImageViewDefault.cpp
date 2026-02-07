@@ -11,9 +11,9 @@
 #include <ranges>
 #include <utility>
 
+#include "IPixelariumImage.hpp"
 #include "RenderHelpers.hpp"
 #include "app_resources_default.h"
-#include "IPixelariumImage.hpp"
 #include "imgui.h"
 #include "implot.h"
 #include "simple_thread_pool.hpp"
@@ -88,10 +88,7 @@ void pixelarium::application::PixelariumImageViewDefault::ShowImage()
             using style_pair = std::pair<const char*, ImVec4>;
 
             constexpr std::array<style_pair, 3> names = {
-                {
-                    {"Blue", ImVec4(0, 0, 1, 1)},
-                    {"Green", ImVec4(0, 1, 0, 1)},
-                    {"Red", ImVec4(1, 0, 0, 1)  }}};
+                {{"Blue", ImVec4(0, 0, 1, 1)}, {"Green", ImVec4(0, 1, 0, 1)}, {"Red", ImVec4(1, 0, 0, 1)}}};
             // for (auto& e : hist_planes_)
             // {
             //     ImPlot::PlotHistogram(name.c_str(), e.data, e.rows * e.cols, 16);
@@ -107,7 +104,7 @@ void pixelarium::application::PixelariumImageViewDefault::ShowImage()
                     // ImPlot::PlotHistogram(names.at(i % 3), reinterpret_cast<float*>(hist_planes_[i].data),
                     //                       hist_planes_[i].rows * hist_planes_[i].cols, 16, 1.0, ImPlotRange(),
                     //                       ImPlotHistogramFlags_Horizontal);
-                    ImPlot::PushStyleColor(ImPlotCol_Line, names.at(i%3).second);
+                    ImPlot::PushStyleColor(ImPlotCol_Line, names.at(i % 3).second);
                     ImPlot::PlotLine(std::format("{}-line", names.at(i % 3).first).c_str(),
                                      reinterpret_cast<float*>(hist_planes_[i].data),
                                      hist_planes_[i].rows * hist_planes_[i].cols);
