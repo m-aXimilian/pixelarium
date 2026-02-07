@@ -4,8 +4,8 @@
 
 #include <format>
 
+#include "imgui_proxy.hpp"
 #include "ILog.hpp"
-#include "implot.h"
 
 namespace pixelarium::application
 {

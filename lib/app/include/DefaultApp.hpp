@@ -5,7 +5,7 @@
 #include "AppGLFW.hpp"
 #include "ILog.hpp"
 #include "PixelariumGallery.hpp"
-#include "imgui.h"
+#include "imgui_proxy.hpp"
 #include "resource.hpp"
 
 namespace pixelarium::application

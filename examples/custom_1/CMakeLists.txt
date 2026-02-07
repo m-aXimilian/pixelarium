@@ -6,7 +6,4 @@ set(CUSTOM_1_NAME "${PROJECT_NAME}_custom1_app")
 add_executable(${CUSTOM_1_NAME} ${SRC})
 
 target_link_libraries(${CUSTOM_1_NAME}
-  PRIVATE pixelariumimagelib
-  PRIVATE pixelariumutilslib
-  PRIVATE pixelariumresourcelib
   PRIVATE pixelariumapplicationlib)

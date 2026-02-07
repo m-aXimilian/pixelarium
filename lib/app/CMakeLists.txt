@@ -23,6 +23,7 @@ set(IMGUISRC
   "${imgui_DIR}/backends/imgui_impl_glfw.cpp")
 
 set(APPLIBSRC
+  include/imgui_proxy.hpp
   include/AppGLFW.hpp
   include/DefaultApp.hpp
   include/PixelariumGallery.hpp
@@ -54,9 +55,10 @@ add_library(${APPLIBNAME}
 add_library(pixelarium::lib::application_static ALIAS ${APPLIBNAME})
 
 target_link_libraries(${APPLIBNAME}
-  PRIVATE pixelarium::lib::utilities_static
-  PRIVATE pixelarium::lib::imaging_static
-  PRIVATE pixelarium::lib::resources_static)
+  PUBLIC
+  pixelarium::lib::utilities_static
+  pixelarium::lib::imaging_static
+  pixelarium::lib::resources_static)
 
 # This needs to be public to let the consumer know about it.
 if(WIN32)
@@ -82,5 +84,6 @@ target_include_directories(${APPLIBNAME}
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
   PUBLIC ${pfd_DIR}
   PUBLIC ${imgui_DIR}
+  PUBLIC ${imgui_DIR}/misc/cpp
   PUBLIC ${imgui_DIR}/backends
   ${IMPLOT_DIR})
