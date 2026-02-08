@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.23)
 
-project(pixelarium VERSION 0.0.11)
+project(pixelarium VERSION 0.0.12)
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 

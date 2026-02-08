@@ -79,3 +79,21 @@ This is the most straight-forward usage of Pixelarium. It simply instantiates a 
 
 This is meant to showcase that [`DefaultApp`]((https://github.com/m-aXimilian/pixelarium/blob/fd400bf545ade029696c21119a50cf4bb67ffbac/lib/app/DefaultApp.hpp)) ([`AppGLFW`](https://github.com/m-aXimilian/pixelarium/blob/fd400bf545ade029696c21119a50cf4bb67ffbac/lib/app/AppGLFW.hpp) as well) can be customized via inheritance.
 
+As a usage example, it implements a simple binary image reader. It can be presented with a binary file of layout
+
+```cpp
+    struct ParsedImage
+    {
+        uint8_t depth;
+        uint8_t channels;
+        uint16_t width;
+        uint16_t height;
+        void* data;
+    };
+```
+
+i.e., a header encoding 1 byte for the pixel-depth, 1 byte for the channel count, 2 byte each for width and height in pixel followed by the actual pixeldata.
+
+## custom_1
+
+An example showcasing how to inject a user defined control into the existing scaffolding of `DefaultApp` using a multiplication filter. This is in many ways similar to the previous example.
