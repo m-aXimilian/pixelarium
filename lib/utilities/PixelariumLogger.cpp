@@ -8,23 +8,6 @@
 
 using namespace pixelarium::utils::log;
 
-constexpr auto LogLevelToString(LogLevel lvl) -> std::string
-{
-    switch (lvl)
-    {
-        case LogLevel::kTrace:
-            return "Trace";
-        case LogLevel::kDebug:
-            return "Debug";
-        case LogLevel::kInfo:
-            return "Info";
-        case LogLevel::kWarn:
-            return "Warning";
-        case LogLevel::kError:
-            return "Error";
-    }
-}
-
 struct PixelariumLogger::LogStream
 {
     LogStream(const std::string& sink)
