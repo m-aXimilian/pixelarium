@@ -5,7 +5,7 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "imgui_internal.h"
-#include "utilities/simple_thread_pool.hpp"
+#include "simple_thread_pool.hpp"
 
 // see https://github.com/ocornut/imgui/issues/3518
 bool PixelBeginStatusBar()
@@ -214,20 +214,7 @@ void pixelarium::application::AppGLFW::MenuBar()
         // main menu
         if (ImGui::BeginMenu(MAINMENUNAME))
         {
-            if (ImGui::BeginCombo(LOGLEVELSELECT, LOGLEVELS[log_level_].data()))
-            {
-                for (int n = 0; n < static_cast<int>(LOGLEVELS.size()); n++)
-                {
-                    bool is_selected = (LOGLEVELS[log_level_] == LOGLEVELS[n]);
-                    if (ImGui::Selectable(LOGLEVELS[n].data(), is_selected))
-                    {
-                        log_level_ = n;
-                        this->logger_.ChangeLevel(static_cast<utils::log::LogLevel>(1 << log_level_));
-                    }
-                    if (is_selected) ImGui::SetItemDefaultFocus();
-                }
-                ImGui::EndCombo();
-            }
+            LogLevelSelect();
 
             // consumer main menu bar entries
             this->MenuBarOptionsColumn1();
@@ -279,7 +266,7 @@ void pixelarium::application::AppGLFW::LogLevelSelect()
 void pixelarium::application::AppGLFW::SetStatusTimed(const std::string& status, size_t seconds)
 {
     SetStatus(status);
-    utils::simple_thread_pool::run_asynch(
+    utils::pixelarium_pool::enqueue(
         [this, seconds]()
         {
             std::this_thread::sleep_for(std::chrono::seconds(seconds));

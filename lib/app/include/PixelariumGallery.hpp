@@ -1,8 +1,8 @@
 #pragma once
 
-#include "rendering/RenderImageManager.hpp"
-#include "resources/resource.hpp"
-#include "utilities/ILog.hpp"
+#include "ILog.hpp"
+#include "RenderImageManager.hpp"
+#include "resource.hpp"
 
 namespace pixelarium::application
 {

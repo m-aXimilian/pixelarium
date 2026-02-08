@@ -1,11 +1,22 @@
 #include "PixelariumImageViewDefault.hpp"
 
-#include <format>
+#include <opencv2/core/hal/interface.h>
 
+#include <cstdio>
+#include <format>
+#include <iostream>
+#include <opencv2/core.hpp>
+#include <opencv2/imgproc.hpp>
+#include <ostream>
+#include <ranges>
+#include <utility>
+
+#include "IPixelariumImage.hpp"
 #include "RenderHelpers.hpp"
 #include "app_resources_default.h"
-#include "imaging/IPixelariumImage.hpp"
 #include "imgui.h"
+#include "implot.h"
+#include "simple_thread_pool.hpp"
 
 void pixelarium::application::PixelariumImageViewDefault::RefreshCachedImage()
 {
@@ -14,6 +25,11 @@ void pixelarium::application::PixelariumImageViewDefault::RefreshCachedImage()
         this->cached_image_ = this->img_->TryGetImage().value_or(cv::Mat{});
         this->is_dirty_ = false;
     }
+}
+
+void pixelarium::application::PixelariumImageViewDefault::ImageViewMenuBarAdditions()
+{
+    ImGui::MenuItem("Histogram", NULL, &this->show_hists_);
 }
 
 /// @brief Displays the image in an ImGui window.
@@ -40,6 +56,7 @@ void pixelarium::application::PixelariumImageViewDefault::ShowImage()
         const auto cached_heigth{cached_image_.rows};
         const auto ratio{static_cast<float>(cached_heigth) / cached_width};
         SetInitialSize(kInitialWindowWidth, (kInitialWindowWidth * ratio + 100));
+        utils::pixelarium_pool::enqueue([this]() { GenerateHistogram(); });
     }
 
     ImGui::Begin(this->img_->Name().c_str(), &this->open_p,
@@ -62,8 +79,67 @@ void pixelarium::application::PixelariumImageViewDefault::ShowImage()
                  aspect_const_dimensions(dim, new_dim));
 
     ImGui::Separator();
+
+    if (show_hists_ && hist_available_)
+    {
+        if (ImPlot::BeginPlot("Histogram"))
+        {
+            ImPlot::SetupAxes(nullptr, nullptr, ImPlotAxisFlags_AutoFit, ImPlotAxisFlags_AutoFit);
+            using style_pair = std::pair<const char*, ImVec4>;
+
+            constexpr std::array<style_pair, 3> names = {
+                {{"Blue", ImVec4(0, 0, 1, 1)}, {"Green", ImVec4(0, 1, 0, 1)}, {"Red", ImVec4(1, 0, 0, 1)}}};
+            // for (auto& e : hist_planes_)
+            // {
+            //     ImPlot::PlotHistogram(name.c_str(), e.data, e.rows * e.cols, 16);
+            //     for (auto& e : name)
+            //     {
+            //         e++;
+            //     }
+            // }
+            for (size_t i{0}; i < hist_planes_.size(); ++i)
+            {
+                if (hist_planes_.at(i).type() == CV_32F)
+                {
+                    // ImPlot::PlotHistogram(names.at(i % 3), reinterpret_cast<float*>(hist_planes_[i].data),
+                    //                       hist_planes_[i].rows * hist_planes_[i].cols, 16, 1.0, ImPlotRange(),
+                    //                       ImPlotHistogramFlags_Horizontal);
+                    ImPlot::PushStyleColor(ImPlotCol_Line, names.at(i % 3).second);
+                    ImPlot::PlotLine(std::format("{}-line", names.at(i % 3).first).c_str(),
+                                     reinterpret_cast<float*>(hist_planes_[i].data),
+                                     hist_planes_[i].rows * hist_planes_[i].cols);
+                    ImPlot::PopStyleColor();
+                }
+            }
+
+            ImPlot::PushStyleVar(ImPlotStyleVar_FillAlpha, 0.25f);
+            ImPlot::SetNextMarkerStyle(ImPlotMarker_Square, 6, ImPlot::GetColormapColor(1), IMPLOT_AUTO,
+                                       ImPlot::GetColormapColor(1));
+
+            ImPlot::EndPlot();
+        }
+    }
+
     ImGui::Text("%s", std::format("   Raw Dimensions W : {}, H: {}", dim.x, dim.y).c_str());
     ImGui::Text("%s", std::format("Render Dimensions W : {}, H: {}", curr_dim_.x, curr_dim_.y).c_str());
 
     ImGui::End();
+}
+
+auto pixelarium::application::PixelariumImageViewDefault::GenerateHistogram() -> void
+{
+    cv::split(cached_image_, bgr_planes_);
+    hist_planes_.resize(bgr_planes_.size());
+
+    int histSize = 256;
+    float range[] = {0, 256};  // the upper boundary is exclusive
+    const float* histRange[] = {range};
+
+    for (auto [bgr, hist] : std::ranges::views::zip(bgr_planes_, hist_planes_))
+    {
+        cv::calcHist(&bgr, 1, 0, cv::Mat(), hist, 1, &histSize, histRange, true, false);
+        // cv::normalize(hist, hist);
+    }
+
+    hist_available_ = true;
 }

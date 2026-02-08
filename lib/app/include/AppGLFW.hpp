@@ -4,7 +4,8 @@
 
 #include <format>
 
-#include "utilities/ILog.hpp"
+#include "ILog.hpp"
+#include "imgui_proxy.hpp"
 
 namespace pixelarium::application
 {
@@ -13,7 +14,18 @@ namespace pixelarium::application
 class AppGLFW
 {
    public:
-    explicit AppGLFW(const utils::log::ILog& log) : logger_(log) { this->InitMainWindow(); }
+    explicit AppGLFW(const utils::log::ILog& log) : logger_(log), plot_context_(ImPlot::CreateContext())
+    {
+        this->InitMainWindow();
+    }
+
+    ~AppGLFW() { ImPlot::DestroyContext(plot_context_); }
+
+    AppGLFW(AppGLFW&) = delete;
+    AppGLFW(const AppGLFW&) = delete;
+    AppGLFW(AppGLFW&&) = delete;
+    AppGLFW& operator=(AppGLFW&) = delete;
+    AppGLFW& operator=(AppGLFW&&) = delete;
 
     /// @brief Start the main render loop
     void Start() { this->RunLoop(); }
@@ -61,6 +73,7 @@ class AppGLFW
     void LogLevelSelect();
     int log_level_{0};
     GLFWwindow* window = nullptr;
+    ImPlotContext* plot_context_ = nullptr;
     bool show_status_{false};
     std::string status_message_{};
 };

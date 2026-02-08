@@ -46,9 +46,10 @@ bool pixelarium::application::RenderImageManager::Remove(resources::ResourceKey 
 /// @return void.  No exception is thrown.
 void pixelarium::application::RenderImageManager::Add(resources::ResourceKey key) noexcept
 {
-    // we don't want to add what's already there
-    // or empty render images
-    if (this->render_image_map_.contains(key))
+    // we don't want to add what's already there, render empty images, or failed keys
+    if (this->render_image_map_.contains(key)
+        // || this->failed_keys_cache_.contains(key)
+    )
     {
         return;
     }
@@ -56,6 +57,8 @@ void pixelarium::application::RenderImageManager::Add(resources::ResourceKey key
     auto current_view = this->view_factory_->RenderImage(key);
     if (current_view == nullptr)
     {
+        // failed to create view, cache this key to avoid repeated attempts
+        this->failed_keys_cache_.insert(key);
         return;
     }
 
