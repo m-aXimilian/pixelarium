@@ -2,19 +2,19 @@ PROJECT_NAME           = @PIXELARIUM_TITLE@
 PROJECT_NUMBER         = @CMAKE_PROJECT_VERSION@
 
 OUTPUT_DIRECTORY       = @PROJECT_BINARY_DIR@/doc
-INPUT                  = @PROJECT_SOURCE_DIR@/lib/app \
-                         @PROJECT_SOURCE_DIR@/doc \
-                         @PROJECT_SOURCE_DIR@/lib/imaging \
-                         @PROJECT_SOURCE_DIR@/lib/imaging/impl \
-                         @PROJECT_SOURCE_DIR@/lib/utilities \
-                         @PROJECT_SOURCE_DIR@/lib/rendering \
-                         @PROJECT_SOURCE_DIR@/lib/resources
+INPUT                  = @PROJECT_SOURCE_DIR@/doc/ \
+                         @PROJECT_SOURCE_DIR@/lib/app/include \
+                         @PROJECT_SOURCE_DIR@/lib/app/rendering/include \
+                         @PROJECT_SOURCE_DIR@/lib/imaging/include \
+                         @PROJECT_SOURCE_DIR@/lib/imaging/impl/include \
+                         @PROJECT_SOURCE_DIR@/lib/utilities/include \
+                         @PROJECT_SOURCE_DIR@/lib/resources/include
 IMAGE_PATH             = @PROJECT_SOURCE_DIR@/doc/figures
 
 DOXYFILE_ENCODING      = UTF-8
 GENERATE_LATEX         = NO
 FULL_PATH_NAMES        = NO
-USE_MDFILE_AS_MAINPAGE = @PROJECT_SOURCE_DIR@/doc/index.md
+USE_MDFILE_AS_MAINPAGE = @MAINPAGE_FILE@
 
 
 HTML_EXTRA_STYLESHEET  = @AWESOME_CSS_DIR@/doxygen-awesome.css

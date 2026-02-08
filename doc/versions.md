@@ -2,6 +2,7 @@
 
 | Version  | Description                                                                                                 |
 |:--------:|:------------------------------------------------------------------------------------------------------------|
+|   0.0.12 | Build system simplifications, binary image-reader in custom\_0, a simple POC for histograms in views        |
 |   0.0.11 | Miscellaneous refactoring                                                                                   |
 |   0.0.10 | Adds Tiff-support, in-memory images, and advances usage example "custom_1"                                  |
 |   0.0.9  | Improve documentation, add example for `DefaultApp` override semantics                                      |

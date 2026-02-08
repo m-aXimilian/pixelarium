@@ -8,12 +8,13 @@
 #include <string>
 
 #include "DefaultApp.hpp"
+#include "ILog.hpp"
+#include "PixelariumLogger.hpp"
+#include "PixelariumMem.hpp"
 #include "imgui.h"
-#include "impl/PixelariumMem.hpp"
+#include "implot.h"
 #include "portable-file-dialogs.h"
-#include "resources/resource.hpp"
-#include "utilities/ILog.hpp"
-#include "utilities/SpdLogger.hpp"
+#include "resource.hpp"
 
 using namespace pixelarium;
 using namespace std;
@@ -22,17 +23,15 @@ using Pool = resources::ImageResourcePool;
 
 // setup a logger
 #ifdef _WIN32
-unique_ptr<Log> logger{
-    make_unique<utils::log::SpdLogger>(string(getenv("APPDATA")) + "/pixelarium/simple_app.log", "default")};
+auto logger{utils::log::PixelariumLogger("pixellog", string(getenv("APPDATA")) + "/pixelarium/simple_app.log")};
 #else
-unique_ptr<Log> logger{
-    make_unique<utils::log::SpdLogger>(string(getenv("HOME")) + "/.cache/pixelarium/simple_app.log", "default")};
+auto logger{utils::log::PixelariumLogger("pixellog", string(getenv("HOME")) + "/.cache/pixelarium/simple_app.log")};
 #endif
 
 // instantiate an image pool for the application
 resources::ImageResourcePool image_pool;
 
-constexpr auto ToCVPixelType(size_t depth, size_t chans) -> int
+constexpr auto ToCVPixelType(size_t depth, size_t chans)
 {
     int tp{};
     switch (depth)
@@ -49,7 +48,7 @@ constexpr auto ToCVPixelType(size_t depth, size_t chans) -> int
 
     if (chans > 1)
     {
-        return CV_MAKETYPE(tp, chans);
+        return static_cast<int>(CV_MAKETYPE(tp, chans));
     }
 
     return tp;
@@ -68,7 +67,6 @@ class BinaryReader
     vector<std::byte> buffer{};
     uintmax_t file_size;
 
-    // struct __attribute__((packed)) ParsedImage // gcc and clang only
 #pragma pack(push, 1)
     struct ParsedImage
     {
@@ -97,7 +95,7 @@ class BinaryReader
         // not cloning is a dangling reference once the externally managed data pointer is freed
         auto mat{tmp_mat.clone()};
 
-        image_pool.SetResource(make_unique<imaging::PixelariumMem>(mat, name.c_str(), *logger));
+        image_pool.SetResource(make_unique<imaging::PixelariumMem>(mat, name.c_str(), logger));
     }
 
     auto ReadFile(const filesystem::path& file, const StatusReport& report) -> ParsedImage
@@ -107,6 +105,7 @@ class BinaryReader
         uint16_t width{};
         uint16_t height{};
         uint64_t pixel_count{};
+
         if (!filesystem::exists(file)) return {};
 
         auto sz = filesystem::file_size(file);
@@ -128,7 +127,6 @@ class BinaryReader
             buffer.clear();
         }
 
-        // buffer = static_cast<char*>(malloc(sz));
         ifstream inp_stream(file, ios::binary);
         if (inp_stream)
         {
@@ -137,7 +135,7 @@ class BinaryReader
             inp_stream.read(reinterpret_cast<char*>(&depth), sizeof(depth));
             inp_stream.read(reinterpret_cast<char*>(&channels), sizeof(channels));
             inp_stream.read(reinterpret_cast<char*>(&pixel_count), sizeof(pixel_count));
-            logger->Info(format("{}(): Pixel count {}", __FUNCTION__, pixel_count));
+            logger.Info(format("{}(): Pixel count {}", __FUNCTION__, pixel_count));
 
             if (pixel_count <= sz - header_size)
             {
@@ -146,8 +144,8 @@ class BinaryReader
             }
         }
 
-        logger->Info(format("{}: Parsed image with width: {}, height: {}, depth: {}, channels: {}", __PRETTY_FUNCTION__,
-                            width, height, depth, channels));
+        logger.Info(format("{}: Parsed image with width: {}, height: {}, depth: {}, channels: {}", __PRETTY_FUNCTION__,
+                           width, height, depth, channels));
         report.report_status(
             format("Parsed image with width: {}, height: {}, depth: {}, channels: {}", width, height, depth, channels));
 
@@ -169,7 +167,7 @@ class BinaryReader
         if (filesystem::exists(bin_file))
         {
             file_size = filesystem::file_size(bin_file);
-            Text("File: %s (%lu)", bin_file.filename().c_str(), file_size);
+            Text("File: %s (%ju)", bin_file.filename().c_str(), file_size);
             if (Button("Parse File"))
             {
                 auto buff = ReadFile(bin_file, report);
@@ -187,23 +185,25 @@ class MyApp : public application::DefaultApp
 {
    private:
     BinaryReader bin_read;
+    bool plot_demop_{false};
 
    public:
     MyApp(const Log& log, Pool& pool) : application::DefaultApp(log, pool) {}
+    ~MyApp() {}
 
     // override some of the defaults member functions
     void Run() override;
-    void MenuBarOptionsColumn1() override {};
+    void MenuBarOptionsColumn1() override;
     void MenuBarOptionsColumn2() override {};
 };
 
 int main()
 {
     // some initial log message
-    logger->Info(std::format("{}: Starting Application {}", __FUNCTION__, "Pixelarium"));
+    logger.Info(std::format("{}: Starting Application {}", __FUNCTION__, "Pixelarium"));
 
     // create a custom application, inject its dependencies and start it
-    auto app{MyApp(*logger, image_pool)};
+    auto app{MyApp(logger, image_pool)};
 
     app.Start();
 }
@@ -216,4 +216,11 @@ void MyApp::Run()
         StatusReport{.report_status = [this](const std::string& msg) { this->SetStatusTimed(msg, 5); },
                      .reset_status = [this]() { this->ResetStatus(); }};
     bin_read.Present(reporter);
+
+    if (plot_demop_)
+    {
+        ImPlot::ShowDemoWindow(&plot_demop_);
+    }
 }
+
+void MyApp::MenuBarOptionsColumn1() { ImGui::MenuItem("Show Plotdemos", NULL, &this->plot_demop_); }

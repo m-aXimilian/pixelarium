@@ -2,8 +2,8 @@
 
 #include <algorithm>
 
-#include "imaging/IPixelariumImage.hpp"
-#include "resources/resource.hpp"
+#include "IPixelariumImage.hpp"
+#include "resource.hpp"
 
 namespace
 {

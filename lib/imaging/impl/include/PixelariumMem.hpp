@@ -3,8 +3,8 @@
 #include <stdexcept>
 #include <string>
 
-#include "../IPixelariumImage.hpp"
-#include "utilities/ILog.hpp"
+#include "ILog.hpp"
+#include "IPixelariumImage.hpp"
 
 namespace pixelarium::imaging
 {

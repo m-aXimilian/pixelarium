@@ -4,10 +4,10 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "ILog.hpp"
 #include "IPixelariumImageView.hpp"
 #include "ImageViewFactory.hpp"
-#include "resources/resource.hpp"
-#include "utilities/ILog.hpp"
+#include "resource.hpp"
 
 // This is intended as an additional abstraction
 // aggregating views that should be rendered (or not)
@@ -68,6 +68,7 @@ class RenderImageManager
     std::unique_ptr<ImageViewFactory> view_factory_;
     std::mutex mut_;
     std::unordered_set<resources::ResourceKey> keys_to_delete_;
+    std::unordered_set<resources::ResourceKey> failed_keys_cache_;
 
     const utils::log::ILog& log_;
 };

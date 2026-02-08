@@ -5,7 +5,7 @@
 #include <functional>
 #include <mutex>
 
-#include "imaging/IPixelariumImage.hpp"
+#include "IPixelariumImage.hpp"
 
 using Image = pixelarium::imaging::IPixelariumImageCvMat;
 using namespace std;

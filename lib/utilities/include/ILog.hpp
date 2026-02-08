@@ -15,6 +15,24 @@ enum class LogLevel
     kWarn = 1 << 3,
     kError = 1 << 4,
 };
+
+constexpr auto LogLevelToString(LogLevel lvl) -> std::string
+{
+    switch (lvl)
+    {
+        case LogLevel::kTrace:
+            return "Trace";
+        case LogLevel::kDebug:
+            return "Debug";
+        case LogLevel::kInfo:
+            return "Info";
+        case LogLevel::kWarn:
+            return "Warning";
+        case LogLevel::kError:
+            return "Error";
+    }
+}
+
 /// @brief Interface for logging implementations.
 class ILog
 {

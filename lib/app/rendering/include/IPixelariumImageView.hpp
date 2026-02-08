@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "imaging/IPixelariumImage.hpp"
+#include "IPixelariumImage.hpp"
 #include "imgui.h"
 
 namespace pixelarium::application
@@ -29,6 +29,7 @@ class IPixelariumImageView
 
    protected:
     virtual void ImageViewMenuBar();
+    virtual void ImageViewMenuBarAdditions() {};
 
    protected:
     std::shared_ptr<imaging::IPixelariumImageCvMat> img_{};

@@ -3,9 +3,41 @@
 #include <memory>
 #include <string>
 
-#include "../IPixelariumImage.hpp"
+#include "ILog.hpp"
+#include "IPixelariumImage.hpp"
 #include "libCZI.h"
-#include "utilities/ILog.hpp"
+#include "libCZI_Pixels.h"
+
+namespace
+{
+struct CvPixelTypeAndSize
+{
+    int size{-1};
+    int type{-1};
+};
+
+template <typename P>
+[[nodiscard]] constexpr auto GetCVPixelTypeAndSize(P p) noexcept -> CvPixelTypeAndSize
+{
+    switch (p)
+    {
+        case libCZI::PixelType::Gray8:
+            return {1, CV_8U};
+        case libCZI::PixelType::Gray16:
+            return {2, CV_16U};
+        case libCZI::PixelType::Bgr24:
+            return {3, CV_8UC3};
+        case libCZI::PixelType::Bgra32:
+            return {4, CV_8UC4};
+        case libCZI::PixelType::Gray32:
+            return {4, CV_32S};
+        case libCZI::PixelType::Gray32Float:
+            return {4, CV_32F};
+        default:
+            return {};
+    }
+}
+}  // namespace
 
 namespace pixelarium::imaging
 {

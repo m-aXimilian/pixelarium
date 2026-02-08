@@ -54,15 +54,15 @@ If you want to specify compiler settings and options which are not defined in a 
 
 # Usage
 
-The [examples](https://github.com/m-aXimilian/pixelarium/tree/fd400bf545ade029696c21119a50cf4bb67ffbac/examples) directory aims to showcase a few usage examples of this project.
+The [examples](https://github.com/m-aXimilian/pixelarium/tree/main/examples) directory aims to showcase a few usage examples of this project.
 
-All there is to do in order to get an initial window on screen is to create an instance of [`AppGLFW`](https://github.com/m-aXimilian/pixelarium/blob/fd400bf545ade029696c21119a50cf4bb67ffbac/lib/app/AppGLFW.hpp) (or one of its child classes) and start it.
+All there is to do in order to get an initial window on screen is to create an instance of [`AppGLFW`](https://github.com/m-aXimilian/pixelarium/blob/main/lib/app/include/AppGLFW.hpp) (or one of its child classes) and start it.
 
 ```cpp
-  unique_ptr<ILog> logger = make_unique<SpdLogger>("logfile.log", "loggername");
+  const auto logger {SpdLogger("logfile.log", "loggername")};
   ImageResourcePool image_pool;
 
-  auto app {DefaultApp(*logger, image_pool)};
+  auto app {DefaultApp(logger, image_pool)};
   app.Start();
 ```
 
@@ -72,10 +72,28 @@ All there is to do in order to get an initial window on screen is to create an i
 
 ## simple
 
-This is the most straight-forward usage of Pixelarium. It simply instantiates a [`DefaultApp`](https://github.com/m-aXimilian/pixelarium/blob/fd400bf545ade029696c21119a50cf4bb67ffbac/lib/app/DefaultApp.hpp) and runs it.
+This is the most straight-forward usage of Pixelarium. It simply instantiates a [`DefaultApp`](https://github.com/m-aXimilian/pixelarium/blob/main/lib/app/include/DefaultApp.hpp) and runs it.
 
 
 ## custom_0
 
-This is meant to showcase that [`DefaultApp`]((https://github.com/m-aXimilian/pixelarium/blob/fd400bf545ade029696c21119a50cf4bb67ffbac/lib/app/DefaultApp.hpp)) ([`AppGLFW`](https://github.com/m-aXimilian/pixelarium/blob/fd400bf545ade029696c21119a50cf4bb67ffbac/lib/app/AppGLFW.hpp) as well) can be customized via inheritance.
+This is meant to showcase that [`DefaultApp`]((https://github.com/m-aXimilian/pixelarium/blob/main/lib/app/include/DefaultApp.hpp)) ([`AppGLFW`](https://github.com/m-aXimilian/pixelarium/blob/main/lib/app/include/AppGLFW.hpp) as well) can be customized via inheritance.
 
+As a usage example, it implements a simple binary image reader. It can be presented with a binary file of layout
+
+```cpp
+    struct ParsedImage
+    {
+        uint8_t depth;
+        uint8_t channels;
+        uint16_t width;
+        uint16_t height;
+        void* data;
+    };
+```
+
+i.e., a header encoding 1 byte for the pixel-depth, 1 byte for the channel count, 2 byte each for width and height in pixel followed by the actual pixeldata.
+
+## custom_1
+
+An example showcasing how to inject a user defined control into the existing scaffolding of `DefaultApp` using a multiplication filter. This is in many ways similar to the previous example.
