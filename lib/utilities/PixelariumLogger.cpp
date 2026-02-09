@@ -6,44 +6,13 @@
 #include <ostream>
 #include <stdexcept>
 
-using namespace pixelarium::utils::log;
-
-struct PixelariumLogger::LogStream
+namespace pixelarium::utils::log
 {
-    LogStream(const std::string& sink)
-    {
-        out_stream_ = std::ofstream(sink, std::ios::app);
-        if (!out_stream_)
-        {
-            throw std::runtime_error("Failed to open log stream");
-        }
-    }
-
-    ~LogStream()
-    {
-        if (out_stream_.is_open())
-        {
-            out_stream_.close();
-        }
-    }
-
-    LogStream& operator<<(const std::string& str)
-    {
-        this->out_stream_ << str;
-        return *this;
-    }
-
-   private:
-    std::ofstream out_stream_;
-};
-
-PixelariumLogger::PixelariumLogger(const std::string& name, const std::string& file_sink)
-    : name_(name), file_sink_(file_sink)
-{
-    log_stream_ = std::make_unique<LogStream>(file_sink_);
-}
-
-PixelariumLogger::~PixelariumLogger() = default;
+// PixelariumLogger::PixelariumLogger(const std::string& name, const std::string& file_sink)
+//     : name_(name), file_sink_(file_sink)
+// {
+//     log_stream_ = std::make_unique<LogStream>(file_sink_);
+// }
 
 auto PixelariumLogger::Write(LogLevel lvl, const std::string& msg) const -> void
 {
@@ -68,6 +37,10 @@ auto PixelariumLogger::Write(LogLevel lvl, const std::string& msg) const -> void
 
     {
         std::lock_guard<std::mutex> guard(mutex_);
-        *log_stream_ << std::format("[{}] [{}] [{}] {}\n", timestamp, name_, LogLevelToString(lvl), msg);
+        if (log_stream_)
+        {
+            *log_stream_ << std::format("[{}] [{}] [{}] {}\n", timestamp, name_, LogLevelToString(lvl), msg);   
+        }
     }
 }
+}  // namespace pixelarium::utils::log

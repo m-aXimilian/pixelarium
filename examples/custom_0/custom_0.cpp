@@ -25,7 +25,8 @@ using Pool = resources::ImageResourcePool;
 #ifdef _WIN32
 auto logger{utils::log::PixelariumLogger("pixellog", string(getenv("APPDATA")) + "/pixelarium/simple_app.log")};
 #else
-auto logger{utils::log::PixelariumLogger("pixellog", string(getenv("HOME")) + "/.cache/pixelarium/simple_app.log")};
+auto logger{utils::log::PixelariumLogger("pixellog"// , string(getenv("HOME")) + "/.cache/pixelarium/simple_app.log"
+        )};
 #endif
 
 // instantiate an image pool for the application

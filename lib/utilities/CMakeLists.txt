@@ -3,10 +3,12 @@ set(UTILSLIBNAME pixelariumutilslib)
 set(UTILSLIBSRC
   include/ILog.hpp
   include/SpdLogger.hpp
+  include/LogStream.hpp
   include/PixelariumLogger.hpp
   include/simple_thread_pool.hpp
   SpdLogger.cpp
-  PixelariumLogger.cpp)
+  PixelariumLogger.cpp
+  LogStream.cpp)
 
 add_library(${UTILSLIBNAME} STATIC ${UTILSLIBSRC})
 
