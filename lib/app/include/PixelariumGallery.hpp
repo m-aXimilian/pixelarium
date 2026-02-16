@@ -1,7 +1,10 @@
 #pragma once
 
+#include <type_traits>
+
 #include "ILog.hpp"
 #include "RenderImageManager.hpp"
+// #include "ThumbnailFactory.hpp"
 #include "resource.hpp"
 
 namespace pixelarium::application
@@ -31,10 +34,15 @@ class PixelariumImageGallery : IPixelariumGallery<resources::ImageResourcePool>
 {
     using Pool = resources::ImageResourcePool;
     using Log = utils::log::ILog;
+    using Restype = typename resources::pool_traits<Pool>::resource_type;
+    using Datatype = typename resources::pool_traits<Pool>::data_type;
 
    public:
     PixelariumImageGallery(const Log& log, resources::ImageResourcePool& pool)
-        : pool_{pool}, log_{log}, render_manager_(std::make_unique<application::RenderImageManager>(pool, log))
+        : pool_{pool},
+          log_{log},
+          render_manager_(std::make_unique<application::RenderImageManager>(pool, log))// ,
+          // thumb_fact_(pool)
     {
     }
 
@@ -51,6 +59,8 @@ class PixelariumImageGallery : IPixelariumGallery<resources::ImageResourcePool>
     Pool& pool_;
     const Log& log_;
     std::unique_ptr<application::RenderImageManager> render_manager_;
+    // imaging::ThumbnailFactory<Restype, Datatype> thumb_fact_;
+
     bool image_listp_{true};
     bool auto_show_selectd_image_{true};
     size_t selected_image_{0};

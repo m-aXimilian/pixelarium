@@ -34,6 +34,7 @@ target_compile_definitions(${IMAGELIBLIBNAME} PUBLIC _LIBCZISTATICLIB)
 target_link_libraries(${IMAGELIBLIBNAME}
   PUBLIC ${OpenCV_LIBS}
   PUBLIC pixelarium::lib::utilities_static
+  PRIVATE pixelarium::lib::resources_static
   PRIVATE libCZIStatic)
 
 

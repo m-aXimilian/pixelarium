@@ -17,7 +17,7 @@ struct empty_resource_exception : public std::exception
 {
     empty_resource_exception() {};
     empty_resource_exception(std::string& msg) : message_(msg) {};
-    const std::string& what() { return message_; }
+    const char* what() const noexcept { return message_.c_str(); }
 
    private:
     std::string message_ = "Empty Resource";
@@ -36,19 +36,22 @@ struct IResource
 template <typename R>
 concept ResT = requires(R& r) { static_cast<IResource&>(r); };
 
+template <typename T>
+struct pool_traits;
+
 /// @brief Defines an interface for a resource pool
 /// @tparam ResT  defines the resource type that is accepted by the pool
-template <typename ResT, class Data>
+template <typename R, class D>
 class IResourcePool
 {
    public:
     virtual ~IResourcePool() = default;
-    virtual std::weak_ptr<ResT> GetResource(size_t id) const = 0;
-    virtual ResourceKey SetResource(std::unique_ptr<ResT> res) = 0;
-    virtual bool ModifyResource(ResourceKey id, std::unique_ptr<ResT> res) = 0;
+    virtual std::weak_ptr<R> GetResource(size_t id) const = 0;
+    virtual ResourceKey SetResource(std::unique_ptr<R> res) = 0;
+    virtual bool ModifyResource(ResourceKey id, std::unique_ptr<R> res) = 0;
     virtual bool DeleteResource(ResourceKey id) = 0;
     virtual void EnumerateResources(
-        const std::function<void(ResourceKey, size_t, const imaging::IPixelariumImage<Data>&)>& func) = 0;
+        const std::function<void(ResourceKey, size_t, const imaging::IPixelariumImage<D>&)>& func) = 0;
     virtual size_t GetTotalSize() const = 0;
     virtual void Clear() = 0;
 };
@@ -93,5 +96,19 @@ class ImageResourcePool : public IResourcePool<imaging::IPixelariumImageCvMat, c
    private:
     std::unordered_map<size_t, std::shared_ptr<imaging::IPixelariumImageCvMat>> resources_;
     std::mutex mut_;
+};
+
+template <typename R, typename D>
+struct pool_traits<IResourcePool<R, D>>
+{
+    using resource_type = R;
+    using data_type = D;
+};
+
+template <>
+struct pool_traits<ImageResourcePool>
+{
+    using resource_type = imaging::IPixelariumImageCvMat;
+    using data_type = cv::Mat;
 };
 }  // namespace pixelarium::resources
